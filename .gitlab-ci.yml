@@ -1,0 +1,26 @@
+cache:
+  paths:
+    - ./api/target/
+    - ./frontend/node_modules/
+
+buildApi:
+  image: maven:latest
+  stage: build
+  script:
+    - cd api
+    - mvn compile
+
+testApi:
+  image: maven:latest
+  stage: test
+  script:
+    - cd api
+    - mvn test
+
+buildFrontend:
+  image: node:12
+  stage: build
+  script:
+    - cd frontend
+    - npm ci
+    - npm run build
