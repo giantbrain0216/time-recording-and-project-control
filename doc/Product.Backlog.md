@@ -14,9 +14,9 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: [XS]
 - Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten des gesamten Features überprüfen.)*
-  - *TODO*
-  - *TODO*
+  - Ein Kunde konnte angelegt werden.
+  - Der Kunde ist in der Liste aller Kunden sichtbar.
+  - Der Kunde kann nachträglich bearbeitet werden.
 
 ### Feature 1.2 *Projekt hinzufügen*
 
@@ -24,9 +24,11 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: [XS]
 - Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten des gesamten Features überprüfen.)*
-  - *TODO*
-  - *TODO*
+  - Das Projekt konnte angelegt werden.
+  - Das Projekt ist einem Kunden zugeordnet.
+  - Der veranschlagte Aufwand ist erfasst.
+  - Es wurde noch kein Aufwand geleistet.
+  - Das Projekt ist in der Übersicht über alle Projekte vorhanden.
 
 ### Feature 1.3 *Mitarbeiter und ihre verfügbare Arbeitszeit hinzufügen*
 
@@ -34,9 +36,9 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: [XS]
 - Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten des gesamten Features überprüfen.)*
-  - *TODO*
-  - *TODO*
+  - Ein Mitarbeiter konnte angelegt werden.
+  - Der Mitarbeiter ist in der Liste aller Mitarbeiter sichtbar.
+  - Die verfügbare Wochenarbeitszeit ist ersichtlich.
 
 ### Feature 1.4 *Mitarbeiter einem Projekt zuteilen oder entfernen*
 
@@ -44,9 +46,11 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: [S]
 - Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten des gesamten Features überprüfen.)*
-  - *TODO*
-  - *TODO*
+  - Ein weiterer Mitarbeiter ist dem Projekt zugeordnet.
+  - Der Mitarbeiter kann komplett oder teilweise dem Projekt zugeordnet werden.
+  - Ein Mitarbeiter kann aus einem Projekt entfernt werden.
+  - Der Mitarbeiter wird in der Liste der Mitarbeiter, die dem Projekt zugewiesen sind, angezeigt.
+  - Die Gesamtkapazität an verfügbarer Arbeitszeit ist um den zugewiesenen Umfang gestiegen.
 
 ### Feature 1.5 *Erfassung von geleisteten Aufwänden pro Mitarbeiter*
 
@@ -54,9 +58,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: [M]
 - Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten des gesamten Features überprüfen.)*
-  - *TODO*
-  - *TODO*
+  - Alle relevanten Angaben zum Aufwand konnten erfasst werden:
+    - Kurzbeschreibung der geleisteten Arbeit
+    - Datum
+    - Der geleistete Aufwand
+    - Der entsprechende Mitarbeiter
+  - Der insgesamt geleistete Aufwand ist entsprechend der erfassten Aufwände gestiegen.
 
 ### Feature 1.6 *Gesammelte Erfassung von geleisteten Aufwänden pro Mitarbeiter*
 
@@ -64,12 +71,60 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: [M]
 - Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten des gesamten Features überprüfen.)*
-  - *TODO*
-  - *TODO*
+  - Aufwände, die in einer CSV gesammelt wurden, konnten in die Anwendung übernommen werden.
+  - Es wurden alle Informationen gespeichert, die auch bei der einzelnen Erfassung vorhanden sind.
+
+### Additional Feature 1.7 *Export der Aufwände für eine Rechnung*
+
+> Als *Mitarbeiter* möchte ich *meine geleistete Arbeit erfassen*, um *den Aufwand tracken zu können*.
+
+- Aufwandsschätzung: [M]
+- Akzeptanztests:
+  - Eine CSV-Datei für den gewünschten Kunden und Zeitraum liegt vor.
+  - Die CSV-Datei enthält:
+   - Kurzbeschreibung der geleisteten Arbeit
+   - Datum
+   - Der geleistete Aufwand
+   - Der entsprechende Mitarbeiter
 
 
 
+## Epic 2 *User Interface*
+
+> Als *Benutzer* möchte ich *Daten in das System eintragen und modifizieren*, um *diese besser verwalten zu können*.
+
+Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekten, Kunden & Mitarbeiter in das System einzutragen und nachträglich verändern zu können. Zudem sollte es möglich sein, Mitarbeiter zu Projekten vollständig oder teilweise zuzuordnen, sowie auch von Projekten zu entfernen. Außerdem sollte der Benutzer die Möglichkeit haben, geleistete Leistungen pro Mitarbeiter in das System einzutragen. Zudem sollte das System den Export der Aufwände eines Projekts ermöglichen. Die Web-App sollte dem Nutzer auch Optimierungsvorschläge basierend auf den benötigten Kompetenzen in Projekten machen. Das System kommuniziert zusätzlich mit einem Ticketsystem, um die geleistete Arbeit direkt zu erfassen.
+
+### Feature 2.1 *Einsicht aller Kunden*
+
+> Als *Nutzer* möchte ich *Kunden in das System eintragen*, um *sie besser zu verwalten*.
+
+- Aufwandsschätzung: [XS]
+- Akzeptanztests:
+  - Alle erfassten Kunden können auf einen Blick eingesehen werden.
+  - Die Detailansicht zu einem Kunden kann geöffnet werden. Es sind alle Kundendaten und die zugewiesenen Projekte einsehbar.
+
+### Feature 2.2 *Einsicht aller Projekte.*
+
+> Als *Nutzer* möchte ich *Kunden in das System eintragen*, um *sie besser zu verwalten*.
+
+- Aufwandsschätzung: [XS]
+- Akzeptanztests:
+  - Alle erfassten Projekte können auf einen Blick eingesehen werden.
+  - Der geplante Aufwand sowie der geleistete Aufwand werden pro Projekt angezeigt.
+  - Der Status des Projekts wird angezeigt.
+  - Der insgesamt geplante Aufwand über alle Projekte wird angezeigt.
+  - Die Projektliste kann speziell für einen Kunden angezeigt werden.
+
+### Feature 2.3 *Einsicht aller Mitarbeiter.*
+
+> Als *Nutzer* möchte ich *Kunden in das System eintragen*, um *sie besser zu verwalten*.
+
+- Aufwandsschätzung: [XS]
+- Akzeptanztests:
+  - Alle Mitarbeiter können auf einen Blick eingesehen werden.
+  - Sowohl die verfügbare Arbeitszeit, als auch die auf Projekte geplante Arbeitszeit ist ersichtlich.
+  - Die insgesamt verfügbare Arbeitszeit über alle Mitarbeiter wird angezeigt.
 
 
 
