@@ -87,13 +87,54 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
    - Der geleistete Aufwand
    - Der entsprechende Mitarbeiter
 
+### Additional Feature 1.8 *Ergänzung der vorhandenen Kompetenzen für Mitarbeiter und Projekte*
+
+> Als *Mitarbeiter* möchte ich *zu einem Projekt oder Mitarbeiter Kompetenzen hinzufügen*, um *zu sehen welche Kompetenzen für Projekte fehlen*.
+
+- Aufwandsschätzung: [S]
+- Akzeptanztests(intern):
+  - Kompetenzen können von Mitarbeiter/Projekt hinzugefügt oder entfernt werden
+  - Es kann überprüft werden, ob alle Kompetenzen für ein Projekt abgedeckt werden
+  - Kompetenzen können zum System hinzugefügt werden
+
+### Additional Feature 1.9 *Auflistung benötigter Mitarbeiter im Unternehmen an Hand der benötigten Kompetenzen*
+
+> Als *Mitarbeiter* möchte ich *auf sehen können, welche Mitarbeiter in der Firma wie sehr gebraucht werden*, um *alle Projekte bewältigen zu können*.
+
+- Aufwandsschätzung: [M]
+- Akzeptanztests(intern):
+  - Es werden die zusätzlich gebrauchten Mitarbeiter mit einem Bedarf Index angezeigt
+  - Benötigen viele Projekte mit geringem Aufwand oder einzelne Projekte mit hohem Aufwand eine Kompetenz, ist der Bedarf hieran hoch.
+
+### Additional Feature 1.10 *Auswertung von Projektdaten*
+
+> Als *Nutzer* möchte ich *sehen, wie ich die Mitarbeiter am besten einsetzen kann*, um *Kosten zu sparen und alle Projekte zu bewältigen*.
+
+- Aufwandsschätzung: [XL]
+- Akzeptanztests(intern):
+  - Es wird angezeigt ob alle Projekte bewältigt werden und wie man am besten die Mitarbeiter einsetzen kann
+  - Projektkosten je nachdem wie man Mitarbeiter einsetzt werden angezeigt
+  - Es wird angezeigt ob es zu Überstunden kommt
+  - Ausgelastete bzw. nicht ausgelastete Mitarbeiter werden angezeigt und ein Verbesserungsvorschlag wird gemacht
+
+### Additional Feature 1.11 *Erfassung der Aufwände aus einem Ticketsystem*
+
+> Als *Mitarbeiter* möchte ich *meine bearbeiteten Tickets ins System importieren*, um *sie direkt in meinem Aufwand zu erfassen*.
+
+- Aufwandsschätzung: [L]
+- Akzeptanztests(intern):
+  - Tickets können aus einem Ticketsystem importiert werden
+  - Der Aufwand für das Ticket wird automatisch in das System erfasst
+
+
+
 
 
 ## Epic 2 *User Interface*
 
-> Als *Benutzer* möchte ich *eine Liste der Mitarbeiter, Projekte etc. sehen*, um *mir einen besseren Überblick zu erschaffen*.
+> Als *Benutzer* möchte ich *eine Liste der Mitarbeiter, Projekte, Charts etc. sehen*, um *mir einen besseren Überblick zu erschaffen*.
 
-Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekten, Kunden & Mitarbeiter einsehen zu können. Diese werden in einer Liste untereinander angezeigt, mit der Möglichkeit diese nach einem Attribut sortieren oder filtern zu können. Zu jedem Kunden, Projekt und Mitarbeiter sollte es ein Vorschaufenster geben, wo man alle Informationen auf einem Blick sehen kann.
+Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekten, Kunden & Mitarbeiter einsehen zu können. Diese werden in einer Liste untereinander angezeigt, mit der Möglichkeit diese nach einem Attribut sortieren oder filtern zu können. Zu jedem Kunden, Projekt und Mitarbeiter sollte es ein Vorschaufenster geben, wo man alle Informationen auf einem Blick sehen kann. Zusätzlich gibt es Charts, die verschiedene Informationen visualisieren.
 
 ### Feature 2.1 *Einsicht aller Kunden*
 
@@ -126,112 +167,11 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Sowohl die verfügbare Arbeitszeit, als auch die auf Projekte geplante Arbeitszeit ist ersichtlich.
   - Die insgesamt verfügbare Arbeitszeit über alle Mitarbeiter wird angezeigt.
 
+### Additional Feature 2.4 *Visualisierung der Projektauslastung in Form von Charts*
 
+> Als *Mitarbeiter* möchte ich *die Projektauslastungen visualisiert bekommen*, um *besser zu verstehen wo Resourcen noch gebraucht werden und wo nicht*.
 
-
-
-
-[XS, S, M, L, XL]
-#### Implementable Story 1.1.1 *Titel*
-
-> Als *Rolle* möchte ich *Ziel/Wunsch*, um *Nutzen*.
-
-- Aufwandsschätzung: [0-100] Story Points
-- Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten der gesamten Implementable Story überprüfen.)*
-  - *TODO*
-  - *TODO*
-
-##### Task 1.1.1.1 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.1.1.2 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.1.1.3 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-#### Implementable Story 1.1.2 *Titel*
-
-> Als *Rolle* möchte ich *Ziel/Wunsch*, um *Nutzen*.
-
-- Aufwandsschätzung: [0-100] Story Points
-- Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten der gesamten Implementable Story überprüfen.)*
-  - *TODO*
-  - *TODO*
-
-##### Task 1.1.2.1 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.1.2.2 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.1.2.3 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-### Feature 1.2 *Titel*
-
-> Als *Rolle* möchte ich *Ziel/Wunsch*, um *Nutzen*.
-
-- Aufwandsschätzung: [XS, S, M, L, XL]
-- Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten des gesamten Features überprüfen.)*
-  - *TODO*
-  - *TODO*
-
-#### Implementable Story 1.2.1 *Titel*
-
-> Als *Rolle* möchte ich *Ziel/Wunsch*, um *Nutzen*.
-
-- Aufwandsschätzung: [0-100] Story Points
-- Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten der gesamten Implementable Story überprüfen.)*
-  - *TODO*
-  - *TODO*
-
-##### Task 1.2.1.1 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.2.1.2 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.2.1.3 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-#### Implementable Story 1.2.2 *Titel*
-
-> Als *Rolle* möchte ich *Ziel/Wunsch*, um *Nutzen*.
-
-- Aufwandsschätzung: [0-100] Story Points
-- Akzeptanztests:
-  - *TODO (Beschreibung von Testfällen die das erwartete Verhalten der gesamten Implementable Story überprüfen.)*
-  - *TODO*
-  - *TODO*
-
-##### Task 1.2.2.1 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.2.2.2 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-##### Task 1.2.2.3 *Titel/Beschreibung*
-
-- Aufwandsschätzung: [0-24] Stunden
-
-## Epic 2 *Titel*
-
-> Als *Rolle* möchte ich *Ziel/Wunsch*, um *Nutzen*.
-
-*Wie bei Epic 1.*
+- Aufwandsschätzung: [S]
+- Akzeptanztests(intern):
+  - Die dargestellten Informationen entsprechen genau den Daten aus der Datenbank.
+  - Die Berechnungen für die verschiedenen Charts wurden richtig berechnet.
