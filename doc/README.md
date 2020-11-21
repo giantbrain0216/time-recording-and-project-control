@@ -1,6 +1,6 @@
-# App-Name
+# WebApp zur Aufwandserfassung und Projektsteuerung
 
-> **TODO:** Kurze Beschreibung der App inklusive der Beschreibung des Problems, welches durch die App gelöst wird.
+> Die Webapp dient zur Aufwanderfassung der Mitarbeiter, um den geleisteten Aufwand besser tracken zu können. Zusätzlich dient die App zur Projektsteuerung, sodass Teamleiter ihre Mitarbeiter optimal einsetzen können.
 
 ## Installation und Start
 
