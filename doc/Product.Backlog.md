@@ -96,10 +96,11 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Kompetenzen können von Mitarbeiter/Projekt hinzugefügt oder entfernt werden
   - Es kann überprüft werden, ob alle Kompetenzen für ein Projekt abgedeckt werden
   - Kompetenzen können zum System hinzugefügt werden
+  - Einsicht der hinzugefügten Kompetenzen
 
 ### Additional Feature 1.9 *Auflistung benötigter Mitarbeiter im Unternehmen an Hand der benötigten Kompetenzen*
 
-> Als *Mitarbeiter* möchte ich *auf sehen können, welche Mitarbeiter in der Firma wie sehr gebraucht werden*, um *alle Projekte bewältigen zu können*.
+> Als *Mitarbeiter* möchte ich *sehen können, welche Mitarbeiter in der Firma wie sehr gebraucht werden*, um *alle Projekte rechtzeitig bewältigen zu können*.
 
 - Aufwandsschätzung: [M]
 - Akzeptanztests(intern):
@@ -108,11 +109,11 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 ### Additional Feature 1.10 *Auswertung von Projektdaten*
 
-> Als *Nutzer* möchte ich *sehen, wie ich die Mitarbeiter am besten einsetzen kann*, um *Kosten zu sparen und alle Projekte zu bewältigen*.
+> Als *Nutzer* möchte ich *sehen, wie ich die Mitarbeiter am besten einsetzen kann*, um *Kosten zu sparen und alle Projekte rechtzeitig zu bewältigen*.
 
 - Aufwandsschätzung: [XL]
 - Akzeptanztests(intern):
-  - Es wird angezeigt ob alle Projekte bewältigt werden und wie man am besten die Mitarbeiter einsetzen kann
+  - Es wird angezeigt ob alle Projekte bewältigt werden können und wie man am besten die Mitarbeiter einsetzen kann
   - Projektkosten je nachdem wie man Mitarbeiter einsetzt werden angezeigt
   - Es wird angezeigt ob es zu Überstunden kommt
   - Ausgelastete bzw. nicht ausgelastete Mitarbeiter werden angezeigt und ein Verbesserungsvorschlag wird gemacht
@@ -125,7 +126,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Akzeptanztests(intern):
   - Tickets können aus einem Ticketsystem importiert werden
   - Der Aufwand für das Ticket wird automatisch in das System erfasst
-
+  - Gegebener Task ist nach dem Import erledigt
 
 
 
@@ -174,4 +175,4 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Aufwandsschätzung: [S]
 - Akzeptanztests(intern):
   - Die dargestellten Informationen entsprechen genau den Daten aus der Datenbank.
-  - Die Berechnungen für die verschiedenen Charts wurden richtig berechnet.
+  - Die Berechnungen für die verschiedenen Charts wurden richtig durchgeführt.
