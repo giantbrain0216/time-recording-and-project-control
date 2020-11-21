@@ -82,10 +82,10 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Akzeptanztests:
   - Eine CSV-Datei für den gewünschten Kunden und Zeitraum liegt vor.
   - Die CSV-Datei enthält:
-   - Kurzbeschreibung der geleisteten Arbeit
-   - Datum
-   - Der geleistete Aufwand
-   - Der entsprechende Mitarbeiter
+    - Kurzbeschreibung der geleisteten Arbeit
+    - Datum
+    - Der geleistete Aufwand
+    - Der entsprechende Mitarbeiter
 
 ### Additional Feature 1.8 *Ergänzung der vorhandenen Kompetenzen für Mitarbeiter und Projekte*
 
@@ -127,6 +127,16 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Tickets können aus einem Ticketsystem importiert werden
   - Der Aufwand für das Ticket wird automatisch in das System erfasst
   - Gegebener Task ist nach dem Import erledigt
+
+### Feature 1.12 *Aufsetzen der Java Umgebung*
+
+> Als *Entwickler* möchte ich *an der Webapp programmieren*, deswegen muss die Java Umgebung mit Spring Boot RESTful API implementiert sein*.
+
+- Aufwandsschätzung: [S]
+- Akzeptanztests(intern):
+  - Java Program muss auf dem Server ohne Probleme laufen
+  - Man kann uaf die Spring Boot API zugreifen
+
 
 
 
@@ -176,3 +186,13 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Akzeptanztests(intern):
   - Die dargestellten Informationen entsprechen genau den Daten aus der Datenbank.
   - Die Berechnungen für die verschiedenen Charts wurden richtig durchgeführt.
+
+
+### Feature 2.5 *Vollständige GUI mit Menü und Searchbar*
+
+> Als *Nutzer* möchte ich *eine übersichtliche und intuitive GUI haben*, um *schneller meine Aufgaben zu erledigen*.
+
+- Aufwandsschätzung: [M]
+- Akzeptanztests(intern):
+  - Die GUI ist übersichtlich und intuitiv
+  - Die Webapp kann auch auf mobilen Endgeräten ohne Eingschränkungen genutzt werden
