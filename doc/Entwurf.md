@@ -23,10 +23,10 @@
 
 ## Beschreibung der Java-Packages der API
 
-1. **Entities:** in diesem Package werden alle Entitäten gespeichert, wie zum Beispiel Mitarbeiter, Kunde oder Projekt.
-2. **Authentication:** in diesem Package werden der ganze Code sein, der sich um die sichere Authentifizierung des Mitarbeiters kümmert
-3. **Database methods:** hier werden die ganzen Hilfsmethoden sein, die für die Manipulation der Daten genutzt werden. Die Methoden um aus der Datenbank zu lesen, etwas zu ändern oder etwas zu löschen sind hier dabei.
-4. **Calculation methods:** die Hilfsmethoden für die Rechnung mit Personenstunden und für die verschiedenen Berechnungen mit Zeit werden hier gespeichert
+- **Entities:** in diesem Package werden alle Entitäten gespeichert, wie zum Beispiel Mitarbeiter, Kunde oder Projekt.
+- **Authentication:** in diesem Package werden der ganze Code sein, der sich um die sichere Authentifizierung des Mitarbeiters kümmert
+- **Database methods:** hier werden die ganzen Hilfsmethoden sein, die für die Manipulation der Daten genutzt werden. Die Methoden um aus der Datenbank zu lesen, etwas zu ändern oder etwas zu löschen sind hier dabei.
+- **Calculation methods:** die Hilfsmethoden für die Rechnung mit Personenstunden und für die verschiedenen Berechnungen mit Zeit werden hier gespeichert
 
 
 ## Beschreibung der Frontend-Views
