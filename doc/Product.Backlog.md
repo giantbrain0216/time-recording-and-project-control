@@ -135,7 +135,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Aufwandsschätzung: [S]
 - Akzeptanztests(intern):
   - Java Program muss auf dem Server ohne Probleme laufen
-  - Man kann uaf die Spring Boot API zugreifen
+  - Man kann auf die Spring Boot API zugreifen
 
 
 
@@ -195,4 +195,4 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Aufwandsschätzung: [M]
 - Akzeptanztests(intern):
   - Die GUI ist übersichtlich und intuitiv
-  - Die Webapp kann auch auf mobilen Endgeräten ohne Eingschränkungen genutzt werden
+  - Die Webapp kann auch auf mobilen Endgeräten ohne Einschränkung genutzt werden
