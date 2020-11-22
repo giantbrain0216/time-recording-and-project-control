@@ -6,4 +6,4 @@
 - [ ] Der Code wurde von einem anderen Entwickler begutachtet.
 - [ ] Vereinbarte Guidelines von Itestra sind eingehalten 
 - [ ] Documentation ist auf dem aktuellsten Stand.
-- [ ] CI Pipeline ist grün.
+- [ ] CI Pipeline passed.
