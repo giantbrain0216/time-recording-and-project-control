@@ -1,11 +1,9 @@
 # Entwurf
-
-> Dieser Entwurf legt die prinzipielle Lösungsarchitektur fest und enthält alles, was man benötigt, um einem Außenstehenden den prinzipiellen Aufbau der App erklären zu können.
-> Der Fokus liegt auf einem groben Überblick und vereinzelten wichtigen Details (**keep it simple**).
-
-**TODO:** Beschreibung des grundlegenden Aufbaus
-
-**TODO:** Verweis auf Standards wie zum Beispiel verwendete Entwurfsmuster (optional)
+## WebApp zur Aufwandserfassung und Projektsteuerung
+### Gruppe 12
+- Clirim Salihi
+- Mohamed Ben Salha
+- Radu Manea
 
 ## Inhaltsverzeichnis
 1. System Context Diagram
