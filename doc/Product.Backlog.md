@@ -18,6 +18,16 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Der Kunde ist in der Liste aller Kunden sichtbar.
   - Der Kunde kann nachträglich bearbeitet werden.
 
+### Feature 1.1 *Test*
+
+> Als *Nutzer* möchte ich *Kunden in das System eintragen*, um *sie besser zu verwalten*.
+
+- Aufwandsschätzung: [XS]
+- Akzeptanztests:
+  - Ein Kunde konnte angelegt werden.
+  - Der Kunde ist in der Liste aller Kunden sichtbar.
+  - Der Kunde kann nachträglich bearbeitet werden.
+
 ### Feature 1.2 *Projekt hinzufügen*
 
 > Als *Nutzer* möchte ich *ein Projekt in das System anlegen*, um *die Mitarbeiter besser auf die Proejkte zu verteilen*.
