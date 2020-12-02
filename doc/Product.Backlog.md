@@ -18,15 +18,60 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Der Kunde ist in der Liste aller Kunden sichtbar.
   - Der Kunde kann nachträglich bearbeitet werden.
 
-### Feature 1.1 *Test*
+#### Implementable Story 1.1.1 *Kunde hinzufügen*
 
-> Als *Nutzer* möchte ich *Kunden in das System eintragen*, um *sie besser zu verwalten*.
+> Als Nutzer möchte ich *Kunden zum System hinzufügen*, um *um eine bessere Übersicht zu haben*
 
-- Aufwandsschätzung: [XS]
+- Aufwandsschätzung: 10 Story Points
 - Akzeptanztests:
-  - Ein Kunde konnte angelegt werden.
-  - Der Kunde ist in der Liste aller Kunden sichtbar.
-  - Der Kunde kann nachträglich bearbeitet werden.
+  - Der Kunde erscheint in der Kundenliste
+  - Die Daten des Kundens werden in der Datenbank gespeichert
+
+##### Task 1.1.1.1 *GUI für Kunde hinzufügen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.1.1.2 *Kundendaten in der Datenbank speichern*
+
+- Aufwandsschätzung: 1 Stunde
+
+#### Implementable Story 1.1.2 *Kunde bearbeiten*
+
+> Als Nutzer möchte ich *Kunden im System bearbeiten*, um *Daten des Kundens zu aktualisieren*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Die aktualisierten Daten erscheinen auf dem Profil des Kundens
+  - Die Daten des Kundens werden in der Datenbank aktualisiert
+
+##### Task 1.1.2.1 *GUI für Kunde bearbeiten*
+
+- Aufwandsschätzung: 1 Stunde
+
+##### Task 1.1.2.2 *Kundendaten in der Datenbank aktualisieren*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+#### Implementable Story 1.1.3 *Kunde löschen*
+
+> Als Nutzer möchte ich *Kunden aus dem System löschen*, um *irrelevante Kunden aus dem System zu entfernen*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Der Kunde erscheint nicht mehr in der Kundenliste
+  - Die Daten des Kundens werden aus der Datenbank gelöscht
+
+##### Task 1.1.2.1 *Pop-up Meldung "Sind Sie sicher Sie wollen den Kunden xyz löschen?"*
+
+- Aufwandsschätzung: 0.2 Stunden
+
+##### Task 1.1.2.2 *Kundendaten aus der Datenbank löschen*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+##### Task 1.1.2.3 *Überprüfung ob der Kunde noch offene Projekte hat*
+
+- Aufwandsschätzung: 1 Stunde
 
 ### Feature 1.2 *Projekt hinzufügen*
 
@@ -40,6 +85,67 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Es wurde noch kein Aufwand geleistet.
   - Das Projekt ist in der Übersicht über alle Projekte vorhanden.
 
+#### Implementable Story 1.2.1 *Projekt hinzufügen*
+
+> Als Nutzer möchte ich *Projekte zum System hinzufügen*, um *um eine bessere Übersicht zu haben*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Das Projekt erscheint in der Projektenliste
+  - Die Daten des Projekts werden in der Datenbank gespeichert
+
+##### Task 1.2.1.1 *GUI für Projekt hinzufügen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.2.1.2 *Projektdaten in der Datenbank speichern*
+
+- Aufwandsschätzung: 1 Stunde
+
+#### Implementable Story 1.2.2 *Projekt bearbeiten*
+
+> Als Nutzer möchte ich *Projekte im System bearbeiten*, um *Daten des Projekts zu aktualisieren*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Die aktualisierten Daten erscheinen auf dem Profil vom Projekt
+  - Die Daten des Projekts werden in der Datenbank aktualisiert
+
+##### Task 1.2.2.1 *GUI für Projekt bearbeiten*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.2.2.2 *Projektdaten in der Datenbank aktualisieren*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+#### Implementable Story 1.1.3 *Projekt löschen*
+
+> Als Nutzer möchte ich *Projekte aus dem System löschen*, um *irrelevante Projekte aus dem System zu entfernen*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Das Projekt erscheint nicht mehr in der Projektliste
+  - Die Daten des Projekts werden aus der Datenbank gelöscht
+  - Die zugeteilten Mitarbeiter für das Projekt werden vom Projekt entfernt
+  - Projekte die noch laufen können nicht entfernt werden
+
+##### Task 1.2.2.1 *Pop-up Meldung "Sind Sie sicher Sie wollen das Projekt xyz löschen?"*
+
+- Aufwandsschätzung: 0.2 Stunden
+
+##### Task 1.2.2.2 *Projektdaten aus der Datenbank löschen*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+##### Task 1.2.2.3 *Überprüfung ob das Projekt noch läuft*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+##### Task 1.2.2.4 *Zugeteilte Mitarbeiter vom Projekt entfernen*
+
+- Aufwandsschätzung: 1 Stunde
+
 ### Feature 1.3 *Mitarbeiter und ihre verfügbare Arbeitszeit hinzufügen*
 
 > Als *Nutzer* möchte ich *einen Mitarbeiter und seine Arbeitszeit in das System anlegen*, um *ihn optimal einsetzen zu können*.
@@ -49,6 +155,62 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Ein Mitarbeiter konnte angelegt werden.
   - Der Mitarbeiter ist in der Liste aller Mitarbeiter sichtbar.
   - Die verfügbare Wochenarbeitszeit ist ersichtlich.
+
+#### Implementable Story 1.3.1 *Mitarbeiter hinzufügen*
+
+> Als Nutzer möchte ich *Mitarbeiter zum System hinzufügen*, um *um eine bessere Übersicht über die Mitarbeiter zu haben*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Der Mitarbeiter erscheint in der Mitarbeiterliste
+  - Die Daten des Mitarbeiters werden in der Datenbank gespeichert
+
+##### Task 1.3.1.1 *GUI für Mitarbeiter hinzufügen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.3.1.2 *Mitarbeiterdaten in der Datenbank speichern*
+
+- Aufwandsschätzung: 1 Stunde
+
+#### Implementable Story 1.3.2 *Mitarbeiter bearbeiten*
+
+> Als Nutzer möchte ich *Mitarbeiter im System bearbeiten*, um *Daten des Mitarbeiters zu aktualisieren*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Die aktualisierten Daten erscheinen auf dem Profil vom Mitarbeiter
+  - Die Daten des Mitarbeiters werden in der Datenbank aktualisiert
+
+##### Task 1.3.2.1 *GUI für Mitarbeiter bearbeiten*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.3.2.2 *Mitarbeiterdaten in der Datenbank aktualisieren*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+#### Implementable Story 1.1.3 *Mitarbeiter löschen*
+
+> Als Nutzer möchte ich *Mitarbeiter aus dem System löschen*, um *Mitarbeiter zu löschen, die nicht mehr bei der Firma arbeiten*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Der Mitarbeiter erscheint nicht mehr in der Mitarbeiterliste
+  - Die Daten des Mitarbeiters werden aus der Datenbank gelöscht
+  - Der Mitarbeiter wird aus allen Projekten gelöscht, in denen er zugeteilt war
+
+##### Task 1.3.2.1 *Pop-up Meldung "Sind Sie sicher Sie wollen den Mitarbeiter xyz löschen?"*
+
+- Aufwandsschätzung: 0.2 Stunden
+
+##### Task 1.3.2.2 *Mitarbeiterdaten aus der Datenbank löschen*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+##### Task 1.3.2.3 *Mitarbeiter von zugeteilten Projekte entfernen*
+
+- Aufwandsschätzung: 1 Stunde
 
 ### Feature 1.4 *Mitarbeiter einem Projekt zuteilen oder entfernen*
 
@@ -61,6 +223,23 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Ein Mitarbeiter kann aus einem Projekt entfernt werden.
   - Der Mitarbeiter wird in der Liste der Mitarbeiter, die dem Projekt zugewiesen sind, angezeigt.
   - Die Gesamtkapazität an verfügbarer Arbeitszeit ist um den zugewiesenen Umfang gestiegen.
+
+#### Implementable Story 1.4.1 *Mitarbeiter einem Projekt zuteilen*
+
+> Als Nutzer möchte ich *Mitarbeiter zu Projekten zuteilen*, um *eine Übersicht über die Auslastungen der Projekte zu haben*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Der Mitarbeiter erscheint in der Liste der Mitarbeiter für das Projekt
+  - Nach der Zuteilung ist die verfügbare Arbeitszeit für das Projekt größer und für den Mitarbeiter kleiner
+
+##### Task 1.4.1.1 *Mitarbeiter zuteilen*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+##### Task 1.4.1.2 *Verfügbare Arbeitsstunden aktualisieren*
+
+- Aufwandsschätzung: 1 Stunde
 
 ### Feature 1.5 *Erfassung von geleisteten Aufwänden pro Mitarbeiter*
 
@@ -75,6 +254,23 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
     - Der entsprechende Mitarbeiter
   - Der insgesamt geleistete Aufwand ist entsprechend der erfassten Aufwände gestiegen.
 
+#### Implementable Story 1.5.1 *Mitarbeiter erfasst Arbeitszeiten*
+
+> Als Mitarbeiter möchte ich *meine Arbeitszeiten erfassen*, um *meinen Aufwand tracken zu können*
+
+- Aufwandsschätzung: 20 Story Points
+- Akzeptanztests:
+  - Der Mitarbeiter erscheint in der Liste der Mitarbeiter für das Projekt
+  - Nach der Zuteilung ist die verfügbare Arbeitszeit für das Projekt größer und für den Mitarbeiter kleiner
+
+##### Task 1.5.1.1 *Erfasster Aufwand in Datenbank speichern*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.5.1.2 *Bereits getätigter Aufwand in Projekten aktualisieren*
+
+- Aufwandsschätzung: 1 Stunde
+
 ### Feature 1.6 *Gesammelte Erfassung von geleisteten Aufwänden pro Mitarbeiter*
 
 > Als *Nutzer* möchte ich *gesammelte geleistete Arbeit ins System importieren*, um *alte Erfassungen in das neue System hinzuzufügen*.
@@ -83,6 +279,27 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Akzeptanztests:
   - Aufwände, die in einer CSV gesammelt wurden, konnten in die Anwendung übernommen werden.
   - Es wurden alle Informationen gespeichert, die auch bei der einzelnen Erfassung vorhanden sind.
+
+#### Implementable Story 1.6.1 *Import von erfassten Aufwänden*
+
+> Als Mitarbeiter möchte ich *bereits getätigten Aufwand aus einer CSV Datei importieren*, um *alte Erfassungen zum System hinzuzufügen*
+
+- Aufwandsschätzung: 20 Story Points
+- Akzeptanztests:
+  - Der Aufwand wird aus der CSV Datei in die Datenbank transferiert
+  - Es wird überprüft, ob die CSV Datei die richtige Struktur und Datentypen beinhält
+
+##### Task 1.6.1.1 *Daten aus CSV Datei lesen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.6.1.2 *Aufwand in Datenbank speichern*
+
+- Aufwandsschätzung: 1 Stunde
+
+##### Task 1.6.1.3 *Defensive Prüfung der CSV Datei (Struktur & Datentypen)*
+
+- Aufwandsschätzung: 2 Stunden
 
 ### Additional Feature 1.7 *Export der Aufwände für eine Rechnung*
 
@@ -97,6 +314,26 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
     - Der geleistete Aufwand
     - Der entsprechende Mitarbeiter
 
+#### Implementable Story 1.7.1 *Export einer Rechnung*
+
+> Als Mitarbeiter möchte ich *eine Rechnung für ein Projekt exportieren*, um *den Aufwand für das Projekt einschätzen zu können*
+
+- Aufwandsschätzung: 15 Story Points
+- Akzeptanztests:
+  - Der Aufwand in einer PDF geschrieben und exportiert
+
+##### Task 1.7.1.1 *Aufwand aus der Datenbank lesen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.7.1.2 *PDF Datei erzeugen*
+
+- Aufwandsschätzung: 0.5 Stunden
+
+##### Task 1.7.1.3 *PDF Datei anbieten zum runterladen*
+
+- Aufwandsschätzung: 1 Stunde
+
 ### Additional Feature 1.8 *Ergänzung der vorhandenen Kompetenzen für Mitarbeiter und Projekte*
 
 > Als *Mitarbeiter* möchte ich *zu einem Projekt oder Mitarbeiter Kompetenzen hinzufügen*, um *zu sehen welche Kompetenzen für Projekte fehlen*.
@@ -108,6 +345,41 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Kompetenzen können zum System hinzugefügt werden
   - Einsicht der hinzugefügten Kompetenzen
 
+#### Implementable Story 1.8.1 *Kompetenz hinzufügen*
+
+> Als Mitarbeiter möchte ich *eine Kompetenz zu einem Projekt oder Mitarbeiter hinzufügen*, damit *ich sehe welche Kompetenzen für Projekte fehlen*.
+
+- Aufwandsschätzung: 15 Story Points
+- Akzeptanztests:
+  - Die hinzugefügte Kompetenz ist in der Liste der Kompetenzen des Projekts/Mitarbeiters sichtbar
+  - Es kann nicht die gleiche Kompetenz 2 mal hinzugefügt werden
+  - Nachdem eine Kompetenz hinzugefügt wurde, werden fehlende Kompetenzen für Projekte und für die Firma geupdatet
+
+##### Task 1.7.1.1 *Kompetenz hinzufügen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.7.1.2 *Fehlende Kompetenzen für Projekte und Firma updaten*
+
+- Aufwandsschätzung: 2 Stunden
+
+#### Implementable Story 1.8.2 *Kompetenz entfernen*
+
+> Als Mitarbeiter möchte ich *eine Kompetenz von einem Projekt oder Mitarbeiter entfernen*, damit *ich sehe welche Kompetenzen für Projekte benötigt werden*.
+
+- Aufwandsschätzung: 15 Story Points
+- Akzeptanztests:
+  - Die hinzugefügte Kompetenz ist in der Liste der Kompetenzen des Projekts/Mitarbeiters nicht mehr sichtbar
+  - Nachdem eine Kompetenz entfernt wurde, werden fehlende Kompetenzen für Projekte und für die Firma geupdatet
+
+##### Task 1.8.2.1 *Kompetenz löschen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.8.2.2 *Fehlende Kompetenzen für Projekte und Firma updaten*
+
+- Aufwandsschätzung: 2 Stunden
+
 ### Additional Feature 1.9 *Auflistung benötigter Mitarbeiter im Unternehmen an Hand der benötigten Kompetenzen*
 
 > Als *Mitarbeiter* möchte ich *sehen können, welche Mitarbeiter in der Firma wie sehr gebraucht werden*, um *alle Projekte rechtzeitig bewältigen zu können*.
@@ -116,6 +388,23 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Akzeptanztests(intern):
   - Es werden die zusätzlich gebrauchten Mitarbeiter mit einem Bedarf Index angezeigt
   - Benötigen viele Projekte mit geringem Aufwand oder einzelne Projekte mit hohem Aufwand eine Kompetenz, ist der Bedarf hieran hoch.
+
+#### Implementable Story 1.9.1 *Empfehlung für benötigten Mitarbeiter*
+
+> Als *Mitarbeiter* möchte ich *sehen können, welche Mitarbeiter in der Firma wie sehr gebraucht werden*, um *alle Projekte rechtzeitig bewältigen zu können*
+
+- Aufwandsschätzung: 50 Story Points
+- Akzeptanztests:
+  - Es werden die zusätzlich gebrauchten Mitarbeiter mit einem Bedarf Index angezeigt
+  - Der Bedarfsindex wird richtig errechnet
+
+##### Task 1.9.1.1 *Bedarfsindex für neue Mitarbeiter errechnen*
+
+- Aufwandsschätzung: 5 Stunden
+
+##### Task 1.9.1.2 *Benötigten Mitarbeiter anzeigen*
+
+- Aufwandsschätzung: 2 Stunden
 
 ### Additional Feature 1.10 *Auswertung von Projektdaten*
 
