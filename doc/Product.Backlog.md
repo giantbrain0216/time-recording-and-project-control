@@ -417,6 +417,40 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Es wird angezeigt ob es zu Überstunden kommt
   - Ausgelastete bzw. nicht ausgelastete Mitarbeiter werden angezeigt und ein Verbesserungsvorschlag wird gemacht
 
+#### Implementable Story 1.10.1 *Anzeige ob alle Projekte bewältigt werden und ob es zu Überstunden kommt*
+
+> Als *Mitarbeiter* möchte ich *sehen ob aktuell alle Projekte bewältigt werden können und ob es für Mitarbeiter zu Überstunden kommt*, um *besser einschätzen zu können wie die aktuelle Lage ist*
+
+- Aufwandsschätzung: 30 Story Points
+- Akzeptanztests:
+  - Es wird angezeigt ob alle Projekte bewältigt werden können
+  - Es wird angezeigt ob es zu Überstunden kommt
+
+##### Task 1.10.1.1 *Berechnung ob alle Projekte rechtzeitig bewältigt werden*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.10.1.2 *Berechnung ob es zu Überstunden kommt*
+
+- Aufwandsschätzung: 4 Stunden
+
+#### Implementable Story 1.10.2 *Verbesserungsvorschläge für den optimalen Einsatz der Mitarbeiter machen*
+
+> Als *Leiter* möchte ich *Vorschläge bekommen, wie ich meine Mitarbeiter optimal einsetzen kann*, um *Kosten zu sparen und alle Projekte rechtzeitig zu bewältigen*
+
+- Aufwandsschätzung: 50 Story Points
+- Akzeptanztests:
+  - Es werden Verbesserungsvorschläge gemacht, wie die Mitarbeiter eingesetzt werden müssen
+  - Die Verbesserungsvorschläge müssen zu einer Kostenoptimierung oder zu einer Zeitoptimierung führen
+
+##### Task 1.10.2.1 *Berechnung für den optimalen Einsatz der Mitarbeiter*
+
+- Aufwandsschätzung: 20 Stunden
+
+##### Task 1.10.2.2 *GUI für die Verbesserungsvorschläge*
+
+- Aufwandsschätzung: 6 Stunden
+
 ### Additional Feature 1.11 *Erfassung der Aufwände aus einem Ticketsystem*
 
 > Als *Mitarbeiter* möchte ich *meine bearbeiteten Tickets ins System importieren*, um *sie direkt in meinem Aufwand zu erfassen*.
@@ -426,6 +460,28 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Tickets können aus einem Ticketsystem importiert werden
   - Der Aufwand für das Ticket wird automatisch in das System erfasst
   - Gegebener Task ist nach dem Import erledigt
+
+#### Implementable Story 1.11.1 *Import eines Tickets aus einem Ticketsystem*
+
+> Als *Mitarbeiter* möchte ich *meine bearbeiteten Tickets aus einem Ticketsystem importieren*, um *sie nicht nochmal separat erfassen zu müssen*
+
+- Aufwandsschätzung: 30 Story Points
+- Akzeptanztests:
+  - Tickets können aus einem Ticketsystem importiert werden
+  - Die Zeit für die Bearbeitung der Tickets ist in der Datenbank eingetragen worden
+  - Check ob der Mitarbeiter die Zeit nicht doppelt eingetragen hat(Ticket + manuell)
+
+##### Task 1.11.1.1 *Import der Daten aus einem Ticketsystem*
+
+- Aufwandsschätzung: 20 Stunden
+
+##### Task 1.11.1.2 *Eintragung der Daten in die Datenbank*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.11.1.3 *Überprüfung ob der Aufwand nicht bereits eingetragen wurde*
+
+- Aufwandsschätzung: 4 Stunden
 
 ### Feature 1.12 *Aufsetzen der Java Umgebung*
 
