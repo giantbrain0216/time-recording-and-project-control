@@ -492,6 +492,49 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Java Program muss auf dem Server ohne Probleme laufen
   - Man kann auf die Spring Boot API zugreifen
 
+#### Implementable Story 1.12.1 *RESTful API entwickeln*
+
+> Als *Entwickler* möchte ich *das Frontend entwickeln*, deswegen *muss ich bereits mit dem Backend kommunizieren können*
+
+- Aufwandsschätzung: 20 Story Points
+- Akzeptanztests:
+  - Es werden für die 4 Requests GET POST DELETE PUT Schnittstellen angeboten
+  - Die API kommuniziert dann mit der aufgesetzten Datenbank
+
+##### Task 1.12.1.1 *Schnittstelle implementieren*
+
+- Aufwandsschätzung: 10 Stunden
+
+##### Task 1.12.1.2 *Methoden schreiben für den Zugriff auf die Datenbank*
+
+- Aufwandsschätzung: 6 Stunden
+
+### Feature 1.13 *Aufsetzen der Datenbank*
+
+> Als *Entwickler* möchte ich *Daten in einer Datenbank speichern*, um später auf sie zugreifen zu können.
+
+- Aufwandsschätzung: [S]
+- Akzeptanztests(intern):
+  - Es müssen für alle Entitäten und noch zusätzlich gebrauchten Attribute Tabelle zu Speicherung der Daten erstellt werden
+  - Man muss von der Spring Boot API aus auf die Datenbank zugreifen können
+
+#### Implementable Story 1.13.1 *Aufsetzen der Datenbank*
+
+> Als *Entwickler* möchte ich *relevante Daten speichern*, deswegen *muss ich über eine Datenbank verfügen*
+
+- Aufwandsschätzung: 20 Story Points
+- Akzeptanztests:
+  - Es müssen für alle Entitäten und noch zusätzlich gebrauchten Attribute Tabelle zu Speicherung der Daten erstellt werden
+  - Man muss von der Spring Boot API aus auf die Datenbank zugreifen können
+
+##### Task 1.13.1.1 *Tabellen erstellen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 1.13.1.2 *Zugriff auf die Datenbank für das Backend erstellen*
+
+- Aufwandsschätzung: 6 Stunden
+
 
 
 
