@@ -4,8 +4,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import de.unistuttgart.iste.pe2.sopra.entities.Client;
-import de.unistuttgart.iste.pe2.sopra.entities.Employee;
+import entities.Client;
+import entities.Employee;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

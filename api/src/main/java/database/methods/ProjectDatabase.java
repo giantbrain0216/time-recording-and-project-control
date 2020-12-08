@@ -4,7 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import de.unistuttgart.iste.pe2.sopra.entities.Project;
+import entities.Project;
 
 import java.sql.Date;
 import java.sql.SQLException;

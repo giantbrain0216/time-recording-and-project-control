@@ -6,8 +6,8 @@ import database.methods.EmployeeDatabase;
 import entities.Employee;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,5 +47,29 @@ public class EmployeeController {
 
         return employeeDatabase.getAllEmployees();
     }
+
+    @DeleteMapping("/employees/{id}")
+    public Employee deleteEmployee(@PathVariable("id") Integer employeeID) {
+        Employee employee = employeeDatabase.getEmployee(employeeID);
+        employeeDatabase.deleteFromDatabase(employeeID);
+        return employee;
+    }
+
+    @PostMapping("/employees")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addEmployee(@RequestBody Employee requestBody){
+        try {
+            employeeDatabase.addToDatabase(requestBody);
+        }catch(SQLException e){
+            System.out.println(e);
+        }
+    }
+
+    @PutMapping("/employees/{id}")
+    public void updateEmployee(@RequestBody Employee requestBody){
+            employeeDatabase.modifyEmployeeData(requestBody);
+
+    }
 }
+
 
