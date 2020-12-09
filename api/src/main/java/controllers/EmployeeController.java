@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class EmployeeController {
 
     @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addEmployee(@RequestBody Employee requestBody){
+    public void addEmployee(@Valid @RequestBody Employee requestBody){
         try {
             employeeDatabase.addToDatabase(requestBody);
         }catch(SQLException e){
@@ -66,7 +67,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/employees/{id}")
-    public void updateEmployee(@RequestBody Employee requestBody){
+    public void updateEmployee(@Valid @RequestBody Employee requestBody){
             employeeDatabase.modifyEmployeeData(requestBody);
 
     }

@@ -3,6 +3,8 @@ package entities;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -15,12 +17,17 @@ import java.util.List;
 @DatabaseTable(tableName = "employees")
 public class Employee {
 
+    @NotNull
     @DatabaseField(id = true)
     private int employeeID;
 
+    @Size(min = 1, max = 40)
+    @NotNull
     @DatabaseField(canBeNull = false)
     private String name;
 
+    @NotNull
+    @Size(min = 1, max = 40)
     @DatabaseField(canBeNull = false)
     private String domicile;
 
