@@ -22,7 +22,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Nutzer möchte ich *Kunden zum System hinzufügen*, um *um eine bessere Übersicht zu haben*
 
-- Aufwandsschätzung: 10 Story Points
+- Aufwandsschätzung: 15 Story Points
 - Akzeptanztests:
   - Der Kunde erscheint in der Kundenliste
   - Die Daten des Kundens werden in der Datenbank gespeichert
@@ -39,7 +39,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Nutzer möchte ich *Kunden im System bearbeiten*, um *Daten des Kundens zu aktualisieren*
 
-- Aufwandsschätzung: 10 Story Points
+- Aufwandsschätzung: 15 Story Points
 - Akzeptanztests:
   - Die aktualisierten Daten erscheinen auf dem Profil des Kundens
   - Die Daten des Kundens werden in der Datenbank aktualisiert
@@ -106,7 +106,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Nutzer möchte ich *Projekte im System bearbeiten*, um *Daten des Projekts zu aktualisieren*
 
-- Aufwandsschätzung: 10 Story Points
+- Aufwandsschätzung: 15 Story Points
 - Akzeptanztests:
   - Die aktualisierten Daten erscheinen auf dem Profil vom Projekt
   - Die Daten des Projekts werden in der Datenbank aktualisiert
@@ -160,7 +160,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Nutzer möchte ich *Mitarbeiter zum System hinzufügen*, um *um eine bessere Übersicht über die Mitarbeiter zu haben*
 
-- Aufwandsschätzung: 10 Story Points
+- Aufwandsschätzung: 15 Story Points
 - Akzeptanztests:
   - Der Mitarbeiter erscheint in der Mitarbeiterliste
   - Die Daten des Mitarbeiters werden in der Datenbank gespeichert
@@ -177,7 +177,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Nutzer möchte ich *Mitarbeiter im System bearbeiten*, um *Daten des Mitarbeiters zu aktualisieren*
 
-- Aufwandsschätzung: 10 Story Points
+- Aufwandsschätzung: 15 Story Points
 - Akzeptanztests:
   - Die aktualisierten Daten erscheinen auf dem Profil vom Mitarbeiter
   - Die Daten des Mitarbeiters werden in der Datenbank aktualisiert
@@ -228,7 +228,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Nutzer möchte ich *Mitarbeiter zu Projekten zuteilen*, um *eine Übersicht über die Auslastungen der Projekte zu haben*
 
-- Aufwandsschätzung: 10 Story Points
+- Aufwandsschätzung: 15 Story Points
 - Akzeptanztests:
   - Der Mitarbeiter erscheint in der Liste der Mitarbeiter für das Projekt
   - Nach der Zuteilung ist die verfügbare Arbeitszeit für das Projekt größer und für den Mitarbeiter kleiner
@@ -258,7 +258,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Mitarbeiter möchte ich *meine Arbeitszeiten erfassen*, um *meinen Aufwand tracken zu können*
 
-- Aufwandsschätzung: 20 Story Points
+- Aufwandsschätzung: 30 Story Points
 - Akzeptanztests:
   - Der Mitarbeiter erscheint in der Liste der Mitarbeiter für das Projekt
   - Nach der Zuteilung ist die verfügbare Arbeitszeit für das Projekt größer und für den Mitarbeiter kleiner
@@ -318,7 +318,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Mitarbeiter möchte ich *eine Rechnung für ein Projekt exportieren*, um *den Aufwand für das Projekt einschätzen zu können*
 
-- Aufwandsschätzung: 15 Story Points
+- Aufwandsschätzung: 20 Story Points
 - Akzeptanztests:
   - Der Aufwand in einer PDF geschrieben und exportiert
 
@@ -349,7 +349,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Mitarbeiter möchte ich *eine Kompetenz zu einem Projekt oder Mitarbeiter hinzufügen*, damit *ich sehe welche Kompetenzen für Projekte fehlen*.
 
-- Aufwandsschätzung: 15 Story Points
+- Aufwandsschätzung: 10 Story Points
 - Akzeptanztests:
   - Die hinzugefügte Kompetenz ist in der Liste der Kompetenzen des Projekts/Mitarbeiters sichtbar
   - Es kann nicht die gleiche Kompetenz 2 mal hinzugefügt werden
@@ -367,7 +367,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 > Als Mitarbeiter möchte ich *eine Kompetenz von einem Projekt oder Mitarbeiter entfernen*, damit *ich sehe welche Kompetenzen für Projekte benötigt werden*.
 
-- Aufwandsschätzung: 15 Story Points
+- Aufwandsschätzung: 10 Story Points
 - Akzeptanztests:
   - Die hinzugefügte Kompetenz ist in der Liste der Kompetenzen des Projekts/Mitarbeiters nicht mehr sichtbar
   - Nachdem eine Kompetenz entfernt wurde, werden fehlende Kompetenzen für Projekte und für die Firma geupdatet
@@ -518,22 +518,18 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Es müssen für alle Entitäten und noch zusätzlich gebrauchten Attribute Tabelle zu Speicherung der Daten erstellt werden
   - Man muss von der Spring Boot API aus auf die Datenbank zugreifen können
 
-#### Implementable Story 1.13.1 *Aufsetzen der Datenbank*
+#### Implementable Story 1.13.1 *Tabellen erstellen*
 
-> Als *Entwickler* möchte ich *relevante Daten speichern*, deswegen *muss ich über eine Datenbank verfügen*
+> Als *Entwickler* möchte ich *Daten für alle Entitäten und mehr in einer Datenbank speichern*, deswegen *müssen Tabellen für alle Entitäten und mehr existieren*
 
-- Aufwandsschätzung: 20 Story Points
+- Aufwandsschätzung: 10 Story Points
 - Akzeptanztests:
-  - Es müssen für alle Entitäten und noch zusätzlich gebrauchten Attribute Tabelle zu Speicherung der Daten erstellt werden
-  - Man muss von der Spring Boot API aus auf die Datenbank zugreifen können
+  - Es werden für Kunden, Mitarbeiter und Projekte erstellt
+  - Zusätzliche Größen wie geleisteter Aufwand haben auch eine eigene Tabelle
 
 ##### Task 1.13.1.1 *Tabellen erstellen*
 
-- Aufwandsschätzung: 2 Stunden
-
-##### Task 1.13.1.2 *Zugriff auf die Datenbank für das Backend erstellen*
-
-- Aufwandsschätzung: 6 Stunden
+- Aufwandsschätzung: 10 Stunden
 
 
 
@@ -554,6 +550,23 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Alle erfassten Kunden können auf einen Blick eingesehen werden.
   - Die Detailansicht zu einem Kunden kann geöffnet werden. Es sind alle Kundendaten und die zugewiesenen Projekte einsehbar.
 
+#### Implementable Story 2.1.1 *Alle Kunden werden in einer Liste angezeigt*
+
+> Als *Benutzer* möchte ich *alle Kunden in einer Liste untereinander sehen*, um einen *Überblick über alle Kunden zu haben*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Alle Kunden die in der Datenbank gespeichert sind werden angezeigt
+  - Die Daten der Kunden werden richtig angezeigt
+
+##### Task 2.1.1.1 *Liste dynamisch befüllen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 2.1.1.2 *Detaillierte Anzeige von einem Kunde erstellen*
+
+- Aufwandsschätzung: 1 Stunde
+
 ### Feature 2.2 *Einsicht aller Projekte.*
 
 > Als *Nutzer* möchte ich *alle Projekte einsehen*, um *mir einen besseren Überblick zu verschaffen und um einschätzen zu können, ob Resourcen noch benötigt werden*.
@@ -566,6 +579,23 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Der insgesamt geplante Aufwand über alle Projekte wird angezeigt.
   - Die Projektliste kann speziell für einen Kunden angezeigt werden.
 
+#### Implementable Story 2.2.1 *Alle Projekte werden in einer Liste angezeigt*
+
+> Als *Benutzer* möchte ich *alle Projekte in einer Liste untereinander sehen*, um einen *Überblick über alle Projekte zu haben*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Alle Projekte die in der Datenbank gespeichert sind werden angezeigt
+  - Die Daten der Projekte werden richtig angezeigt
+
+##### Task 2.2.1.1 *Liste dynamisch befüllen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 2.2.1.2 *Detaillierte Anzeige von einem Projekt erstellen*
+
+- Aufwandsschätzung: 1 Stunde
+
 ### Feature 2.3 *Einsicht aller Mitarbeiter.*
 
 > Als *Nutzer* möchte ich *alle Mitarbeiter einsehen*, um *sie optimal einsetzen zu können*.
@@ -576,6 +606,23 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Sowohl die verfügbare Arbeitszeit, als auch die auf Projekte geplante Arbeitszeit ist ersichtlich.
   - Die insgesamt verfügbare Arbeitszeit über alle Mitarbeiter wird angezeigt.
 
+#### Implementable Story 2.3.1 *Alle Mitarbeiter werden in einer Liste angezeigt*
+
+> Als *Benutzer* möchte ich *alle Mitarbeiter in einer Liste untereinander sehen*, um einen *Überblick über alle Mitarbeiter zu haben*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Alle Mitarbeiter die in der Datenbank gespeichert sind werden angezeigt
+  - Die Daten der Mitarbeiter werden richtig angezeigt
+
+##### Task 2.3.1.1 *Liste dynamisch befüllen*
+
+- Aufwandsschätzung: 2 Stunden
+
+##### Task 2.3.1.2 *Detaillierte Anzeige von einem Mitarbeiter erstellen*
+
+- Aufwandsschätzung: 1 Stunde
+
 ### Additional Feature 2.4 *Visualisierung der Projektauslastung in Form von Charts*
 
 > Als *Mitarbeiter* möchte ich *die Projektauslastungen visualisiert bekommen*, um *besser zu verstehen wo Resourcen noch gebraucht werden und wo nicht*.
@@ -584,6 +631,23 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Akzeptanztests(intern):
   - Die dargestellten Informationen entsprechen genau den Daten aus der Datenbank.
   - Die Berechnungen für die verschiedenen Charts wurden richtig durchgeführt.
+
+#### Implementable Story 2.4.1 *Für jedes Projekt gibt es eine Visualisierung für die Projektauslastung*
+
+> Als *Benutzer* möchte ich *für jedes Projekt die Auslastung in Form von Charts sehen*, um ein *besseres Verständnis von der Auslastung zu bekommen*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Die visualisierten Daten stimmen mit den Daten aus der Datenbank überein
+  - Die Visualisierung ist einfach zu verstehen
+
+##### Task 2.4.1.1 *Charts erstellen*
+
+- Aufwandsschätzung: 1 Stunde
+
+##### Task 2.4.1.2 *Charts mit Daten befüllen*
+
+- Aufwandsschätzung: 1 Stunde
 
 
 ### Feature 2.5 *Vollständige GUI mit Menü und Searchbar*
@@ -594,3 +658,32 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 - Akzeptanztests(intern):
   - Die GUI ist übersichtlich und intuitiv
   - Die Webapp kann auch auf mobilen Endgeräten ohne Einschränkung genutzt werden
+
+#### Implementable Story 2.5.1 *Menü auf der linken Seite erstellen*
+
+> Als *Benutzer* möchte ich *ein Menü haben*, um *besser von einer Ansicht auf die andere zu wechseln*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Das Menü hat Knöpfe für alle Views
+  - Das Menü ist responsive und verschwindet wenn das Display zu klein ist
+
+##### Task 2.5.1.1 *Menü mit Knöpfe erstellen*
+
+- Aufwandsschätzung: 1 Stunde
+
+##### Task 2.5.1.2 *Das Menü responsive machen*
+
+- Aufwandsschätzung: 1 Stunde
+
+#### Implementable Story 2.5.2 *Searchbar oben erstellen*
+
+> Als *Benutzer* möchte ich *nach verschiedenen Suchen*, um *schneller an Informationen zu kommen*
+
+- Aufwandsschätzung: 10 Story Points
+- Akzeptanztests:
+  - Die Searchbar hat einen Searchfeld
+
+##### Task 2.5.2.1 *Searchbar erstellen*
+
+- Aufwandsschätzung: 1 Stunde
