@@ -214,7 +214,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 ### Feature 1.4 *Mitarbeiter einem Projekt zuteilen oder entfernen*
 
-> Als *Nutzer* möchte ich *einen Mitarbeiter einem Projekt zuordnen oder entfernen*, um *eine bessere Übersicht über die verschiedenen Projekten und Mitarbeiter zu haben.* .
+> Als *Nutzer* möchte ich *einen Mitarbeiter einem Projekt zuordnen oder entfernen*, um *eine bessere Übersicht über die verschiedenen Projekten und Mitarbeiter zu haben.* 
 
 - Aufwandsschätzung: [S]
 - Akzeptanztests:
@@ -485,7 +485,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 ### Feature 1.12 *Aufsetzen der Java Umgebung*
 
-> Als *Entwickler* möchte ich *an der Webapp programmieren*, deswegen muss die Java Umgebung mit Spring Boot RESTful API implementiert sein*.
+> Als *Entwickler* möchte ich *an der Webapp programmieren*, deswegen muss die Java Umgebung mit Spring Boot RESTful API implementiert sein.
 
 - Aufwandsschätzung: [S]
 - Akzeptanztests(intern):
@@ -567,7 +567,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: 1 Stunde
 
-### Feature 2.2 *Einsicht aller Projekte.*
+### Feature 2.2 *Einsicht aller Projekte*
 
 > Als *Nutzer* möchte ich *alle Projekte einsehen*, um *mir einen besseren Überblick zu verschaffen und um einschätzen zu können, ob Resourcen noch benötigt werden*.
 
@@ -596,7 +596,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: 1 Stunde
 
-### Feature 2.3 *Einsicht aller Mitarbeiter.*
+### Feature 2.3 *Einsicht aller Mitarbeiter*
 
 > Als *Nutzer* möchte ich *alle Mitarbeiter einsehen*, um *sie optimal einsetzen zu können*.
 
