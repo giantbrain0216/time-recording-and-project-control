@@ -233,7 +233,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
   - Der Mitarbeiter erscheint in der Liste der Mitarbeiter für das Projekt
   - Nach der Zuteilung ist die verfügbare Arbeitszeit für das Projekt größer und für den Mitarbeiter kleiner
 
-##### Task 1.4.1.1 *Mitarbeiter zuteilen*
+##### Task 1.4.1.1 *Mitarbeiter einem Projekt zuteilen*
 
 - Aufwandsschätzung: 0.5 Stunden
 
@@ -293,7 +293,7 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 - Aufwandsschätzung: 2 Stunden
 
-##### Task 1.6.1.2 *Aufwand in Datenbank speichern*
+##### Task 1.6.1.2 *Importierter Aufwand in Datenbank speichern*
 
 - Aufwandsschätzung: 1 Stunde
 
