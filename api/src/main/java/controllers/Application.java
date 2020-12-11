@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 public class Application {
-    protected ConnectionSource connectionSource;
+    public ConnectionSource connectionSource;
 
     public Application() throws SQLException {
         connectionSource = new JdbcConnectionSource("jdbc:mariadb://bilbao.informatik" +

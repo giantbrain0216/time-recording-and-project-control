@@ -2,9 +2,12 @@ package entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import controllers.Application;
+import database.methods.EmployeeDatabase;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -19,7 +22,7 @@ public class Employee {
 
     @NotNull
     @DatabaseField(id = true)
-    private int employeeID;
+    private Integer employeeID;
 
     @Size(min = 1, max = 40)
     @NotNull
@@ -38,9 +41,10 @@ public class Employee {
     private String projectIDs;
 
 
-    public Employee() {}
+    public Employee() {
+    }
 
-    public Employee(int id, String name, String domicile, String competences, String projectIDs) {
+    public Employee(Integer id, String name, String domicile, String competences, String projectIDs) {
         this.employeeID = id;
         this.name = name;
         this.domicile = domicile;
@@ -64,14 +68,6 @@ public class Employee {
         this.domicile = domicile;
     }
 
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCompetences() {
         return competences;
     }
@@ -93,6 +89,19 @@ public class Employee {
         this.projectIDs += "-" + projectID;
     }
 
+    public void removeProject(Integer projectIDToRemove){
+        if (!this.projectIDs.contains(projectIDToRemove.toString())) {
+            System.out.println("This employee does not have this competence");
+        }
+
+        if (this.projectIDs.contains(projectIDToRemove + "-")) {
+            this.projectIDs = this.competences.replace(projectIDToRemove + "-", "");
+        } else if (this.projectIDs.contains("-" + projectIDToRemove)) {
+            this.projectIDs = this.competences.replace("-" + projectIDToRemove, "");
+        } else {
+            this.projectIDs = "";
+        }
+    }
     /**
      * a competence will be removed from the list of competences of the employee.
      * If this competence the first saved competence and the employee has other
@@ -111,7 +120,7 @@ public class Employee {
         }
 
         if (this.competences.contains(competenceToRemove + "-")) {
-            this.competences =  this.competences.replace(competenceToRemove + "-", "");
+            this.competences = this.competences.replace(competenceToRemove + "-", "");
         } else if (this.competences.contains("-" + competenceToRemove)) {
             this.competences = this.competences.replace("-" + competenceToRemove, "");
         } else {
