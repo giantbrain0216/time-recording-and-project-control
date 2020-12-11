@@ -65,6 +65,7 @@ public class ClientDatabase {
         try {
             clientDAO.deleteById(clientID);
         } catch (SQLException e) {
+            e.printStackTrace();
             System.out.println("There is no client with the ID " + clientID);
         }
     }
@@ -78,7 +79,7 @@ public class ClientDatabase {
      *
      * @param clientWithNewData with the modified and updated data
      */
-    public void modifyEmployeeData(final Client clientWithNewData) {
+    public void modifyClientData(final Client clientWithNewData) {
         if (clientWithNewData == null) {
             throw new NullPointerException("Please enter a valid Employee");
         }

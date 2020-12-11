@@ -4,6 +4,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.Size;
+
 /**
  * Class representing a client which can have projects that will
  * be performed from the itestra society. A client has a name, ID
@@ -22,9 +24,11 @@ public class Client {
     private String name;
 
     @DatabaseField(canBeNull = false)
+    @Size(min = 5, max = 25)
     private String email;
 
     @DatabaseField(canBeNull = false)
+    @Size(min = 10, max = 40)
     private String telephoneNumber;
 
     @DatabaseField(canBeNull = false)
@@ -91,7 +95,7 @@ public class Client {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public Integer getContactPerson() {
+    public int getIDContactPerson() {
         return contactPersonID;
     }
 
