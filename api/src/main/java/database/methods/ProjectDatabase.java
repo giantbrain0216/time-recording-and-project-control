@@ -42,6 +42,21 @@ public class ProjectDatabase {
      * an exception will be thrown in the case another projets with the same number
      * occurs in the table.
      *
+     * @throws SQLException if the employee cannot be added.
+     */
+    public void addToDatabase() throws SQLException {
+        addToDatabase();
+    }
+
+    /**
+     * Adds the given employee to the table in the database,
+     * by storing all attributes in the respective cells.
+     * Preconditions : in the table there is no elements with the same number
+     * as the given project's
+     * Postconditions : The project has been added to the database. Otherwise
+     * an exception will be thrown in the case another projets with the same number
+     * occurs in the table.
+     *
      * @param projectToAdd must not be null and his number must be unique
      * @throws SQLException if the employee cannot be added.
      */

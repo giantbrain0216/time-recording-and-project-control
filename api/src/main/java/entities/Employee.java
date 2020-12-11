@@ -1,5 +1,6 @@
 package entities;
 
+import ch.qos.logback.classic.db.names.ColumnName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import controllers.Application;
@@ -21,32 +22,31 @@ import java.util.List;
 public class Employee {
 
     @NotNull
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true,columnName = "ID of the Employee")
     private Integer employeeID;
 
     @Size(min = 1, max = 40)
     @NotNull
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "Name")
     private String name;
 
     @NotNull
     @Size(min = 1, max = 40)
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "Domicile")
     private String domicile;
 
-    @DatabaseField(canBeNull = true)
+    @DatabaseField(columnName = "Competences")
     private String competences;
 
-    @DatabaseField(canBeNull = true)
+    @DatabaseField(columnName = "Project IDs")
+    @NotNull
     private String projectIDs;
 
 
-    public Employee() {
-    }
+    public Employee() {}
 
-    public Employee(Integer id, String name, String domicile, String competences, String projectIDs) {
-        this.employeeID = id;
-        this.name = name;
+    public Employee(String name, String domicile, String competences, String projectIDs) {
+         this.name = name;
         this.domicile = domicile;
         this.projectIDs = projectIDs;
         this.competences = competences.toUpperCase();

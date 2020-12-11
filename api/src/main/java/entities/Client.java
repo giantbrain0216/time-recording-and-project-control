@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -17,24 +18,27 @@ import javax.validation.constraints.Size;
 @DatabaseTable(tableName = "clients")
 public class Client {
 
-    @DatabaseField(id = true)
-    private Integer clientID;
+    @DatabaseField(generatedId  = true)
+    private int clientID;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "Name")
+    @NotNull
     private String name;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "E-Mail Address")
     @Size(min = 5, max = 25)
+    @NotNull
     private String email;
 
-    @DatabaseField(canBeNull = false)
-    @Size(min = 10, max = 40)
+    @DatabaseField(columnName = "Phone Number")
+    @Size(min = 8, max = 40)
+    @NotNull
     private String telephoneNumber;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "ID of the contact person")
     private Integer contactPersonID;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "IDs of the projects")
     private String projectIDs;
 
     public Client() {}
@@ -43,7 +47,6 @@ public class Client {
      * Constructor to create an object from type Client who can have
      * {@link Project} within the society.
      *
-     * @param clientID      which must be unique
      * @param name          of the client
      * @param email         to communicate with him. It will be verified before accepting it
      * @param telephoneNumber to contact him
@@ -51,7 +54,7 @@ public class Client {
      * @param projectIDs    which the client has in the society. It will be verified
      *                      because it must match the format "id-id-id-....-id"
      */
-    public Client(final Integer clientID, final String name, final String email, final String telephoneNumber,
+    public Client(final String name, final String email, final String telephoneNumber,
                   final Integer contactPersonID, final String projectIDs) {
         if (!email.contains("@")) {
             throw new IllegalArgumentException("The E-Mail is invalid ! ");
@@ -62,7 +65,6 @@ public class Client {
                         "seperated through the delimiter -");
             }
         }
-        this.clientID = clientID;
         this.name = name;
         this.contactPersonID = contactPersonID;
         this.email = email;

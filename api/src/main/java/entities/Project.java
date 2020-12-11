@@ -3,6 +3,7 @@ package entities;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.crypto.Data;
 import java.sql.Date;
 
@@ -18,52 +19,51 @@ import java.sql.Date;
 @DatabaseTable(tableName = "projects")
 public class Project {
 
-    @DatabaseField(id = true)
-    private Integer projectNumber;
+    @DatabaseField(generatedId = true,columnName = "Project number")
+    private int projectNumber;
 
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(columnName = "ID of the Client")
+    @NotNull
     private Integer clientID;
 
-    @DatabaseField
+    @DatabaseField(columnName = "planned Start")
     private Date plannedStart;
 
-    @DatabaseField
-    private Date  plannedEnd;
+    @DatabaseField(columnName = "planned End")
+    private Date plannedEnd;
 
-    @DatabaseField
+    @DatabaseField(columnName = "planned Effort")
     private Integer plannedEffort;
 
 
-    @DatabaseField
+    @DatabaseField(columnName = "performed Effort")
     private Integer performedEffort;
 
-    @DatabaseField
+    @DatabaseField(columnName = "Needed Competences")
     private String competences;
 
-    public Project() {}
+    public Project() {
+    }
 
     /**
      * Constructor to create an object from type Project who belongs a
      * {@link Client} and should be performed from the society.
      *
-     * @param projectNumber has to be unique
-     * @param clientID the owner of this project
-     * @param plannedStart date of start
-     * @param plannedEnd date of end
-     * @param plannedEffort effort to achieve
+     * @param clientID        the owner of this project
+     * @param plannedStart    date of start
+     * @param plannedEnd      date of end
+     * @param plannedEffort   effort to achieve
      * @param performedEffort effort that has been achieved
-     * @param competences needed to achieve this project
+     * @param competences     needed to achieve this project
      */
-    public Project(final Integer projectNumber, final Integer clientID, final Date plannedStart,
-                   final Date plannedEnd, final Integer plannedEffort, final Integer performedEffort
-            , final String competences) {
+    public Project(final Integer clientID, final Date plannedStart,
+                   final Date plannedEnd, final Integer plannedEffort, final Integer performedEffort, final String competences) {
         this.clientID = clientID;
         this.competences = competences;
         this.performedEffort = performedEffort;
         this.plannedStart = plannedStart;
         this.plannedEffort = plannedEffort;
         this.plannedEnd = plannedEnd;
-        this.projectNumber = projectNumber;
     }
 
     public Integer getProjectNumber() {

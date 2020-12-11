@@ -38,7 +38,7 @@ public class EmployeeDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Employee kevin = new Employee(6, "Assil", "Tunis", "CSS", "6");
+        Employee kevin = new Employee( "Assil", "Tunis", "CSS", "6");
         employeeDatabase.addToDatabase(kevin);
         Assert.assertEquals(6, employeeDatabase.getAllEmployees().size());
         Assert.assertEquals("CSS", employeeDatabase.getEmployee(6).getCompetences());
@@ -83,7 +83,7 @@ public class EmployeeDatabaseTest {
         assertEquals(5, employeeDatabase.getAllEmployees().size());
         employeeDatabase.deleteFromDatabase(2);
         assertEquals(4, employeeDatabase.getAllEmployees().size());
-        employeeDatabase.addToDatabase(new Employee(2, "Mohamed", "Stuttgart", "JAVA-JAVASCRIPT", "3"));
+        employeeDatabase.addToDatabase(new Employee( "Mohamed", "Stuttgart", "JAVA-JAVASCRIPT", "3"));
     }
 
 }
