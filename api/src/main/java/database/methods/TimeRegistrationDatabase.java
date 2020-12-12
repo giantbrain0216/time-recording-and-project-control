@@ -5,13 +5,10 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import controllers.Application;
-import controllers.TimeRegistration;
+import entities.TimeRegistration;
 import entities.Client;
-import entities.Employee;
-import entities.Project;
 
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

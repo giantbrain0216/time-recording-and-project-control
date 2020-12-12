@@ -38,19 +38,6 @@ public class EmployeeController {
      */
     @GetMapping("/employees")
     public List<Employee> getEmployees() {
-        JSONArray employeeArray = new JSONArray();
-        List<Employee> listOfEmployees = employeeDatabase.getAllEmployees();
-        for(Employee employee: listOfEmployees){
-            JSONObject jsonEmployee = new JSONObject();
-            jsonEmployee.put("name", employee.getName());
-            jsonEmployee.put("id", employee.getEmployeeID());
-            jsonEmployee.put("domicile", employee.getDomicile());
-            jsonEmployee.put("projects", employee.getProjectIDs());
-            jsonEmployee.put("competences", employee.getCompetences());
-            employeeArray.put(jsonEmployee);
-
-        }
-
         return employeeDatabase.getAllEmployees();
     }
 
@@ -61,7 +48,7 @@ public class EmployeeController {
      *  postcondition: correct employee is returned
      *
      * @param employeeID - The ID of the employee
-     * @return List of all Employees
+     * @return  Employee corresponding to the id
      */
     @GetMapping("/employees/{id}")
     public Employee getEmployee(@PathVariable("id") Integer employeeID) {

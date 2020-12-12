@@ -21,7 +21,6 @@ import java.util.List;
 @DatabaseTable(tableName = "employees")
 public class Employee {
 
-    @NotNull
     @DatabaseField(generatedId = true,columnName = "ID of the Employee")
     private Integer employeeID;
 
