@@ -9,6 +9,8 @@ import entities.Employee;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -48,7 +50,27 @@ public class ClientDatabase {
         if (clientToAdd == null) {
             throw new NullPointerException("Please enter a valid Employee");
         }
+        clientToAdd.setID(createID());
         clientDAO.create(clientToAdd);
+    }
+
+    /**
+     * Creates IDs in such a way that after deleting a client, for example,
+     * there are no gaps, but the ID whose client was deleted is assigned
+     * to another client to be added.
+     *
+     * @return ID of the client to be added.
+     */
+    private int createID() {
+        List<Client> listOfClients = this.getAllClients();
+        //  sort the list by ID
+        Collections.sort(listOfClients, Comparator.comparing(client -> client.getClientID()));
+        for (int i = 0; i < listOfClients.size(); i++) {
+            if (listOfClients.get(i).getClientID() != i + 1) {
+                return i + 1;
+            }
+        }
+        return listOfClients.size() + 1;
     }
 
     /**

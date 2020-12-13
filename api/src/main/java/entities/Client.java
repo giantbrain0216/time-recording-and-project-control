@@ -18,7 +18,8 @@ import javax.validation.constraints.Size;
 @DatabaseTable(tableName = "clients")
 public class Client {
 
-    @DatabaseField(generatedId  = true)
+    @DatabaseField
+    @NotNull
     private int clientID;
 
     @DatabaseField(columnName = "Name")
@@ -154,5 +155,9 @@ public class Client {
                 ", contactPersonID='" + contactPersonID + '\'' +
                 ", projectIDs='" + projectIDs + '\'' +
                 '}' +"\n";
+    }
+
+    public void setID(int id) {
+        this.clientID = id;
     }
 }
