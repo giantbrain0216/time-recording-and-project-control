@@ -4,9 +4,12 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import entities.Client;
 import entities.Employee;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -29,6 +32,25 @@ public class EmployeeDatabase {
         employeeDao = DaoManager.createDao(connectionSource, Employee.class);
         TableUtils.createTableIfNotExists(connectionSource, Employee.class);
     }
+
+    /**
+     * Creates IDs in such a way that after deleting an employee, for example,
+     * there are no gaps, but the ID whose employee was deleted is assigned
+     * to another employee to be added.
+     *
+     * @return ID of the employee to be added.
+     */
+    private int createID() {
+        List<Employee> listOfEmployees = this.getAllEmployees();
+        //  sort the list by ID
+        Collections.sort(listOfEmployees, Comparator.comparing(employee -> employee.getEmployeeID()));
+        for (int i = 0; i < listOfEmployees.size(); i++) {
+            if (listOfEmployees.get(i).getEmployeeID() != i + 1) {
+                return i + 1;
+            }
+        }
+        return listOfEmployees.size() + 1;
+    }
     /**
      * Adds the given employee to the table in the database,
      * by storing all attributes in the respective cells.
@@ -45,6 +67,7 @@ public class EmployeeDatabase {
         if (employee == null) {
             throw new NullPointerException("Please enter a valid Employee");
         }
+        employee.setID(createID());
         employeeDao.create(employee);
     }
 

@@ -21,7 +21,7 @@ import java.util.List;
 @DatabaseTable(tableName = "employees")
 public class Employee {
 
-    @DatabaseField(generatedId = true,columnName = "ID of the Employee")
+    @DatabaseField(columnName = "ID of the Employee")
     private Integer employeeID;
 
     @Size(min = 1, max = 40)
@@ -136,5 +136,9 @@ public class Employee {
                 ", competences='" + competences + '\'' +
                 ", projectIDs='" + projectIDs + '\'' +
                 '}' + "\n";
+    }
+
+    public void setID(int id) {
+        this.employeeID = id;
     }
 }
