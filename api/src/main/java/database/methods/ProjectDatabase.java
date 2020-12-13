@@ -4,11 +4,14 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import entities.Client;
 import entities.Project;
 
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -32,24 +35,28 @@ public class ProjectDatabase {
         projectDao = DaoManager.createDao(connectionSource, Project.class);
         TableUtils.createTableIfNotExists(connectionSource, Project.class);
     }
-
     /**
-     * Adds the given employee to the table in the database,
-     * by storing all attributes in the respective cells.
-     * Preconditions : in the table there is no elements with the same number
-     * as the given project's
-     * Postconditions : The project has been added to the database. Otherwise
-     * an exception will be thrown in the case another projets with the same number
-     * occurs in the table.
+     * Creates Project Numer in such a way that after deleting a project, for example,
+     * there are no gaps, but the project number whose project was deleted is assigned
+     * to another project to be added.
      *
-     * @throws SQLException if the employee cannot be added.
+     * @return ProjectNumber of the project to be added.
      */
-    public void addToDatabase() throws SQLException {
-        addToDatabase();
+    private int createProjectNumber() {
+        List<Project> listOfProjects = this.getAllProjects();
+        //  sort the list by ID
+        Collections.sort(listOfProjects, Comparator.comparing(project -> project.getProjectNumber()));
+        for (int i = 0; i < listOfProjects.size(); i++) {
+            if (listOfProjects.get(i).getProjectNumber() != i + 1) {
+                return i + 1;
+            }
+        }
+        return listOfProjects.size() + 1;
     }
 
+
     /**
-     * Adds the given employee to the table in the database,
+     * Adds the given project to the table in the database,
      * by storing all attributes in the respective cells.
      * Preconditions : in the table there is no elements with the same number
      * as the given project's
@@ -62,8 +69,9 @@ public class ProjectDatabase {
      */
     public void addToDatabase(Project projectToAdd) throws SQLException {
         if (projectToAdd == null) {
-            throw new NullPointerException("Please enter a valid Employee");
+            throw new NullPointerException("Please enter a valid Project");
         }
+        projectToAdd.setProjectNumber(createProjectNumber());
         projectDao.create(projectToAdd);
     }
 
@@ -114,7 +122,7 @@ public class ProjectDatabase {
      * @param projectNumber of the employee to return
      * @return project whose number matches the given one
      */
-    public Project getProjects(Integer projectNumber) {
+    public Project getProject(Integer projectNumber) {
         try {
             return projectDao.queryForId(projectNumber);
         } catch (SQLException e) {

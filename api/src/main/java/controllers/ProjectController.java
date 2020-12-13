@@ -3,19 +3,14 @@ package controllers;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import database.methods.EmployeeDatabase;
 import database.methods.ProjectDatabase;
-import entities.Employee;
 import entities.Project;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 
 @RestController
 public class ProjectController {
@@ -53,7 +48,7 @@ public class ProjectController {
      */
     @GetMapping("/projects/{id}")
     public Project getProject(@PathVariable("id") Integer employeeID) {
-        Project project = projectDatabase.getProjects(employeeID);
+        Project project = projectDatabase.getProject(employeeID);
         return project;
     }
 
@@ -68,7 +63,7 @@ public class ProjectController {
      */
     @DeleteMapping("/projects/{id}")
     public Project deleteProject(@PathVariable("id") Integer projectID) {
-        Project project = projectDatabase.getProjects(projectID);
+        Project project = projectDatabase.getProject(projectID);
         projectDatabase.deleteFromDatabase(projectID);
         return project;
     }

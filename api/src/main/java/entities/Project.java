@@ -114,4 +114,7 @@ public class Project {
         this.competences = competences;
     }
 
+    public void setProjectNumber(int projectNumber) {
+        this.projectNumber = projectNumber;
+    }
 }
