@@ -9,7 +9,8 @@ import java.sql.Date;
 @DatabaseTable(tableName = "Time Registration")
 public class TimeRegistration {
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField
+    @NotNull
     private int id;
 
     @DatabaseField(columnName = "ID of Employee")
@@ -36,7 +37,7 @@ public class TimeRegistration {
     }
 
 
-    public int getId() {
+    public int getID() {
         return id;
     }
 
@@ -70,5 +71,9 @@ public class TimeRegistration {
 
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 }

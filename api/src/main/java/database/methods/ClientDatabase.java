@@ -64,7 +64,7 @@ public class ClientDatabase {
     private int createID() {
         List<Client> listOfClients = this.getAllClients();
         //  sort the list by ID
-        Collections.sort(listOfClients, Comparator.comparing(client -> client.getClientID()));
+        Collections.sort(listOfClients, Comparator.comparing(Client::getClientID));
         for (int i = 0; i < listOfClients.size(); i++) {
             if (listOfClients.get(i).getClientID() != i + 1) {
                 return i + 1;

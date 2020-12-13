@@ -19,7 +19,7 @@ import java.sql.Date;
 @DatabaseTable(tableName = "projects")
 public class Project {
 
-    @DatabaseField(generatedId = true,columnName = "Project number")
+    @DatabaseField(columnName = "Project number")
     private int projectNumber;
 
     @DatabaseField(columnName = "ID of the Client")

@@ -11,6 +11,8 @@ import entities.Client;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class TimeRegistrationDatabase {
@@ -31,8 +33,28 @@ public class TimeRegistrationDatabase {
      * @param timeRegistrationToAdd to be added to the database
      */
 
+    /**
+     * Creates IDs in such a way that after deleting a TimeRegistratio, for example,
+     * there are no gaps, but the ID whose TimeRegistratio was deleted is assigned
+     * to another TimeRegistratio to be added.
+     *
+     * @return ID of the TimeRegistratio to be added.
+     */
+    private int createID() {
+        List<TimeRegistration> listOfTimeRegistration = this.getAllTimeRegistrations();
+        //  sort the list by ID
+        Collections.sort(listOfTimeRegistration, Comparator.comparing(TimeRegistration::getID));
+        for (int i = 0; i < listOfTimeRegistration.size(); i++) {
+            if (listOfTimeRegistration.get(i).getID() != i + 1) {
+                return i + 1;
+            }
+        }
+        return listOfTimeRegistration.size() + 1;
+    }
+
     public void addToDataBase(final TimeRegistration timeRegistrationToAdd) {
         try {
+            timeRegistrationToAdd.setID(createID());
             timeRegistrationDAO.create(timeRegistrationToAdd);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
