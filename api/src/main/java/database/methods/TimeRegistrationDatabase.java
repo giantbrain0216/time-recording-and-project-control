@@ -5,10 +5,13 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import controllers.Application;
+import entities.Employee;
+import entities.Project;
 import entities.TimeRegistration;
 import entities.Client;
 
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -135,20 +138,5 @@ public class TimeRegistrationDatabase {
             System.out.println("there is no elements in the database. ");
             return new ArrayList<>();
         }
-    }
-
-    public static void main(String[] args) throws SQLException {
-        Application application1 = new Application();
-        ClientDatabase clientDatabase = new ClientDatabase(application1.connectionSource);
-        Client client = new Client("Amazon","amazon@web.de","1234567",1,"1-3");
-        Client client1 = new Client("Teams","teams@web.de","7654321",2,"8");
-        Client client2= new Client("Google","google@web.de","13579864",1,"2-7-14");
-        clientDatabase.addToDatabase(client);
-      //  clientDatabase.addToDatabase(client2);
-        clientDatabase.addToDatabase(client1);
-        clientDatabase.addToDatabase(client2);
-
-
-
     }
 }

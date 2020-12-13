@@ -24,8 +24,6 @@ public class EmployeeDatabaseTest {
     public void setUp() throws SQLException {
         application = new Application();
         employeeDatabase = new EmployeeDatabase(application.connectionSource);
-//        Assert.assertEquals(4,employeeDatabase.getAllEmployees().size());
-
     }
 
     /**
@@ -38,14 +36,15 @@ public class EmployeeDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Employee kevin = new Employee( "Assil", "Tunis", "CSS", "6");
-        employeeDatabase.addToDatabase(kevin);
         Assert.assertEquals(6, employeeDatabase.getAllEmployees().size());
-        Assert.assertEquals("CSS", employeeDatabase.getEmployee(6).getCompetences());
-        Assert.assertEquals("6", employeeDatabase.getEmployee(6).getProjectIDs());
-        Assert.assertEquals("Assil", employeeDatabase.getEmployee(6).getName());
-        Assert.assertEquals("Tunis", employeeDatabase.getEmployee(6).getDomicile());
-        employeeDatabase.deleteFromDatabase(6);
+        Employee assil = new Employee( "Assil", "Tunis", "CSS", "6");
+        employeeDatabase.addToDatabase(assil);
+        Assert.assertEquals(7, employeeDatabase.getAllEmployees().size());
+        Assert.assertEquals("CSS", employeeDatabase.getEmployee(7).getCompetences());
+        Assert.assertEquals("6", employeeDatabase.getEmployee(7).getProjectIDs());
+        Assert.assertEquals("Assil", employeeDatabase.getEmployee(7).getName());
+        Assert.assertEquals("Tunis", employeeDatabase.getEmployee(7).getDomicile());
+        employeeDatabase.deleteFromDatabase(7);
     }
 
     /**
@@ -80,9 +79,9 @@ public class EmployeeDatabaseTest {
      */
     @Test
     public void deleteEmployeeDataTest() throws SQLException {
-        assertEquals(5, employeeDatabase.getAllEmployees().size());
+        assertEquals(6, employeeDatabase.getAllEmployees().size());
         employeeDatabase.deleteFromDatabase(2);
-        assertEquals(4, employeeDatabase.getAllEmployees().size());
+        assertEquals(5, employeeDatabase.getAllEmployees().size());
         employeeDatabase.addToDatabase(new Employee( "Mohamed", "Stuttgart", "JAVA-JAVASCRIPT", "3"));
     }
 

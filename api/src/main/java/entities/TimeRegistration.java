@@ -9,7 +9,7 @@ import java.sql.Date;
 @DatabaseTable(tableName = "Time Registration")
 public class TimeRegistration {
 
-    @DatabaseField
+    @DatabaseField(columnName = "ID",id = true)
     @NotNull
     private int id;
 

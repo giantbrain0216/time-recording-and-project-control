@@ -19,8 +19,8 @@ import java.sql.Date;
 @DatabaseTable(tableName = "projects")
 public class Project {
 
-    @DatabaseField(columnName = "Project number")
-    private int projectNumber;
+    @DatabaseField(columnName = "Project number", id=true)
+    private Integer projectNumber;
 
     @DatabaseField(columnName = "ID of the Client")
     @NotNull

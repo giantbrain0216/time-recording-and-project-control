@@ -18,9 +18,9 @@ import javax.validation.constraints.Size;
 @DatabaseTable(tableName = "clients")
 public class Client {
 
-    @DatabaseField
+    @DatabaseField(columnName ="ID of Client",id=true)
     @NotNull
-    private int clientID;
+    private Integer clientID;
 
     @DatabaseField(columnName = "Name")
     @NotNull
