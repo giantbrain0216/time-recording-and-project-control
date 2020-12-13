@@ -1,7 +1,7 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="customerSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 8 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
         <table class="table v-middle border">
           <thead>
@@ -12,18 +12,18 @@
             </tr>
           </thead>
           <tbody>
-          <tr v-for="customer in customers" :key="customer.id">
+          <tr v-for="employee in employees" :key="employee.id">
             <td>
               <div class="d-flex align-items-center">
-                <a @click="fetchCustomer(customer.id)"> <div class="mr-2"><vs-avatar color="primary" :text="customer.name"/></div></a>
+                <a @click="fetchEmployee(employee.id)"> <div class="mr-2"><vs-avatar color="primary" :text="employee.name"/></div></a>
                 <div class="">
-                  <a @click="fetchCustomer(customer.id)" class="m-b-0" style="cursor:pointer"> {{ customer.name }}</a>
+                  <a @click="fetchEmployee(employee.id)" class="m-b-0" style="cursor:pointer"> {{ employee.name }}</a>
                 </div>
               </div>
             </td>
-            <td>{{customer.id}}</td>
-            <td>{{customer.location }}</td>
-            <vs-button color="danger" type="filled">
+            <td>{{employee.id}}</td>
+            <td>{{employee.location }}</td>
+            <vs-button color="danger" type="filled" >
               Delete
             </vs-button>
           </tr>
@@ -31,21 +31,21 @@
         </table>
         </vs-card>
       </vs-col>
-      <vs-col v-if="customerSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
-        <vs-card v-show="customerSelected" class="cardx">
+      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
+        <vs-card v-show="employeeSelected" class="cardx">
           <div slot="header">
-            <h4>Details vom {{currentCustomer.name}}</h4>
+            <h4>Details</h4>
           </div>
           <div>
-            <p><strong>Name: </strong></p>
-            <p><strong></strong></p>
+            <h3>{{"Name:" + currentEmployee.name}}</h3>
+            <h3>ID: </h3>
             <h3>Location: </h3>
           </div>
         </vs-card>
       </vs-col>
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
+      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Employee</vs-button>
       <vs-prompt
-        title="Kunde Hinzufügen"
+        title="Mitarbeiter Hinzufügen"
         color="danger"
         @cancel="close"
         @accept="acceptAlert"
@@ -54,7 +54,7 @@
         :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
-          Bitte Kundendaten eingeben
+          Bitte Mitarbeiter Daten eingeben
           <vs-input placeholder="ID" class="mb-3" v-model="inputValues.idField" />
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Location" class="mb-3" v-model="inputValues.locationField"/>
@@ -75,16 +75,16 @@
 import axios from 'axios';
 
 export default {
-  name: "customerList",
+  name: "employeeList",
   data: () => {
     return {
-      customers: [
+      employees: [
         {id: 1, name: 'Clirim Salihi', location: 'Tangegartstr. 11'},
         {id: 2, name: 'Radu Manea', location: 'Kein plan wo' },
         {id: 3, name: 'Mohamed Ben Salha', location: 'i-wo :D'}
       ],
-      currentCustomer:{},
-      customerSelected:false,
+      currentEmployee:{},
+      EmployeeSelected:false,
       activePrompt:false,
       inputValues: {
         idField:'',
@@ -98,7 +98,7 @@ export default {
     axios.get(`http://localhost:8080/customers`)
         .then(response => {
           // JSON responses are automatically parsed.
-          this.customers = response.data
+          this.employees = response.data
         })
         .catch(e => {
           this.errors.push(e)
@@ -108,7 +108,7 @@ export default {
   },
 
   computed:{
-      validCustomer(){
+      validName(){
         return (this.inputValues.idField.length > 0 && this.inputValues.nameField.length > 0 && this.inputValues.locationField.length > 0)
       }
   },
@@ -130,8 +130,8 @@ export default {
         })
       },
 
-    fetchCustomer: function(id){
-      axios.get(`http://localhost:8080/customers`)
+    fetchEmployee: function(id){
+      axios.get(`http://localhost:8080/employees`)
           .then(response => {
             // JSON responses are automatically parsed.
             this.currentCustomer = response.data[id-1]
@@ -139,7 +139,7 @@ export default {
           .catch(e => {
             this.errors.push(e)
           })
-      this.customerSelected = true
+      this.employeeSelected = true
       //print("Working")
     }
 

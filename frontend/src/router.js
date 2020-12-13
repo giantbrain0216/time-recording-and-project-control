@@ -26,7 +26,7 @@ export default new Router({
                     index: 1,
                     component: () => import('./views/StarterPage.vue')
                 },{
-                    path: '/customerlist',
+                    path: '/customerList',
                     name: 'Customer List',
                     index: 2,
                     component: () => import('./views/components/sopra/customerList.vue')
