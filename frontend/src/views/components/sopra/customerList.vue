@@ -9,6 +9,7 @@
             <th class="border-top-0">Name</th>
             <th class="border-top-0">ID</th>
             <th class="border-top-0">Location</th>
+            <th class="border-top-0">-</th>
             </tr>
           </thead>
           <tbody>
@@ -23,9 +24,16 @@
             </td>
             <td>{{customer.id}}</td>
             <td>{{customer.location }}</td>
-            <vs-button color="danger" type="filled">
-              Delete
-            </vs-button>
+            <td>
+              <div>
+                <vs-button class="m-1" color="danger" type="filled">
+                  Delete
+                </vs-button>
+                <vs-button class="m-1" color="primary" type="filled">
+                  Edit
+                </vs-button>
+              </div>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -37,8 +45,8 @@
             <h4>Details vom {{currentCustomer.name}}</h4>
           </div>
           <div>
-            <p><strong>Name: </strong></p>
-            <p><strong></strong></p>
+            <p><strong>Name: </strong>{{currentCustomer.name}}</p>
+            <p><strong>ID: </strong>{{currentCustomer.id}}</p>
             <h3>Location: </h3>
           </div>
         </vs-card>
@@ -109,7 +117,10 @@ export default {
 
   computed:{
       validCustomer(){
-        return (this.inputValues.idField.length > 0 && this.inputValues.nameField.length > 0 && this.inputValues.locationField.length > 0)
+        return (this.inputValues.idField.length > 0
+                && this.inputValues.nameField.length > 0
+                && this.inputValues.locationField.length > 0
+                )
       }
   },
 
