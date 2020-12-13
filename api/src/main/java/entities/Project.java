@@ -98,7 +98,7 @@ public class Project {
         this.plannedEffort = plannedEffort;
     }
 
-    public Integer getPerformedEffort() {
+    public int getPerformedEffort() {
         return performedEffort;
     }
 
@@ -110,8 +110,39 @@ public class Project {
         return competences;
     }
 
-    public void setCompetences(String competences) {
-        this.competences = competences;
+    public void addCompetence(String competence) {
+        if (!this.competences.equals("")) {
+            this.competences += "-" + competence.toUpperCase();
+        } else {
+            this.competences = competence.toUpperCase();
+        }
+
+    }
+
+    /**
+     * a competence will be removed from the list of competences of the project.
+     * If this competence the first saved competence and the project has other
+     * competences, then both the competence and the delimiter symbol after it will be removed.
+     * if the project has many competences then both the competence and the delimiter
+     * symbol before it will be removed, else the project has only this competence and
+     * after removing it he will have no qualities more
+     *
+     * @param competenceToRemove competence to be removed from the list
+     *                           of competences of the project
+     */
+    public void removeCompetence(String competenceToRemove) {
+        competenceToRemove = competenceToRemove.toUpperCase();
+        if (!this.competences.contains(competenceToRemove)) {
+            System.out.println("This project does not have this competence");
+        }
+
+        if (this.competences.contains(competenceToRemove + "-")) {
+            this.competences = this.competences.replace(competenceToRemove + "-", "");
+        } else if (this.competences.contains("-" + competenceToRemove)) {
+            this.competences = this.competences.replace("-" + competenceToRemove, "");
+        } else {
+            this.competences = "";
+        }
     }
 
     public void setProjectNumber(int projectNumber) {

@@ -68,6 +68,7 @@ public class EmployeeDatabaseTest {
         mohamed.setDomicile("Stuttgart");
         mohamed.addCompetence("JAVASCRIPT");
         mohamed.removeProject(5);
+        employeeDatabase.modifyEmployeeData(mohamed);
     }
 
     /**
