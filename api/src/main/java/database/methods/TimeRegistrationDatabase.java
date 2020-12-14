@@ -25,15 +25,6 @@ public class TimeRegistrationDatabase {
         TableUtils.createTableIfNotExists(connectionSource, TimeRegistration.class);
     }
 
-    /**
-     * Adds the given time registration to the table in the database,
-     * by storing all attributes in the respective cells.
-     * Preconditions : in the table there is no elements with the same number
-     * as the given project's
-     * Postconditions : The time registration has been added to the database.      *
-     *
-     * @param timeRegistrationToAdd to be added to the database
-     */
 
     /**
      * Creates IDs in such a way that after deleting a TimeRegistratio, for example,
@@ -54,13 +45,22 @@ public class TimeRegistrationDatabase {
         return listOfTimeRegistration.size() + 1;
     }
 
-    public void addToDataBase(final TimeRegistration timeRegistrationToAdd) {
-        try {
-            timeRegistrationToAdd.setID(createID());
-            timeRegistrationDAO.create(timeRegistrationToAdd);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    /**
+     * Adds the given time registration to the table in the database,
+     * by storing all attributes in the respective cells.
+     * Preconditions : in the table there is no elements with the same number
+     * as the given project's
+     * Post conditions : The time registration has been added to the database.
+     *
+     * @param timeRegistrationToAdd to be added to the database
+     * @return ID of the time registration that has been added for testing purposes
+     * @throws SQLException if the time registration cannot be added.
+     */
+    public int addToDataBase(final TimeRegistration timeRegistrationToAdd) throws SQLException {
+        int timeRegistrationToAddID = createID();
+        timeRegistrationToAdd.setID(timeRegistrationToAddID);
+        timeRegistrationDAO.create(timeRegistrationToAdd);
+        return timeRegistrationToAddID;
     }
 
     /**
@@ -137,28 +137,5 @@ public class TimeRegistrationDatabase {
             System.out.println("there is no elements in the database. ");
             return new ArrayList<>();
         }
-    }
-
-    public static void main(String[] args) throws SQLException {
-        Application application1 = new Application();
-        /*ClientDatabase clientDatabase = new ClientDatabase(application1.connectionSource);
-        Client client = new Client("Amazon","amazon@web.de","1234567",1,"1-3");
-        Client client1 = new Client("Teams","teams@web.de","7654321",2,"8");
-        Client client2= new Client("Google","google@web.de","13579864",1,"2-7-14");
-        clientDatabase.addToDatabase(client);
-        //  clientDatabase.addToDatabase(client2);
-        clientDatabase.addToDatabase(client1);
-        clientDatabase.addToDatabase(client2);
-        clientDatabase.deleteFromDatabase(2);*/
-
-        ProjectDatabase projectDatabase = new ProjectDatabase(application1.connectionSource);
-        Project project = new Project(33, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 300, 14, "JAVA");
-        Project projectt = new Project(21, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 268, 14, "HTML");
-        projectDatabase.addToDatabase(projectt)
-        ; projectDatabase.addToDatabase(project);
-
-
     }
 }

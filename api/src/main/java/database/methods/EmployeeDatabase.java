@@ -6,6 +6,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import entities.Client;
 import entities.Employee;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +52,7 @@ public class EmployeeDatabase {
         }
         return listOfEmployees.size() + 1;
     }
+
     /**
      * Adds the given employee to the table in the database,
      * by storing all attributes in the respective cells.
@@ -61,14 +63,18 @@ public class EmployeeDatabase {
      * occurs in the table.
      *
      * @param employee must not be null and his ID must be unique
+     * @return ID of the employee that has been added for testing purposes
      * @throws SQLException if the employee cannot be added.
      */
-    public void addToDatabase(Employee employee) throws SQLException {
+    public int addToDatabase(Employee employee) throws SQLException {
         if (employee == null) {
             throw new NullPointerException("Please enter a valid Employee");
         }
-        employee.setID(createID());
+        int employeeToAddID = createID();
+        ;
+        employee.setID(employeeToAddID);
         employeeDao.create(employee);
+        return employeeToAddID;
     }
 
     /**

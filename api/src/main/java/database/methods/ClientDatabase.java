@@ -44,14 +44,17 @@ public class ClientDatabase {
      * occurs in the table.
      *
      * @param clientToAdd must not be null and his ID must be unique
+     * @return ID of the client that has been added for testing purposes
      * @throws SQLException if the client cannot be added.
      */
-    public void addToDatabase(Client clientToAdd) throws SQLException {
+    public int addToDatabase(Client clientToAdd) throws SQLException {
         if (clientToAdd == null) {
             throw new NullPointerException("Please enter a valid Employee");
         }
-        clientToAdd.setID(createID());
+        int clientToAddID = createID();
+        clientToAdd.setID(clientToAddID);
         clientDAO.create(clientToAdd);
+        return clientToAddID;
     }
 
     /**

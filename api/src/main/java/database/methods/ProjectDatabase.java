@@ -35,6 +35,7 @@ public class ProjectDatabase {
         projectDao = DaoManager.createDao(connectionSource, Project.class);
         TableUtils.createTableIfNotExists(connectionSource, Project.class);
     }
+
     /**
      * Creates Project Numer in such a way that after deleting a project, for example,
      * there are no gaps, but the project number whose project was deleted is assigned
@@ -65,14 +66,17 @@ public class ProjectDatabase {
      * occurs in the table.
      *
      * @param projectToAdd must not be null and his number must be unique
+     * @return ID of the project that has been added for testing purposes
      * @throws SQLException if the employee cannot be added.
      */
-    public void addToDatabase(Project projectToAdd) throws SQLException {
+    public int addToDatabase(Project projectToAdd) throws SQLException {
         if (projectToAdd == null) {
             throw new NullPointerException("Please enter a valid Project");
         }
-        projectToAdd.setProjectNumber(createProjectNumber());
+        int projectToAddID = createProjectNumber();
+        projectToAdd.setProjectNumber(projectToAddID);
         projectDao.create(projectToAdd);
+        return projectToAddID;
     }
 
     /**
