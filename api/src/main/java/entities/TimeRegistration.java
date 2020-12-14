@@ -10,7 +10,6 @@ import java.sql.Date;
 public class TimeRegistration {
 
     @DatabaseField(columnName = "ID",id = true)
-    @NotNull
     private int id;
 
     @DatabaseField(columnName = "ID of Employee")

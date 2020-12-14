@@ -19,7 +19,6 @@ import javax.validation.constraints.Size;
 public class Client {
 
     @DatabaseField(columnName ="ID of Client",id=true)
-    @NotNull
     private Integer clientID;
 
     @DatabaseField(columnName = "Name")
