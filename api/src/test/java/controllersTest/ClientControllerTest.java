@@ -7,8 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -23,6 +25,32 @@ public class ClientControllerTest {
     private MockMvc mockMvc;
 
 
+
+    private int createMockObject(){
+        String requestBody = " {\"name\": \"Muster Firma\" , \"email\": \"muster@web.de\", " +
+                "\"telephoneNumber\": " +
+                "\"1111222111\"," + " \"contactPersonID\": 2, \"projectIDs\": \"1-3\"} ";
+        try {
+            MvcResult result =
+                    this.mockMvc.perform(post("/clients").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andReturn();
+            Integer id = Integer.parseInt(result.getResponse().getContentAsString());
+           return id;
+
+        }catch(Exception e){
+            System.out.println("Mock Object could not be created");
+            return 0;
+        }
+    }
+
+    private void deleteMockObject(int id){
+        try {
+            this.mockMvc.perform(delete("/clients/" + String.valueOf(id)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * Test the Rest API GET Method for all clients
      *
@@ -30,8 +58,10 @@ public class ClientControllerTest {
      */
     @Test
     public void getAllClientsTest() throws Exception {
+        int id = createMockObject();
         this.mockMvc.perform(get("/clients")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Muster Firma")));
+        deleteMockObject(id);
     }
 
     /**
@@ -41,27 +71,24 @@ public class ClientControllerTest {
      */
     @Test
     public void getClientTest() throws Exception {
-
-        this.mockMvc.perform(get("/clients/1")).andDo(print()).andExpect(status().isOk())
+        int id = createMockObject();
+        this.mockMvc.perform(get("/clients/" + String.valueOf(id))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Muster Firma")));
+        deleteMockObject(id);
     }
 
     /**
      * Test the Rest API DELETE Method
      *
-     * First deletes the client and after it adds the deleted client so that further testing is possible
+     * Tries to delete the mock object
      *
      * @throws Exception
      */
     @Test
     public void deleteClientTest() throws Exception {
-        this.mockMvc.perform(delete("/clients/1")).andDo(print()).andExpect(status().isOk())
+        int id = createMockObject();
+        this.mockMvc.perform(delete("/clients/" + String.valueOf(id))).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Muster Firma")));
-        String requestBody = " {\"name\": \"Muster Firma\",\"email\": \"muster@web.de\",  \"telephoneNumber\": " +
-                "\"1111111111," +
-                " " + " \"contactPersonID\": 2, \"projectIDs\": \"3\"} ";
-        this.mockMvc.perform(post("/clients").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andExpect(status().isCreated());
-
     }
 
     /**
@@ -73,10 +100,9 @@ public class ClientControllerTest {
      */
     @Test
     public void addClientTest() throws Exception {
-        String requestBody = " {\"name\": \"Muster Firma 2\" , \"email\": \"muster@web.de\", \"telephoneNumber\": " +
-                "\"1111222111\"," + " \"contactPersonID\": 2, \"projectIDs\": \"1-3\"} ";
-        this.mockMvc.perform(post("/clients").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isCreated());
-        this.mockMvc.perform(delete("/employees/9999")).andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("Test Employee")));
+        int id = createMockObject();
+        assertTrue(0!=id);
+        deleteMockObject(id);
 
     }
 
@@ -90,15 +116,16 @@ public class ClientControllerTest {
      */
     @Test
     public void modifyClientTest() throws Exception {
-        String requestBody = " {\"email\": \"muster@web.de\", \"name\": \"ModifyTest#2383832\", \"telephoneNumber\": " +
-                "\"1111111111\"," +
-                " \"contactPersonID\": 2, \"projectIDs\": \"3\"} ";
+        int id =createMockObject();
+        String requestBody = " {\"clientID\":"+ String.valueOf(id) +",\"email\": \"muster@web.de\", \"name\": " +
+                "\"ModifyTest#2383832\", " +
+                "\"telephoneNumber\": " +
+                "\"1111222111\"," +
+                " \"contactPersonID\": 2, \"projectIDs\": \"1-3\"} ";
         this.mockMvc.perform(put("/clients").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/clients")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("ModifyTest#2383832")));
-        this.mockMvc.perform(put("/clients").contentType(MediaType.APPLICATION_JSON).content(requestBody.replace(
-                "ModifyTest#2383832","Muster Firma"))).andDo(print()).andExpect(status().isOk());
-
+        deleteMockObject(id);
     }
 
 

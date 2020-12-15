@@ -97,11 +97,11 @@ public class Client {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public int getIDContactPerson() {
+    public int getContactPersonID() {
         return contactPersonID;
     }
 
-    public void setContactPerson(Integer contactPersonID) {
+    public void setContactPersonID(Integer contactPersonID) {
         this.contactPersonID = contactPersonID;
     }
 

@@ -82,11 +82,12 @@ public class EmployeeController {
      */
     @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addEmployee(@Valid @RequestBody Employee requestBody){
+    public int addEmployee(@Valid @RequestBody Employee requestBody){
         try {
-            employeeDatabase.addToDatabase(requestBody);
+            return employeeDatabase.addToDatabase(requestBody);
         }catch(SQLException e){
             System.out.println(e);
+            return 0;
         }
     }
 

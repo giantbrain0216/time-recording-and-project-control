@@ -80,8 +80,12 @@ public class TimeRegistrationController {
      */
     @PostMapping("/timeregistrations")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addTimeRegistration(@Valid @RequestBody TimeRegistration timeRegistration){
+    public void addTimeRegistration(@Valid @RequestBody TimeRegistration timeRegistration) {
+        try {
             timeregistrationDatabase.addToDataBase(timeRegistration);
+        }catch(SQLException e){
+            System.out.println(e);
+        }
     }
 
     /**

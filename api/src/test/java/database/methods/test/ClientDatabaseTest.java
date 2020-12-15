@@ -3,7 +3,6 @@ package database.methods.test;
 import controllers.Application;
 import database.methods.ClientDatabase;
 import entities.Client;
-import entities.Employee;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,8 +58,8 @@ public class ClientDatabaseTest {
         Client amazon = clientDatabase.getClient(1);
         Assert.assertEquals("amazon@web.de", amazon.getEmail());
         Assert.assertEquals("1234567", amazon.getTelephoneNumber());
-        Assert.assertEquals(1, amazon.getIDContactPerson());
-        amazon.setContactPerson(2);
+        Assert.assertEquals(1, amazon.getContactPersonID());
+        amazon.setContactPersonID(2);
         amazon.addProject(5);
         amazon.setEmail("amazon2020@web.de");
         amazon.setTelephoneNumber("789987789");
@@ -68,11 +67,11 @@ public class ClientDatabaseTest {
         // amazon = clientDatabase.getClient(1);
         Assert.assertEquals("amazon2020@web.de", amazon.getEmail());
         Assert.assertEquals("789987789", amazon.getTelephoneNumber());
-        Assert.assertEquals(2, amazon.getIDContactPerson());
+        Assert.assertEquals(2, amazon.getContactPersonID());
         Assert.assertTrue(amazon.getProjectIDs().contains("5"));
 
         // Reset all data as it was before the test
-        amazon.setContactPerson(1);
+        amazon.setContactPersonID(1);
         amazon.deleteProject(5);
         amazon.setEmail("amazon@web.de");
         amazon.setTelephoneNumber("1234567");

@@ -77,11 +77,12 @@ public class ClientController {
      */
     @PostMapping("/clients")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addClient(@Valid @RequestBody Client requestBody){
+    public int addClient(@Valid @RequestBody Client requestBody){
         try {
-            clientDatabase.addToDatabase(requestBody);
+            return clientDatabase.addToDatabase(requestBody);
         }catch(SQLException e){
             System.out.println(e);
+            return 0;
         }
     }
 

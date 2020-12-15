@@ -78,11 +78,12 @@ public class ProjectController {
      */
     @PostMapping("/projects")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addProject(@Valid @RequestBody Project requestBody){
+    public int addProject(@Valid @RequestBody Project requestBody){
         try {
-            projectDatabase.addToDatabase(requestBody);
+            return projectDatabase.addToDatabase(requestBody);
         }catch(SQLException e){
             System.out.println(e);
+            return 0;
         }
     }
 
