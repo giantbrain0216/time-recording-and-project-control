@@ -27,24 +27,23 @@ public class EmployeeDatabaseTest {
     }
 
     /**
-     * This method tests whether an object can be successfully created in the
-     * database by checking after the insertion whether the size of the list has
-     * increased by 1 and whether the data of the added employee is stored in the
-     * correct columns.
+     * This method tests whether an object can be successfully added in the
+     * database by checking after the insertion whether the employee
+     * has been added to the list of all employees whether the data of the added
+     * employee is stored in the correct columns.
      *
      * @throws SQLException if the employee has not been added
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Assert.assertEquals(6, employeeDatabase.getAllEmployees().size());
-        Employee assil = new Employee( "Assil", "Tunis", "CSS", "6");
-        employeeDatabase.addToDatabase(assil);
-        Assert.assertEquals(7, employeeDatabase.getAllEmployees().size());
-        Assert.assertEquals("CSS", employeeDatabase.getEmployee(7).getCompetences());
-        Assert.assertEquals("6", employeeDatabase.getEmployee(7).getProjectIDs());
-        Assert.assertEquals("Assil", employeeDatabase.getEmployee(7).getName());
-        Assert.assertEquals("Tunis", employeeDatabase.getEmployee(7).getDomicile());
-        employeeDatabase.deleteFromDatabase(7);
+        Employee employeeToAdd = new Employee("Assil", "Tunis", "CSS", "6");
+        employeeDatabase.addToDatabase(employeeToAdd);
+        Assert.assertEquals("CSS", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getCompetences());
+        Assert.assertEquals("6", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getProjectIDs());
+        Assert.assertEquals("Assil", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getName());
+        Assert.assertEquals("Tunis", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getDomicile());
+//        Assert.assertTrue(employeeDatabase.getAllEmployees().contains(employeeToAdd));
+        employeeDatabase.deleteFromDatabase(employeeToAdd.getEmployeeID());
     }
 
     /**
@@ -53,37 +52,37 @@ public class EmployeeDatabaseTest {
      * been saved in the database and the old one has been overwritten.
      */
     @Test
-    public void modifyEmployeeDataTest() {
-        Employee mohamed = employeeDatabase.getEmployee(2);
-        assertEquals("Stuttgart", mohamed.getDomicile());
-        assertTrue(mohamed.getCompetences().contains("JAVASCRIPT"));
-        mohamed.setDomicile("Tunis");
-        mohamed.addProject(5);
-        mohamed.removeCompetence("JAVASCRIPT");
-        employeeDatabase.modifyEmployeeData(mohamed);
-        assertTrue(mohamed.getProjectIDs().contains("5"));
-        assertNotEquals("Stuttgart", mohamed.getDomicile());
-        assertEquals("Tunis", mohamed.getDomicile());
-        assertFalse(mohamed.getCompetences().contains("JAVASCRIPT"));
-        mohamed.setDomicile("Stuttgart");
-        mohamed.addCompetence("JAVASCRIPT");
-        mohamed.removeProject(5);
-        employeeDatabase.modifyEmployeeData(mohamed);
+    public void modifyEmployeeDataTest() throws SQLException {
+        Employee employeeToModify = new Employee("Test", "Tunis", "HTML", "6");
+        employeeDatabase.addToDatabase(employeeToModify);
+        assertEquals("Tunis", employeeToModify.getDomicile());
+        assertTrue(employeeToModify.getCompetences().contains("HTML"));
+        employeeToModify.setDomicile("Stuttgart");
+        employeeToModify.addProject(5);
+        employeeToModify.addCompetence("JAVASCRIPT");
+        employeeDatabase.modifyEmployeeData(employeeToModify);
+        assertTrue(employeeToModify.getProjectIDs().contains("5"));
+        assertEquals("Stuttgart", employeeToModify.getDomicile());
+        assertNotEquals("Tunis", employeeToModify.getDomicile());
+        assertTrue(employeeToModify.getCompetences().contains("JAVASCRIPT"));
+        employeeDatabase.deleteFromDatabase(employeeToModify.getEmployeeID());
     }
 
     /**
      * This method tests whether an object can be successfully deleted from the
-     * database by checking after the deletion whether the size of the list has
-     * decreased by 1.
+     * database by checking after the deletion whether the employee
+     * exists in the database 
      *
      * @throws SQLException if the employee has not been deleted
      */
     @Test
     public void deleteEmployeeDataTest() throws SQLException {
-        assertEquals(6, employeeDatabase.getAllEmployees().size());
-        employeeDatabase.deleteFromDatabase(2);
-        assertEquals(5, employeeDatabase.getAllEmployees().size());
-        employeeDatabase.addToDatabase(new Employee( "Mohamed", "Stuttgart", "JAVA-JAVASCRIPT", "3"));
+        Employee employeeToDelete = new Employee("Test", "Tunis", "HTML", "6");
+        employeeDatabase.addToDatabase(employeeToDelete);
+        assertTrue(employeeDatabase.getAllEmployees().contains(employeeToDelete));
+        employeeDatabase.deleteFromDatabase(employeeToDelete.getEmployeeID());
+        assertFalse(employeeDatabase.getAllEmployees().contains(employeeToDelete));
+
     }
 
 }
