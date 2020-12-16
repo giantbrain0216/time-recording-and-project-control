@@ -36,11 +36,13 @@ public class ClientDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Client clientToAdd = new Client("AUDI", "audi@web.de", "1597536482", 2, "1");
-        Assert.assertEquals(3, clientDatabase.getAllClients().size());
+        Client clientToAdd = new Client("TEST", "test@test.de", "1597536482", 2, "98");
         clientDatabase.addToDatabase(clientToAdd);
-        Assert.assertEquals(4, clientDatabase.getAllClients().size());
+        Assert.assertTrue(clientDatabase.getAllClients().contains(clientToAdd));
+        System.out.println("Test");
         clientDatabase.deleteFromDatabase(clientToAdd.getClientID());
+        Assert.assertFalse(clientDatabase.getAllClients().contains(clientToAdd));
+
     }
 
     @Test(expected = NullPointerException.class)
@@ -54,28 +56,23 @@ public class ClientDatabaseTest {
      * been saved in the database and the old one has been overwritten.
      */
     @Test
-    public void modifyClientDataTest() {
-        Client amazon = clientDatabase.getClient(1);
-        Assert.assertEquals("amazon@web.de", amazon.getEmail());
-        Assert.assertEquals("1234567", amazon.getTelephoneNumber());
-        Assert.assertEquals(1, amazon.getContactPersonID());
-        amazon.setContactPersonID(2);
-        amazon.addProject(5);
-        amazon.setEmail("amazon2020@web.de");
-        amazon.setTelephoneNumber("789987789");
-        clientDatabase.modifyClientData(amazon);
+    public void modifyClientDataTest() throws SQLException {
+        Client clientToModify = new Client("Test","test@web.de","12345678",6,"1");
+        clientDatabase.addToDatabase(clientToModify);
+        Assert.assertEquals("test@web.de", clientToModify.getEmail());
+        Assert.assertEquals("12345678", clientToModify.getTelephoneNumber());
+       // Assert.assertEquals(1, clientToAdd.getContactPersonID());
+        clientToModify.setContactPersonID(2);
+        clientToModify.addProject(5);
+        clientToModify.setEmail("testtest@web.de");
+        clientToModify.setTelephoneNumber("789987789");
+        clientDatabase.modifyClientData(clientToModify);
         // amazon = clientDatabase.getClient(1);
-        Assert.assertEquals("amazon2020@web.de", amazon.getEmail());
-        Assert.assertEquals("789987789", amazon.getTelephoneNumber());
-        Assert.assertEquals(2, amazon.getContactPersonID());
-        Assert.assertTrue(amazon.getProjectIDs().contains("5"));
-
-        // Reset all data as it was before the test
-        amazon.setContactPersonID(1);
-        amazon.deleteProject(5);
-        amazon.setEmail("amazon@web.de");
-        amazon.setTelephoneNumber("1234567");
-        clientDatabase.modifyClientData(amazon);
+        Assert.assertEquals("testtest@web.de", clientToModify.getEmail());
+        Assert.assertEquals("789987789", clientToModify.getTelephoneNumber());
+        Assert.assertEquals(2, clientToModify.getContactPersonID());
+        Assert.assertTrue(clientToModify.getProjectIDs().contains("5"));
+        clientDatabase.deleteFromDatabase(clientToModify.getClientID());
     }
     /**
      * This method tests whether an object can be successfully deleted from the
@@ -86,9 +83,12 @@ public class ClientDatabaseTest {
      */
     @Test
     public void deleteFromDatabaseTest() throws SQLException {
-        assertEquals(3, clientDatabase.getAllClients().size());
-        clientDatabase.deleteFromDatabase(2);
-        assertEquals(2, clientDatabase.getAllClients().size());
-        clientDatabase.addToDatabase(new Client("Teams", "teams@web.de", "7654321", 2,"8"));
+        Client clientToDelete = new Client("Test","test@web.de","12345678",6,"1");
+        clientDatabase.addToDatabase(clientToDelete);
+        Assert.assertFalse(clientDatabase.getAllClients().contains(clientToDelete));
+        clientDatabase.deleteFromDatabase(clientToDelete.getClientID());
+        Assert.assertFalse(clientDatabase.getAllClients().contains(clientToDelete));
+
+
     }
 }

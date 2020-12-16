@@ -40,11 +40,15 @@ public class ProjectDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        assertEquals(1, projectDatabase.getAllProjects().size());
-        projectDatabase.addToDatabase(new Project("Project Test",21, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 100, 89, "HTML-CSS"));
-        assertEquals(2, projectDatabase.getAllProjects().size());
-        projectDatabase.deleteFromDatabase(2);
+        Project project = new Project("Project Test",21, new Date(11 - 11 - 2020),
+                new Date(2020 - 11 - 11), 100, 89, "HTML-CSS");
+        projectDatabase.addToDatabase(project);
+
+        Assert.assertTrue(projectDatabase.getAllProjects().contains(project));
+        System.out.println(project.getProjectNumber());
+        projectDatabase.deleteFromDatabase(project.getProjectNumber());
+        Assert.assertFalse( projectDatabase.getAllProjects().contains(project));
+
     }
 
     /**

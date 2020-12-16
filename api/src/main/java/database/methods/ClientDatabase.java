@@ -49,10 +49,7 @@ public class ClientDatabase {
      * @throws SQLException if the client cannot be added.
      */
     public int addToDatabase(Client clientToAdd) throws SQLException {
-        if (clientToAdd == null) {
-            throw new NullPointerException("Please enter a valid Employee");
-        }
-        int clientToAddID = createID();
+      int clientToAddID = createID();
         clientToAdd.setID(clientToAddID);
         clientDAO.create(clientToAdd);
         return clientToAddID;
@@ -84,10 +81,7 @@ public class ClientDatabase {
      *
      * @param clientID of the employee which is unique
      */
-    public void deleteFromDatabase(Integer clientID) {
-        if (clientID == null) {
-            throw new NullPointerException("Please enter a valid Employee");
-        }
+    public void deleteFromDatabase(int clientID) {
         try {
             clientDAO.deleteById(clientID);
         } catch (SQLException e) {
