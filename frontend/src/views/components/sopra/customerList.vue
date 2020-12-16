@@ -63,7 +63,7 @@
         color="danger"
         @cancel="closeAdd"
         @accept="addClient"
-        @close="close"
+        @close="closeAdd"
         :is-valid="validClient"
         :active.sync="activePrompt"
       >
@@ -89,18 +89,18 @@
           @cancel="closeEdit"
           @accept="updateClient"
           @close="closeEdit"
-          :is-valid="validClient"
+          :is-valid="validClientEdit"
           :active.sync="activeEditPromt"
       >
         <div class="con-exemple-prompt">
           Please Modify Client Data
-          <vs-input placeholder="Name" class="mb-3" v-model="editValues.nameField" />
-          <vs-input placeholder="Email" class="mb-3" v-model="editValues.emailField"/>
-          <vs-input placeholder="Tel" class="mb-3" v-model="editValues.numberField"/>
-          <vs-input placeholder="Contact person" class="mb-3" v-model="editValues.cPersonField"/>
-          <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="editValues.projectsField"/>
+          <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
+          <vs-input :placeholder="editValues.emailField" class="mb-3" v-model="editValues.emailField"/>
+          <vs-input :placeholder="editValues.numberField" class="mb-3" v-model="editValues.numberField"/>
+          <vs-input :placeholder="editValues.cPersonField" class="mb-3" v-model="editValues.cPersonField"/>
+          <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
           <vs-alert
-              :active="!validClient"
+              :active="!validClientEdit"
               color="warning"
               icon="new_releases"
           >
@@ -138,7 +138,6 @@ export default {
         cPersonField: '',
         projectsField: ''
       },
-      currentEditedClient: {},
     };
   },
 
@@ -154,33 +153,31 @@ export default {
                 && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length> 4
                 && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length> 7
                 )
-      }
+      },
+    validClientEdit(){
+      return (this.editValues.nameField.length > 0
+          && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
+          && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
+      )
+    }
   },
 
   methods: {
-    updateClient(){
-      axios.put(`http://localhost:8080/clients/` + this.currentEditedClient,{
+    async updateClient(){
+      await axios.put(`http://localhost:8080/clients/`,{
+        'id':this.currentClient.clientID,
         'name': this.editValues.nameField,
         'email': this.editValues.emailField,
         'telephoneNumber': this.editValues.numberField,
         'contactPersonID': parseInt(this.editValues.cPersonField),
         'projectIDs': this.editValues.projectsField
       })
+      this.fetchCustomers()
 
 
     },
 
-    updateEditID(id){
-      this.currentEditedClient = id;
-      var customer = this.fetchCustomer(id);
-      this.editValues.nameField = customer.nameField
-      this.editValues.emailField = customer.emailField
-      this.editValues.numberField = customer.numberField
-      this.editValues.cPersonField = customer.cPersonField
-      this.editValues.projectsField = customer.projectsField
-      this.activeEditPromt = true;
 
-    },
 
     acceptAlert(){
       this.$vs.notify({
@@ -188,17 +185,17 @@ export default {
         text:'Mitarbeiter wurde erfolgreich angelegt.'
       })
     },
-      closeAdd(){
-        this.inputValues.nameField = '',
-        this.inputValues.emailField = '',
-        this.inputValues.numberField = '',
-        this.inputValues.cPersonField = '',
-        this.inputValues.projectsField = '',
-        this.$vs.notify({
-          title:'Beendet',
-          text:'Hinzufügen wurde abgebrochen.'
-        })
-      },
+    closeAdd(){
+      this.inputValues.nameField = '',
+      this.inputValues.emailField = '',
+      this.inputValues.numberField = '',
+      this.inputValues.cPersonField = '',
+      this.inputValues.projectsField = '',
+      this.$vs.notify({
+        title:'Beendet',
+        text:'Hinzufügen wurde abgebrochen.'
+      })
+    },
 
     closeEdit(){
       this.editValues.nameField = '',
@@ -212,11 +209,11 @@ export default {
           })
     },
 
-    fetchCustomer: function(id){
-      axios.get(`http://localhost:8080/clients/${id}`)
+    fetchCustomer: async function(id){
+      await axios.get(`http://localhost:8080/clients/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
-            return response.data
+            this.currentClient = response.data
           })
           .catch(e => {
             this.errors.push(e)
@@ -250,7 +247,18 @@ export default {
     deleteClient: async function(id){
       await axios.delete(`http://localhost:8080/clients/` + id)
       this.fetchCustomers()
-    }
+    },
+
+    async updateEditID(id){
+      await this.fetchCustomer(id);
+      this.editValues.nameField = this.currentClient.name
+      this.editValues.emailField = this.currentClient.email
+      this.editValues.numberField = this.currentClient.telephoneNumber
+      this.editValues.cPersonField = this.currentClient.contactPersonID
+      this.editValues.projectsField = this.currentClient.projectIDs
+      this.activeEditPromt = true;
+
+    },
   }
 }
 </script>
