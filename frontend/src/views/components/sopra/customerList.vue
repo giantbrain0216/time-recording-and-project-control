@@ -1,7 +1,7 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 4 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
         <table class="table v-middle border">
           <thead>
@@ -37,7 +37,7 @@
         </table>
         </vs-card>
       </vs-col>
-      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
+      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
         <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
             <h4 >Details vom {{currentClient.name}} </h4>
@@ -57,6 +57,9 @@
           </div>
         </vs-card>
       </vs-col>
+      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12"><vs-card class="cardx">
+        <ClientChart :clientID="this.currentClient.clientID"/>
+        </vs-card></vs-col>
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
       <vs-prompt
         title="Add Client"
@@ -114,9 +117,13 @@
 
 <script>
 import axios from 'axios';
+import ClientChart from "@/views/components/dashboard/ClientChart";
 
 export default {
   name: "clientList",
+  components: {
+    ClientChart,
+  },
   data: () => {
     return {
       clients: [],
