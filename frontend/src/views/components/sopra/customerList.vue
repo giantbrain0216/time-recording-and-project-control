@@ -1,29 +1,27 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="customerSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
         <table class="table v-middle border">
           <thead>
           <tr class="">
             <th class="border-top-0">Name</th>
             <th class="border-top-0">ID</th>
-            <th class="border-top-0">Location</th>
-            <th class="border-top-0">-</th>
+            <th class="border-top-0">Actions</th>
             </tr>
           </thead>
           <tbody>
-          <tr v-for="customer in customers" :key="customer.id">
+          <tr v-for="client in clients" :key="client.clientID">
             <td>
               <div class="d-flex align-items-center">
-                <a @click="fetchCustomer(customer.id)"> <div class="mr-2"><vs-avatar color="primary" :text="customer.name"/></div></a>
+                <a @click="fetchCustomer(client.clientID)"> <div class="mr-2"><vs-avatar color="primary" :text="client.name"/></div></a>
                 <div class="">
-                  <a @click="fetchCustomer(customer.id)" class="m-b-0" style="cursor:pointer"> {{ customer.name }}</a>
+                  <a @click="fetchCustomer(client.clientID)" class="m-b-0" style="cursor:pointer"> {{ client.name }}</a>
                 </div>
               </div>
             </td>
-            <td>{{customer.id}}</td>
-            <td>{{customer.location }}</td>
+            <td>{{client.clientID}}</td>
             <td>
               <div>
                 <vs-button class="m-1" color="danger" type="filled">
@@ -39,15 +37,22 @@
         </table>
         </vs-card>
       </vs-col>
-      <vs-col v-if="customerSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
-        <vs-card v-show="customerSelected" class="cardx">
+      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
+        <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
-            <h4>Details vom {{currentCustomer.name}}</h4>
+            <h4>Details vom {{currentClient.name}}</h4>
           </div>
           <div>
-            <p><strong>Name: </strong>{{currentCustomer.name}}</p>
-            <p><strong>ID: </strong>{{currentCustomer.id}}</p>
-            <h3>Location: </h3>
+            <p><strong>Name: </strong>{{currentClient.name}}</p>
+            <hr>
+            <p><strong>Email: </strong>{{currentClient.clientID}}</p>
+            <hr>
+            <p><strong>Tel: </strong>{{currentClient.telephoneNumber}}</p>
+            <hr>
+            <p><strong>Contact Person (ID): </strong>{{currentClient.contactPersonID}}</p>
+            <hr>
+            <p><strong>Projects (IDs): </strong>{{currentClient.projectIDs}}</p>
+            <hr>
           </div>
         </vs-card>
       </vs-col>
@@ -56,18 +61,20 @@
         title="Kunde Hinzufügen"
         color="danger"
         @cancel="close"
-        @accept="acceptAlert"
+        @accept="addClient"
         @close="close"
-        :is-valid="validName"
+        :is-valid="validClient"
         :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
           Bitte Kundendaten eingeben
-          <vs-input placeholder="ID" class="mb-3" v-model="inputValues.idField" />
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
-          <vs-input placeholder="Location" class="mb-3" v-model="inputValues.locationField"/>
+          <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
+          <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
+          <vs-input placeholder="Contact person" class="mb-3" v-model="inputValues.cPersonField"/>
+          <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="inputValues.projectsField"/>
           <vs-alert
-            :active="!validName"
+            :active="!validClient"
             color="danger"
             icon="new_releases"
           >
@@ -83,30 +90,28 @@
 import axios from 'axios';
 
 export default {
-  name: "customerList",
+  name: "clientList",
   data: () => {
     return {
-      customers: [
-        {id: 1, name: 'Clirim Salihi', location: 'Tangegartstr. 11'},
-        {id: 2, name: 'Radu Manea', location: 'Kein plan wo' },
-        {id: 3, name: 'Mohamed Ben Salha', location: 'i-wo :D'}
-      ],
-      currentCustomer:{},
-      customerSelected:false,
+      clients: [],
+      currentClient:{},
+      clientSelected:false,
       activePrompt:false,
       inputValues: {
-        idField:'',
-        nameField:'',
-        locationField:''
+        nameField: '',
+        emailField: '',
+        numberField: '',
+        cPersonField: '',
+        projectsField: ''
       }
     };
   },
 
   created() {
-    axios.get(`http://localhost:8080/customers`)
+    axios.get(`http://localhost:8080/clients/`)
         .then(response => {
           // JSON responses are automatically parsed.
-          this.customers = response.data
+          this.clients = response.data
         })
         .catch(e => {
           this.errors.push(e)
@@ -116,10 +121,10 @@ export default {
   },
 
   computed:{
-      validCustomer(){
-        return (this.inputValues.idField.length > 0
-                && this.inputValues.nameField.length > 0
-                && this.inputValues.locationField.length > 0
+      validClient(){
+        return (this.inputValues.nameField.length > 0
+                && 26 > this.inputValues.emailField.length > 4
+                && 41 > this.inputValues.numberField.length > 7
                 )
       }
   },
@@ -142,20 +147,41 @@ export default {
       },
 
     fetchCustomer: function(id){
-      axios.get(`http://localhost:8080/customers`)
+      axios.get(`http://localhost:8080/clients/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
-            this.currentCustomer = response.data[id-1]
+            this.currentClient = response.data
           })
           .catch(e => {
             this.errors.push(e)
           })
-      this.customerSelected = true
-      //print("Working")
-    }
+      this.clientSelected = true
+    },
 
+    deleteClient: function(id) {
+      axios.delete(`http://localhost:8080/clients/${id}`)
+          .then((response) => {
+            this.inputValues.nameField = ''
+            this.inputValues.emailField = ''
+            this.inputValues.numberField = ''
+            this.inputValues.cPersonField = ''
+            this.inputValues.projectsField = ''
+            this.clients = response.data
+          })
+    },
+    
+    addClient: function() {
+      axios.post('http://localhost:8080/clients' + {
+        'name': this.inputValues.nameField,
+        'email': this.inputValues.emailField,
+        'telephoneNumber': this.inputValues.numberField,
+        'contactPersonID': parseInt(this.inputValues.cPersonField),
+        'projectIDs': this.inputValues.projectsField
+      }).then((response) => this.clients = response.data)
+    }
   }
 }
 </script>
+
 <style scoped>
 </style>

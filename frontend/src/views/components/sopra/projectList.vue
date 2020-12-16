@@ -1,52 +1,89 @@
 <template>
   <div class="table-responsive">
-    <vs-row justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12" code-toggler>
+    <vs-row vs-justify="center">
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
           <table class="table v-middle border">
             <thead>
-              <tr>
-                <th class="border-top-0"> - </th>
-                <th class="border-top-0"> - </th>
-                <th class="border-top-0"> - </th>
-                <th class="border-top-0"> - </th>
-              </tr>
+            <tr class="">
+              <th class="border-top-0">Name</th>
+              <th class="border-top-0">ID</th>
+              <th class="border-top-0">Actions</th>
+            </tr>
             </thead>
             <tbody>
-            <tr>
-            </tr>
-              <tr v-for="project in projects" :key="project.id">
-                <td>
-                  <div class="d-flex align-items-center">
-                    <a @click="fetchProject(project.id)">
-                      <div class="mr-2">
-                        <vs-avatar color="primary" :text="project.name"/>
-                      </div>
-                    </a>
-                    <div class="">
-                      <a @click="fetchProject(project.id)" class="m-b-0" style="cursor:pointer">
-                        {{ project.name }}
-                      </a>
-                    </div>
-
+            <tr v-for="project in projects" :key="project.projectNumber">
+              <td>
+                <div class="d-flex align-items-center">
+                  <a @click="fetchProject(project.projectNumber)"> <div class="mr-2"><vs-avatar color="primary" :text="project.projectNumber"/></div></a>
+                  <div class="">
+                    <a @click="fetchProject(project.projectNumber)" class="m-b-0" style="cursor:pointer"> {{ project.projectNumber }}</a>
                   </div>
-                </td>
-                <td>{{project.id}}</td>
-                <td>{{project.location }}</td>
-                <td>
-                  <vs-button color="danger" type="filled" >
+                </div>
+              </td>
+              <td>{{project.projectNumber}}</td>
+              <td>
+                <div>
+                  <vs-button class="m-1" color="danger" type="filled">
                     Delete
                   </vs-button>
-                </td>
-                <!--till Here-->
-                <div>
-                  <vs-progress :height="12" :percent="40" color="success">success</vs-progress>
+                  <vs-button class="m-1" color="primary" type="filled">
+                    Edit
+                  </vs-button>
                 </div>
-              </tr>
+              </td>
+            </tr>
             </tbody>
           </table>
         </vs-card>
       </vs-col>
+      <vs-col v-if="projectSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
+        <vs-card v-show="projectSelected" class="cardx">
+          <div slot="header">
+            <h4>Details vom {{currentProject.name}}</h4>
+          </div>
+          <div>
+            <p><strong>Email: </strong>{{currentProject.projectNumber}}</p>
+            <hr>
+            <p><strong>Tel: </strong>{{currentProject.clientID}}</p>
+            <hr>
+            <p><strong>Contact Person (ID): </strong>{{currentProject.plannedStart}}</p>
+            <hr>
+            <p><strong>Projects (IDs): </strong>{{currentProject.plannedEnd}}</p>
+            <p><strong>-</strong>{{currentProject.plannedEffort}}</p>
+            <p><strong>-</strong>{{currentProject.performedEffort}}</p>
+            <p><strong>-</strong>{{currentProject.competences}}</p>
+            <hr>
+          </div>
+        </vs-card>
+      </vs-col>
+      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Project</vs-button>
+      <vs-prompt
+          title="Projekt Hinzufügen"
+          color="danger"
+          @cancel="close"
+          @accept="close"
+          @close="close"
+          :is-valid="validProject"
+          :active.sync="activePrompt"
+      >
+        <div class="con-exemple-prompt">
+          Bitte Projektdaten eingeben
+          <vs-input placeholder="Name" class="mb-3" v-model="inputValues.clientIDField" />
+          <vs-input placeholder="planned start" class="mb-3" v-model="inputValues.plannedStartField"/>
+          <vs-input placeholder="planned end" class="mb-3" v-model="inputValues.plannedEndField"/>
+          <vs-input placeholder="planned effort" class="mb-3" v-model="inputValues.plannedEffortField"/>
+          <vs-input placeholder="performed effort" class="mb-3" v-model="inputValues.performedEffortField"/>
+          <vs-input placeholder="competences" class="mb-3" v-model="inputValues.competencesField"/>
+          <vs-alert
+              :active="!validProject"
+              color="danger"
+              icon="new_releases"
+          >
+            Die Felder müssen gefüllt werden.
+          </vs-alert>
+        </div>
+      </vs-prompt>
     </vs-row>
   </div>
 </template>
@@ -58,28 +95,26 @@ export default {
   name: "projectList",
   data: () => {
     return {
-      projects: [
-        {id: 1, name: 'Itestra', location: 'Tangegartstr. 11'},
-        {id: 2, name: 'AEB', location: 'Kein plan wo' },
-        {id: 3, name: 'IC Consult', location: 'i-wo :D'}
-      ],
-      progress_value:'',
+      projects: [],
       currentProject:{},
       projectSelected:false,
       activePrompt:false,
       inputValues: {
-        idField:'',
-        nameField:'',
-        locationField:''
+        clientIDField: '',
+        plannedStartField: '',
+        plannedEndField: '',
+        plannedEffortField: '',
+        performedEffortField: '',
+        competencesField: ''
       }
     };
   },
 
   created() {
-    axios.get(`http://localhost:8080/customers`)
+    axios.get(`http://localhost:8080/projects/`)
         .then(response => {
           // JSON responses are automatically parsed.
-          this.employees = response.data
+          this.projects = response.data
         })
         .catch(e => {
           this.errors.push(e)
@@ -89,8 +124,14 @@ export default {
   },
 
   computed:{
-    validName(){
-      return (this.inputValues.idField.length > 0 && this.inputValues.nameField.length > 0 && this.inputValues.locationField.length > 0)
+    validProject(){
+      return (this.inputValues.clientIDField.length !== null
+              && this.inputValues.plannedStartField.length > 0
+              && this.inputValues.plannedEndField.length > 0
+              && this.inputValues.plannedEffortField.length > 0
+              && this.inputValues.performedEffortField.length > 0
+              && this.inputValues.competencesField > 0
+      )
     }
   },
 
@@ -98,13 +139,16 @@ export default {
     acceptAlert(){
       this.$vs.notify({
         title:'Benachrichtigung:',
-        text:'Mitarbeiter wurde erfolgreich angelegt.'
+        text:'Projekt wurde erfolgreich angelegt.'
       })
     },
     close(){
       this.inputValues.idField = '',
-          this.inputValues.nameField = '',
-          this.inputValues.locationField = '',
+          this.inputValues.plannedStartField = '',
+          this.inputValues.plannedEndField = '',
+          this.inputValues.plannedEffortField = '',
+          this.inputValues.performedEffortField = '',
+          this.inputValues.competencesField = '',
           this.$vs.notify({
             title:'Beendet',
             text:'Hinzufügen wurde abgebrochen.'
@@ -112,20 +156,19 @@ export default {
     },
 
     fetchProject: function(id){
-      axios.get(`http://localhost:8080/projects`)
+      axios.get(`http://localhost:8080/projects/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
-            this.currentCustomer = response.data[id-1]
+            this.currentProject = response.data
           })
           .catch(e => {
             this.errors.push(e)
           })
       this.projectSelected = true
-      //print("Working")
-    }
-
+    },
   }
 }
 </script>
+
 <style scoped>
 </style>
