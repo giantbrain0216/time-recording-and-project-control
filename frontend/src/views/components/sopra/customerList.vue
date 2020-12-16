@@ -158,17 +158,6 @@ export default {
       this.clientSelected = true
     },
 
-    deleteClient: function(id) {
-      axios.delete(`http://localhost:8080/clients/${id}`)
-          .then((response) => {
-            this.inputValues.nameField = ''
-            this.inputValues.emailField = ''
-            this.inputValues.numberField = ''
-            this.inputValues.cPersonField = ''
-            this.inputValues.projectsField = ''
-            this.clients = response.data
-          })
-    },
     
     addClient: function() {
       axios.post('http://localhost:8080/clients' + {
