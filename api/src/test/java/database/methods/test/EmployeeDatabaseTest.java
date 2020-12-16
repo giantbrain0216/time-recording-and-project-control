@@ -71,7 +71,7 @@ public class EmployeeDatabaseTest {
     /**
      * This method tests whether an object can be successfully deleted from the
      * database by checking after the deletion whether the employee
-     * exists in the database 
+     * exists in the database
      *
      * @throws SQLException if the employee has not been deleted
      */

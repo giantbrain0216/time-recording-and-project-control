@@ -3,6 +3,7 @@ package entities;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import controllers.Application;
+import database.methods.ClientDatabase;
 import database.methods.EmployeeDatabase;
 import database.methods.ProjectDatabase;
 
@@ -166,4 +167,5 @@ public class Project {
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
+
 }

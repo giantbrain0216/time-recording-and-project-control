@@ -28,20 +28,17 @@ public class ClientDatabaseTest {
 
     /**
      * This method tests whether an object can be successfully created in the
-     * database by checking after the insertion whether the size of the list has
-     * increased by 1 and whether the data of the added client is stored in the
-     * correct columns.
-     *
+     * database by checking after the insertion whether the ID of the client
+     * occurs in the list of IDs of all clients
      * @throws SQLException if the client has not been added
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
         Client clientToAdd = new Client("TEST", "test@test.de", "1597536482", 2, "98");
         clientDatabase.addToDatabase(clientToAdd);
-        Assert.assertTrue(clientDatabase.getAllClients().contains(clientToAdd));
-        System.out.println("Test");
+        Assert.assertTrue(clientDatabase.getAllClients().stream().anyMatch(client -> client.getClientID().equals(clientToAdd.getClientID())));
         clientDatabase.deleteFromDatabase(clientToAdd.getClientID());
-        Assert.assertFalse(clientDatabase.getAllClients().contains(clientToAdd));
+        Assert.assertFalse(clientDatabase.getAllClients().stream().anyMatch(client -> client.getClientID().equals(clientToAdd.getClientID())));
 
     }
 
@@ -57,11 +54,11 @@ public class ClientDatabaseTest {
      */
     @Test
     public void modifyClientDataTest() throws SQLException {
-        Client clientToModify = new Client("Test","test@web.de","12345678",6,"1");
+        Client clientToModify = new Client("Test", "test@web.de", "12345678", 6, "1");
         clientDatabase.addToDatabase(clientToModify);
         Assert.assertEquals("test@web.de", clientToModify.getEmail());
         Assert.assertEquals("12345678", clientToModify.getTelephoneNumber());
-       // Assert.assertEquals(1, clientToAdd.getContactPersonID());
+        // Assert.assertEquals(1, clientToAdd.getContactPersonID());
         clientToModify.setContactPersonID(2);
         clientToModify.addProject(5);
         clientToModify.setEmail("testtest@web.de");
@@ -74,20 +71,21 @@ public class ClientDatabaseTest {
         Assert.assertTrue(clientToModify.getProjectIDs().contains("5"));
         clientDatabase.deleteFromDatabase(clientToModify.getClientID());
     }
+
     /**
      * This method tests whether an object can be successfully deleted from the
-     * database by checking after the deletion whether the size of the list has
-     * decreased by 1.
+     * database by checking after the deletion the deleted element in the list
+     * of all employees still exists.
      *
      * @throws SQLException if the client has not been deleted
      */
     @Test
     public void deleteFromDatabaseTest() throws SQLException {
-        Client clientToDelete = new Client("Test","test@web.de","12345678",6,"1");
+        Client clientToDelete = new Client("Test", "test@web.de", "12345678", 6, "1");
         clientDatabase.addToDatabase(clientToDelete);
-        Assert.assertFalse(clientDatabase.getAllClients().contains(clientToDelete));
+        Assert.assertTrue(clientDatabase.getAllClients().stream().anyMatch(client -> client.getClientID().equals(clientToDelete.getClientID())));
         clientDatabase.deleteFromDatabase(clientToDelete.getClientID());
-        Assert.assertFalse(clientDatabase.getAllClients().contains(clientToDelete));
+        Assert.assertFalse(clientDatabase.getAllClients().stream().anyMatch(client -> client.getClientID().equals(clientToDelete.getClientID())));
 
 
     }
