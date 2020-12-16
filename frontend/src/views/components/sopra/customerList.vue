@@ -1,7 +1,7 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 4 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
         <table class="table v-middle border">
           <thead>
@@ -121,9 +121,13 @@
 
 <script>
 import axios from 'axios';
+import ClientChart from "@/views/components/dashboard/ClientChart";
 
 export default {
   name: "clientList",
+  components: {
+    ClientChart,
+  },
   data: () => {
     return {
       clients: [],
