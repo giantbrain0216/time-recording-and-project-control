@@ -42,7 +42,8 @@ public class EmployeeDatabaseTest {
         Assert.assertEquals("6", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getProjectIDs());
         Assert.assertEquals("Assil", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getName());
         Assert.assertEquals("Tunis", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getDomicile());
-//        Assert.assertTrue(employeeDatabase.getAllEmployees().contains(employeeToAdd));
+        // checks that the employee exists in the database
+        Assert.assertTrue(employeeDatabase.getAllEmployees().stream().anyMatch(employee -> employee.getEmployeeID() == (employeeToAdd.getEmployeeID())));
         employeeDatabase.deleteFromDatabase(employeeToAdd.getEmployeeID());
     }
 
@@ -79,10 +80,11 @@ public class EmployeeDatabaseTest {
     public void deleteEmployeeDataTest() throws SQLException {
         Employee employeeToDelete = new Employee("Test", "Tunis", "HTML", "6");
         employeeDatabase.addToDatabase(employeeToDelete);
-        assertTrue(employeeDatabase.getAllEmployees().contains(employeeToDelete));
+        // checks that the employee exists in the database
+        Assert.assertTrue(employeeDatabase.getAllEmployees().stream().anyMatch(employee -> employee.getEmployeeID() == (employeeToDelete.getEmployeeID())));        employeeDatabase.deleteFromDatabase(employeeToDelete.getEmployeeID());
+        // checks that the employee does not exist in the database
         employeeDatabase.deleteFromDatabase(employeeToDelete.getEmployeeID());
-        assertFalse(employeeDatabase.getAllEmployees().contains(employeeToDelete));
-
+        Assert.assertFalse(employeeDatabase.getAllEmployees().stream().anyMatch(employee -> employee.getEmployeeID() == (employeeToDelete.getEmployeeID())));
     }
 
 }
