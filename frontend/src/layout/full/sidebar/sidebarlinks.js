@@ -19,5 +19,10 @@
 			name: "Employee list",
 			icon: "tag_faces"
 		},
+		{
+			url:"/timeRegistration",
+			name:"Time Registration",
+			icon:"tag_faces"
+		},
 
 ]

@@ -46,6 +46,12 @@ export default new Router({
                     index: 4,
                     component: () => import('./views/components/sopra/employeeList')
                 },
+                {
+                    path: '/timeregistration',
+                    name: 'Time Registration',
+                    index: 5,
+                    component: () => import('./views/components/sopra/timeRegistration')
+                },
 
             ]
 		},
