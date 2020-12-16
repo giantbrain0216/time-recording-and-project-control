@@ -27,7 +27,8 @@ public class ProjectControllerTest {
 
     private int createMockObject(){
 
-        String requestBody = " {\"clientID\": 1, \"plannedStart\": \"2012-04-23T18:25:43.511Z\" ,"+
+        String requestBody = " {\"projectName\":\"Mock Project\",\"clientID\": 1, \"plannedStart\": " +
+                "\"2012-04-23T18:25:43.511Z\" ,"+
                 " \"plannedEnd\": \"2012-08-23T18:25:43.511Z\", \"plannedEffort\": 1000, \"performedEffort\":0," +
                         "\"competences\":\"SEARCHTOKEN\"} ";
 
@@ -117,7 +118,7 @@ public class ProjectControllerTest {
     @Test
     public void modifyProjectTest() throws Exception {
         int id = createMockObject();
-        String requestBody = " {\"projectNumber\":" + String.valueOf(id) + ",\"clientID\": 1, \"plannedStart\": " +
+        String requestBody = " {\"projectName\":\"Mock Project\",\"projectNumber\":" + String.valueOf(id) + ",\"clientID\": 1, \"plannedStart\": " +
                 "\"2012-04-23T18:25:43" +
                 ".511Z\" ,"+
                 " \"plannedEnd\": \"2012-08-23T18:25:43.511Z\", \"plannedEffort\": 1000, \"performedEffort\":0," +
