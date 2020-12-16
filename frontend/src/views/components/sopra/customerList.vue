@@ -24,10 +24,10 @@
             <td>{{client.clientID}}</td>
             <td>
               <div>
-                <vs-button class="m-1" color="danger" type="filled">
+                <vs-button @click="deleteClient(client.clientID)" class="m-1" color="danger" type="filled">
                   Delete
                 </vs-button>
-                <vs-button class="m-1" color="primary" type="filled">
+                <vs-button @click="updateEditID(client.clientID)" class="m-1" color="primary" type="filled">
                   Edit
                 </vs-button>
               </div>
@@ -40,7 +40,8 @@
       <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
         <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
-            <h4>Details vom {{currentClient.name}}</h4>
+            <h4 >Details vom {{currentClient.name}} </h4>
+            <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="clientSelected = false"></vs-button>
           </div>
           <div>
             <p><strong>Name: </strong>{{currentClient.name}}</p>
@@ -58,9 +59,9 @@
       </vs-col>
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
       <vs-prompt
-        title="Kunde Hinzufügen"
+        title="Add Client"
         color="danger"
-        @cancel="close"
+        @cancel="closeAdd"
         @accept="addClient"
         @close="close"
         :is-valid="validClient"
@@ -82,6 +83,31 @@
           </vs-alert>
         </div>
       </vs-prompt>
+      <vs-prompt
+          title="Edit Clients"
+          color="warning"
+          @cancel="closeEdit"
+          @accept="updateClient"
+          @close="closeEdit"
+          :is-valid="validClient"
+          :active.sync="activeEditPromt"
+      >
+        <div class="con-exemple-prompt">
+          Please Modify Client Data
+          <vs-input placeholder="Name" class="mb-3" v-model="editValues.nameField" />
+          <vs-input placeholder="Email" class="mb-3" v-model="editValues.emailField"/>
+          <vs-input placeholder="Tel" class="mb-3" v-model="editValues.numberField"/>
+          <vs-input placeholder="Contact person" class="mb-3" v-model="editValues.cPersonField"/>
+          <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="editValues.projectsField"/>
+          <vs-alert
+              :active="!validClient"
+              color="warning"
+              icon="new_releases"
+          >
+            Die Felder müssen gefüllt werden.
+          </vs-alert>
+        </div>
+      </vs-prompt>
     </vs-row>
   </div>
 </template>
@@ -97,25 +123,27 @@ export default {
       currentClient:{},
       clientSelected:false,
       activePrompt:false,
+      activeEditPromt:false,
       inputValues: {
         nameField: '',
         emailField: '',
         numberField: '',
         cPersonField: '',
         projectsField: ''
-      }
+      },
+      editValues: {
+        nameField: '',
+        emailField: '',
+        numberField: '',
+        cPersonField: '',
+        projectsField: ''
+      },
+      currentEditedClient: {},
     };
   },
 
   created() {
-    axios.get(`http://localhost:8080/clients/`)
-        .then(response => {
-          // JSON responses are automatically parsed.
-          this.clients = response.data
-        })
-        .catch(e => {
-          this.errors.push(e)
-        })
+    this.fetchCustomers();
 
 
   },
@@ -123,50 +151,105 @@ export default {
   computed:{
       validClient(){
         return (this.inputValues.nameField.length > 0
-                && 26 > this.inputValues.emailField.length > 4
-                && 41 > this.inputValues.numberField.length > 7
+                && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length> 4
+                && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length> 7
                 )
       }
   },
 
   methods: {
+    updateClient(){
+      axios.put(`http://localhost:8080/clients/` + this.currentEditedClient,{
+        'name': this.editValues.nameField,
+        'email': this.editValues.emailField,
+        'telephoneNumber': this.editValues.numberField,
+        'contactPersonID': parseInt(this.editValues.cPersonField),
+        'projectIDs': this.editValues.projectsField
+      })
+
+
+    },
+
+    updateEditID(id){
+      this.currentEditedClient = id;
+      var customer = this.fetchCustomer(id);
+      this.editValues.nameField = customer.nameField
+      this.editValues.emailField = customer.emailField
+      this.editValues.numberField = customer.numberField
+      this.editValues.cPersonField = customer.cPersonField
+      this.editValues.projectsField = customer.projectsField
+      this.activeEditPromt = true;
+
+    },
+
     acceptAlert(){
       this.$vs.notify({
         title:'Benachrichtigung:',
         text:'Mitarbeiter wurde erfolgreich angelegt.'
       })
     },
-      close(){
-        this.inputValues.idField = '',
+      closeAdd(){
         this.inputValues.nameField = '',
-        this.inputValues.locationField = '',
+        this.inputValues.emailField = '',
+        this.inputValues.numberField = '',
+        this.inputValues.cPersonField = '',
+        this.inputValues.projectsField = '',
         this.$vs.notify({
           title:'Beendet',
           text:'Hinzufügen wurde abgebrochen.'
         })
       },
 
+    closeEdit(){
+      this.editValues.nameField = '',
+          this.editValues.emailField = '',
+          this.editValues.numberField = '',
+          this.editValues.cPersonField = '',
+          this.editValues.projectsField = '',
+          this.$vs.notify({
+            title:'Closed',
+            text:'Edit was cancelled.'
+          })
+    },
+
     fetchCustomer: function(id){
       axios.get(`http://localhost:8080/clients/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
-            this.currentClient = response.data
+            return response.data
           })
           .catch(e => {
             this.errors.push(e)
           })
-      this.clientSelected = true
+    },
+
+    fetchCustomers: async function (){
+      await axios.get(`http://localhost:8080/clients/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.clients = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
     },
 
     
-    addClient: function() {
-      axios.post('http://localhost:8080/clients' + {
+    addClient: async function() {
+      await axios.post('http://localhost:8080/clients' , {
         'name': this.inputValues.nameField,
         'email': this.inputValues.emailField,
         'telephoneNumber': this.inputValues.numberField,
         'contactPersonID': parseInt(this.inputValues.cPersonField),
         'projectIDs': this.inputValues.projectsField
-      }).then((response) => this.clients = response.data)
+      })
+      this.acceptAlert()
+      this.fetchCustomers()
+    },
+
+    deleteClient: async function(id){
+      await axios.delete(`http://localhost:8080/clients/` + id)
+      this.fetchCustomers()
     }
   }
 }
