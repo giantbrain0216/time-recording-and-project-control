@@ -15,9 +15,9 @@
           <tr v-for="client in clients" :key="client.clientID">
             <td>
               <div class="d-flex align-items-center">
-                <a @click="fetchCustomer(client.clientID)"> <div class="mr-2"><vs-avatar color="primary" :text="client.name"/></div></a>
+                <a @click="updateDetailedClient(client.clientID)"> <div class="mr-2"><vs-avatar color="primary" :text="client.name"/></div></a>
                 <div class="">
-                  <a @click="fetchCustomer(client.clientID)" class="m-b-0" style="cursor:pointer"> {{ client.name }}</a>
+                  <a @click="updateDetailedClient(client.clientID)" class="m-b-0" style="cursor:pointer"> {{ client.name }}</a>
                 </div>
               </div>
             </td>
@@ -259,6 +259,11 @@ export default {
       this.activeEditPromt = true;
 
     },
+
+    updateDetailedClient(id){
+      this.fetchCustomer(id)
+      this.clientSelected = true
+    }
   }
 }
 </script>
