@@ -163,14 +163,14 @@ export default {
         return (this.inputValues.nameField.length > 0
                 && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length> 4
                 && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length> 7
-                && this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN
+                && this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
                 )
       },
     validClientEdit(){
       return (this.editValues.nameField.length > 0
           && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
-          && this.editValues.numberField.contains("@") && !this.editValues.cPersonField.isNaN
+          && this.editValues.numberField.contains("@") && !this.editValues.cPersonField.isNaN()
       )
     }
   },
