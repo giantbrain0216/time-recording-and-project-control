@@ -41,7 +41,7 @@ public class ProjectDatabaseTest {
     @Test
     public void addToDatabaseTest() throws SQLException {
         assertEquals(1, projectDatabase.getAllProjects().size());
-        projectDatabase.addToDatabase(new Project(21, new Date(11 - 11 - 2020),
+        projectDatabase.addToDatabase(new Project("Project Test",21, new Date(11 - 11 - 2020),
                 new Date(2020 - 11 - 11), 100, 89, "HTML-CSS"));
         assertEquals(2, projectDatabase.getAllProjects().size());
         projectDatabase.deleteFromDatabase(2);
@@ -59,7 +59,7 @@ public class ProjectDatabaseTest {
         assertEquals(1, projectDatabase.getAllProjects().size());
         projectDatabase.deleteFromDatabase(1);
         assertEquals(0, projectDatabase.getAllProjects().size());
-        projectDatabase.addToDatabase(new Project(21, new Date(11 - 11 - 2020),
+        projectDatabase.addToDatabase(new Project("Project Test",21, new Date(11 - 11 - 2020),
                 new Date(2020 - 11 - 11), 268, 14, "HTML"));
     }
     /**

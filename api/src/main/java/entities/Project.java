@@ -2,10 +2,14 @@ package entities;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import controllers.Application;
+import database.methods.EmployeeDatabase;
+import database.methods.ProjectDatabase;
 
 import javax.validation.constraints.NotNull;
-import javax.xml.crypto.Data;
+import java.awt.desktop.AppForegroundListener;
 import java.sql.Date;
+import java.sql.SQLException;
 
 /**
  * Class representing a project which will be performed from the
@@ -13,14 +17,18 @@ import java.sql.Date;
  * planned end, planned effort, performed effort, competences that are
  * needed to achieve it and technologies.
  *
- * @version 08.12.2020
+ * @version 16.12.2020
  */
 
 @DatabaseTable(tableName = "projects")
 public class Project {
 
-    @DatabaseField(columnName = "Project number", id=true)
+    @DatabaseField(columnName = "Project number", id = true)
     private Integer projectNumber;
+
+    @DatabaseField(columnName = "Project name")
+    @NotNull
+    private String projectName;
 
     @DatabaseField(columnName = "ID of the Client")
     @NotNull
@@ -49,6 +57,7 @@ public class Project {
      * Constructor to create an object from type Project who belongs a
      * {@link Client} and should be performed from the society.
      *
+     * @param projectName     Name of the project
      * @param clientID        the owner of this project
      * @param plannedStart    date of start
      * @param plannedEnd      date of end
@@ -56,9 +65,10 @@ public class Project {
      * @param performedEffort effort that has been achieved
      * @param competences     needed to achieve this project
      */
-    public Project(final Integer clientID, final Date plannedStart,
+    public Project(final String projectName, final Integer clientID, final Date plannedStart,
                    final Date plannedEnd, final Integer plannedEffort, final Integer performedEffort, final String competences) {
         this.clientID = clientID;
+        this.projectName = projectName;
         this.competences = competences;
         this.performedEffort = performedEffort;
         this.plannedStart = plannedStart;
@@ -147,5 +157,13 @@ public class Project {
 
     public void setProjectNumber(int projectNumber) {
         this.projectNumber = projectNumber;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }
