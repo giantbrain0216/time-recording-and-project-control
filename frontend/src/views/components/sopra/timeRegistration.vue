@@ -45,7 +45,7 @@
                       min="06:00" max="22:00" required>
             <small>   End Time</small>
           </div>
-          <div class="m-3"><vs-button color="success" type="relief">Success</vs-button></div>
+          <div @click="submitTimeRegistration" class="m-3"><vs-button color="success" type="relief">Success</vs-button></div>
         </div>
 
       </vs-card>
@@ -116,6 +116,22 @@ export default {
         }
       }
     },
+
+    submitTimeRegistration: async function(){
+      var dateControl = document.querySelector('input[type="date"]');
+      var startdate = dateControl.value;
+      console.log(startdate)
+      var timeControl = document.querySelector('input[id="starttime"]');
+      var startime = timeControl.value;
+      var timeControl1 = document.querySelector('input[id="endtime"]');
+      var endtime = timeControl1.value;
+      var startString = startdate + "T" + startime + ":00.000"
+      var endString = startdate + "T" + endtime + ":00.000"
+
+      await axios.post(`http://localhost:8080/timeregistrations`,{"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString})
+
+
+    }
 
   }
 
