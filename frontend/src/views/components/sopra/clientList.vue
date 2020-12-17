@@ -15,7 +15,8 @@
           <tr v-for="client in clients" :key="client.clientID">
             <td>
               <div class="d-flex align-items-center">
-                <a @click="updateDetailedClient(client.clientID)"> <div class="mr-2"><vs-avatar color="primary" :text="client.name"/></div></a>
+                <a @click="updateDetailedClient(client.clientID)">
+                  <div class="mr-2"><vs-avatar color="primary" :text="client.name"/></div></a>
                 <div class="">
                   <a @click="updateDetailedClient(client.clientID)" class="m-b-0" style="cursor:pointer"> {{ client.name }}</a>
                 </div>
@@ -97,11 +98,11 @@
       >
         <div class="con-exemple-prompt">
           Please Modify Client Data
-          <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
-          <vs-input :placeholder="editValues.emailField" class="mb-3" v-model="editValues.emailField"/>
-          <vs-input :placeholder="editValues.numberField" class="mb-3" v-model="editValues.numberField"/>
-          <vs-input :placeholder="editValues.cPersonField" class="mb-3" v-model="editValues.cPersonField"/>
-          <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
+          <vs-input :placeholder="inputValues.nameField" class="mb-3" v-model="editValues.nameField" />
+          <vs-input :placeholder="inputValues.emailField" class="mb-3" v-model="editValues.emailField"/>
+          <vs-input :placeholder="inputValues.numberField" class="mb-3" v-model="editValues.numberField"/>
+          <vs-input :placeholder="inputValues.cPersonField" class="mb-3" v-model="editValues.cPersonField"/>
+          <vs-input :placeholder="inputValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
           <vs-alert
               :active="!validClientEdit"
               color="warning"

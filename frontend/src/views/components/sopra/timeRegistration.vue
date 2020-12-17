@@ -127,7 +127,8 @@ export default {
       var startString = startdate + " " + startime
       var endString = startdate + " " + endtime
 
-      await axios.post(`http://localhost:8080/timeregistrations`,{"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString})
+      await axios.post(`http://localhost:8080/timeregistrations`,
+          {"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString})
 
 
     }
