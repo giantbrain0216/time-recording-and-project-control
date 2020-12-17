@@ -1,5 +1,6 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -22,10 +23,12 @@ public class TimeRegistration {
 
     @DatabaseField(columnName = "Start")
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date start;
 
     @DatabaseField(columnName = "End")
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date end;
     public TimeRegistration(){}
     public TimeRegistration(final int employeeID, final int projectID, final Date start, final Date end) {

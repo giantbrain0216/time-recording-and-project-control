@@ -1,5 +1,6 @@
 package entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import controllers.Application;
@@ -36,9 +37,11 @@ public class Project {
     private Integer clientID;
 
     @DatabaseField(columnName = "planned Start")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date plannedStart;
 
     @DatabaseField(columnName = "planned End")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date plannedEnd;
 
     @DatabaseField(columnName = "planned Effort")

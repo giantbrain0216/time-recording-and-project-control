@@ -28,8 +28,8 @@ public class ProjectControllerTest {
     private int createMockObject(){
 
         String requestBody = " {\"projectName\":\"Mock Project\",\"clientID\": 1, \"plannedStart\": " +
-                "\"2012-04-23T18:25:43.511Z\" ,"+
-                " \"plannedEnd\": \"2012-08-23T18:25:43.511Z\", \"plannedEffort\": 1000, \"performedEffort\":0," +
+                "\"2012-04-23 18:25:00\" ,"+
+                " \"plannedEnd\": \"2012-08-23 18:25:00\", \"plannedEffort\": 1000, \"performedEffort\":0," +
                         "\"competences\":\"SEARCHTOKEN\"} ";
 
         try {
@@ -119,9 +119,8 @@ public class ProjectControllerTest {
     public void modifyProjectTest() throws Exception {
         int id = createMockObject();
         String requestBody = " {\"projectName\":\"Mock Project\",\"projectNumber\":" + String.valueOf(id) + ",\"clientID\": 1, \"plannedStart\": " +
-                "\"2012-04-23T18:25:43" +
-                ".511Z\" ,"+
-                " \"plannedEnd\": \"2012-08-23T18:25:43.511Z\", \"plannedEffort\": 1000, \"performedEffort\":0," +
+                "\"2012-04-23 18:25:43\" ,"+
+                " \"plannedEnd\": \"2012-08-23 18:25:43\", \"plannedEffort\": 1000, \"performedEffort\":0," +
                 "\"competences\":\"AZNBNENEN\"} ";
         this.mockMvc.perform(put("/projects").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/projects")).andDo(print()).andExpect(status().isOk())
