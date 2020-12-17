@@ -1,7 +1,7 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 4 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
         <table class="table v-middle border">
           <thead>
@@ -37,7 +37,7 @@
         </table>
         </vs-card>
       </vs-col>
-      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
+      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
         <vs-card v-show="employeeSelected" class="cardx">
           <div slot="header">
             <h4>Details vom {{currentEmployee.name}}</h4>
@@ -45,17 +45,20 @@
           <div>
             <p><strong>ID: </strong>{{currentEmployee.employeeID}}</p>
             <hr>
-            <p><strong>Email: </strong>{{currentEmployee.name}}</p>
+            <p><strong>Name: </strong>{{currentEmployee.name}}</p>
             <hr>
             <p><strong>Domicile: </strong>{{currentEmployee.domicile}}</p>
             <hr>
-            <p><strong>Contact Person (ID): </strong>{{currentEmployee.competences}}</p>
+            <p><strong>Competences: </strong>{{currentEmployee.competences}}</p>
             <hr>
             <p><strong>Projects (IDs): </strong>{{currentEmployee.projectIDs}}</p>
             <hr>
           </div>
         </vs-card>
       </vs-col>
+      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12"><vs-card class="cardx">
+        <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
+      </vs-card></vs-col>
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Employee</vs-button>
       <vs-prompt
         title="Add Employee"
@@ -88,6 +91,7 @@
 
 <script>
 import axios from 'axios';
+import EmployeeChart from "@/views/components/dashboard/EmployeeChart";
 
 export default {
   name: "employeeList",
@@ -104,6 +108,9 @@ export default {
         projectsField: ''
       }
     };
+  },
+  components: {
+    EmployeeChart,
   },
 
   created() {

@@ -120,13 +120,12 @@ export default {
     submitTimeRegistration: async function(){
       var dateControl = document.querySelector('input[type="date"]');
       var startdate = dateControl.value;
-      console.log(startdate)
       var timeControl = document.querySelector('input[id="starttime"]');
       var startime = timeControl.value;
       var timeControl1 = document.querySelector('input[id="endtime"]');
       var endtime = timeControl1.value;
-      var startString = startdate + "T" + startime + ":00.000"
-      var endString = startdate + "T" + endtime + ":00.000"
+      var startString = startdate + " " + startime
+      var endString = startdate + " " + endtime
 
       await axios.post(`http://localhost:8080/timeregistrations`,{"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString})
 

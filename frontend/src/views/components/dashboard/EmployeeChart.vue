@@ -1,14 +1,15 @@
 <template>
-  <BarChart :clientID='clientID'/>
+  <BarChart :employeeID="employeeID"/>
 </template>
 
 <script>
 import BarChart from './BarChart.vue'
 export default {
   name:"ClientChart",
-  props: {clientID: Number},
+  props: {employeeID: Number},
   components: {
     BarChart
-  }
+  },
+
 }
 </script>

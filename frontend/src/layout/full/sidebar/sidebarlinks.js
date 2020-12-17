@@ -5,8 +5,8 @@
 			icon:"favorite_border"
 		},
 		{
-			url: "/customerlist",
-			name: "Customer List",
+			url: "/clientlist",
+			name: "Client List",
 			icon:"tag_faces"  /*error_outline*/
 		},
 		{

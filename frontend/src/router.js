@@ -27,10 +27,10 @@ export default new Router({
                     index: 1,
                     component: () => import('./views/StarterPage.vue')
                 },{
-                    path: '/customerList',
-                    name: 'Customer List',
+                    path: '/clientList',
+                    name: 'Client List',
                     index: 2,
-                    component: () => import('./views/components/sopra/customerList.vue')
+                    component: () => import('./views/components/sopra/clientList.vue')
                 },
 
                 {

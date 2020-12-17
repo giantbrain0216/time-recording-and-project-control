@@ -4,14 +4,42 @@ import axios from "axios";
 
 export default {
   extends: Bar,
-  props: ['clientID'],
+  props: {employeeID:Number},
 
   data: () => {
     return {
       registrations:[],
       dateLabels:["","","","",""],
-      workedHours:[0,0,0,0,0]
+      workedHours:[0,0,0,0,0],
+      errors:[],
     };
+  },
+
+  watch: {
+     employeeID: async function() { // watch it
+       var arr = [0,0,0,0,0];
+      this.workedHours = arr.splice(0);
+      this.registrations = [];
+      await this.fetchRegistrations();
+      await this.getWorkedHours();
+      this.renderChart(
+          {
+            labels: this.dateLabels,
+            datasets: [
+              {
+                label: "Worked Time in Hours",
+                backgroundColor: "#2962ff",
+                data: this.workedHours,
+              }
+            ]
+          },
+          { responsive: true, maintainAspectRatio: false, scales: {
+              xAxes: [{
+                barThickness: 20,
+              }]
+            } }
+      );
+    }
   },
 
   methods: {
@@ -20,9 +48,9 @@ export default {
           .then(response => {
             // JSON responses are automatically parsed.
             for (var i = 0; i < response.data.length; i++) {
-              if(response.data[i].id === this.props.clientID){
+              if(response.data[i].employeeID === this.employeeID){
                 if(this.dateLabels.includes(response.data[i].start.slice(5,10))){
-                  this.registrations.concat(response.data[i])
+                  this.registrations.push(response.data[i])
                 }
 
               }
@@ -33,7 +61,7 @@ export default {
           })
 
     },
-    getDateLabels(){
+    async getDateLabels(){
       var today = new Date();
       for(var i = 0;i<5;i++){
         var dd = String(today.getDate()-4+i).padStart(2, '0');
@@ -41,12 +69,12 @@ export default {
         this.dateLabels[i] =  mm + "-" + dd
       }
     },
-    getWorkedHours(){
+    async getWorkedHours(){
       for(var i = 0; i < this.registrations.length;i++){
         for(var j= 0; j<this.dateLabels.length;j++){
-          if(this.registrations[i].start.slice(5,10).localeCompare(this.dateLabels[j])){
-            var startDate = Date.parse(this.registrations[j].start);
-            var endDate = Date.parse(this.registrations[j].end);
+          if(this.registrations[i].start.slice(5,10).localeCompare(this.dateLabels[j]) === 0){
+            var startDate = Date.parse(this.registrations[i].start);
+            var endDate = Date.parse(this.registrations[i].end);
             var hours = Math.abs(endDate - startDate) / 36e5;
             this.workedHours[j] = this.workedHours[j] + hours
           }
@@ -58,17 +86,16 @@ export default {
   },
 
 
-  mounted() {
-    this.getDateLabels();
-    this.fetchRegistrations();
-    this.getWorkedHours();
-
+ async mounted() {
+    await this.getDateLabels();
+    await this.fetchRegistrations();
+    await this.getWorkedHours();
     this.renderChart(
       {
         labels: this.dateLabels,
         datasets: [
           {
-            label: "Worked Time $",
+            label: "Worked Time in Hours",
             backgroundColor: "#2962ff",
             data: this.workedHours,
           }
@@ -76,10 +103,13 @@ export default {
       },
       { responsive: true, maintainAspectRatio: false, scales: {
               xAxes: [{
-                  barThickness: 10,
+                  barThickness: 20,
               }]
           } }
     );
+    this.workedHours = [0,0,0,0,0];
+    this.registrations = []
+
   }
 };
 </script>
