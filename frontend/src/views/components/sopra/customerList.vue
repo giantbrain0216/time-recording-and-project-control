@@ -1,7 +1,7 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 4 : 12" vs-sm="6" vs-xs="12" code-toggler>
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
         <table class="table v-middle border">
           <thead>
@@ -12,7 +12,6 @@
             </tr>
           </thead>
           <tbody>
-          <!--fills client list dynamically-->
           <tr v-for="client in clients" :key="client.clientID">
             <td>
               <div class="d-flex align-items-center">
@@ -39,7 +38,6 @@
         </vs-card>
       </vs-col>
       <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
-        <!--Card will open if you select a client for the datailed data-view-->
         <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
             <h4 >Details vom {{currentClient.name}} </h4>
@@ -59,9 +57,7 @@
           </div>
         </vs-card>
       </vs-col>
-      <!--Button that opens the adding Pop up-->
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
-      <!--Pop up window for adding a client-->
       <vs-prompt
         title="Add Client"
         color="danger"
@@ -71,9 +67,8 @@
         :is-valid="validClient"
         :active.sync="activePrompt"
       >
-        <!--Empty input fields that will contain the new client data-->
         <div class="con-exemple-prompt">
-          Please enter client data
+          Bitte Kundendaten eingeben
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
           <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
@@ -84,11 +79,10 @@
             color="danger"
             icon="new_releases"
           >
-          Please fill the input fields.
+          Die Felder müssen gefüllt werden.
           </vs-alert>
         </div>
       </vs-prompt>
-      <!--Pop up window for editing client data-->
       <vs-prompt
           title="Edit Clients"
           color="warning"
@@ -100,7 +94,6 @@
       >
         <div class="con-exemple-prompt">
           Please Modify Client Data
-          <!--Input fields with data of the selected client you want to edit-->
           <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
           <vs-input :placeholder="editValues.emailField" class="mb-3" v-model="editValues.emailField"/>
           <vs-input :placeholder="editValues.numberField" class="mb-3" v-model="editValues.numberField"/>
@@ -111,7 +104,7 @@
               color="warning"
               icon="new_releases"
           >
-            Please fill the input fields.
+            Die Felder müssen gefüllt werden.
           </vs-alert>
         </div>
       </vs-prompt>
@@ -121,13 +114,9 @@
 
 <script>
 import axios from 'axios';
-import ClientChart from "@/views/components/dashboard/ClientChart";
 
 export default {
   name: "clientList",
-  components: {
-    ClientChart,
-  },
   data: () => {
     return {
       clients: [],
@@ -163,14 +152,14 @@ export default {
         return (this.inputValues.nameField.length > 0
                 && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length> 4
                 && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length> 7
-                && this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
+                //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
                 )
       },
     validClientEdit(){
       return (this.editValues.nameField.length > 0
           && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
-          && this.editValues.numberField.contains("@") && !this.editValues.cPersonField.isNaN()
+          //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
       )
     }
   },
@@ -272,11 +261,12 @@ export default {
       this.activeEditPromt = true;
 
     },
-
+    
     updateDetailedClient(id){
       this.fetchCustomer(id)
       this.clientSelected = true
     }
+
   }
 }
 </script>
