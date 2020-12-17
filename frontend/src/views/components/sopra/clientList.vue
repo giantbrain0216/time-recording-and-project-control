@@ -117,13 +117,9 @@
 
 <script>
 import axios from 'axios';
-import ClientChart from "@/views/components/dashboard/ClientChart";
 
 export default {
   name: "clientList",
-  components: {
-    ClientChart,
-  },
   data: () => {
     return {
       clients: [],
