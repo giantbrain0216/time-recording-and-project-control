@@ -94,11 +94,11 @@
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
           <vs-input label-placeholder="ID of the client" class="mb-3" v-model="inputValues.clientIDField"/>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="startdate" name="date"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="startdate" name="plannedStart"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="enddate" name="date"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="enddate" name="plannedEnd"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <vs-input label-placeholder="planned effort" class="mb-3" v-model="inputValues.plannedEffortField"/>
@@ -126,21 +126,21 @@
         <h5>Project Name : {{ currentProject.projectName }}</h5>
 
         <div class="con-exemple-prompt">
-          <vs-input :placeholder="currentProject.clientID" class="mb-3 mt-2" v-model="editValues.clientIDField"/>
+          <vs-input :text="currentProject.clientID" class="mb-3 mt-2" v-model="editValues.clientIDField"/>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="startdateedit" name="date"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="startdateedit" name="plannedStartEdit"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="enddateedit" name="date"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="enddateedit" name="plannedEndEdit"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31">
           </div>
-          <vs-input :placeholder="currentProject.plannedEffort" class="mb-3"
+          <vs-input :text="editValues.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
-          <vs-input :placeholder="currentProject.performedEffort" class="mb-3"
+          <vs-input :text="currentProject.performedEffort" class="mb-3"
                     v-model="editValues.performedEffortField"/>
-          <vs-input :placeholder="currentProject.competences" class="mb-3" v-model="editValues.competencesField"/>
+          <vs-input :text="currentProject.competences" class="mb-3" v-model="editValues.competencesField"/>
           <vs-alert
               :active="!validProjectEdit"
               color="warning"
@@ -329,6 +329,7 @@ export default {
     },
     closeAddForm() {
       this.inputValues.clientIDField = "";
+      this.inputValues.projectName = "";
       this.inputValues.plannedStartField = "";
       this.inputValues.plannedEndField = "";
       this.inputValues.plannedEffortField = "";
