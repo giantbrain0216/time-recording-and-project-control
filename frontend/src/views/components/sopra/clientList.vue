@@ -40,8 +40,8 @@
       <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
         <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
-            <h4 >Details vom {{currentClient.name}} </h4>
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="clientSelected = false"></vs-button>
+            <h1 >Details vom {{currentClient.name}} </h1>
           </div>
           <div>
             <p><strong>Name: </strong>{{currentClient.name}}</p>
