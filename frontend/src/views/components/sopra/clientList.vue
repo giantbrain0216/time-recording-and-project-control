@@ -57,11 +57,6 @@
           </div>
         </vs-card>
       </vs-col>
-      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
-        <vs-card class="cardx">
-          <ClientChart :clientID="this.currentClient.clientID"/>
-        </vs-card>
-      </vs-col>
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
       <vs-prompt
         title="Add Client"
@@ -77,7 +72,7 @@
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
           <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
-          <vs-input placeholder="Contact person" class="mb-3" v-model="inputValues.cPersonField"/>
+          <vs-input placeholder="Contact person" type="integer" class="mb-3" v-model="inputValues.cPersonField"/>
           <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="inputValues.projectsField"/>
           <vs-alert
             :active="!validClient"
@@ -155,16 +150,18 @@ export default {
   computed:{
       validClient(){
         return (this.inputValues.nameField.length > 0
-                && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length> 4
-                && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length> 7
-                //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
+                && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length > 4
+                && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length > 7
+                && this.inputValues.emailField.includes('@')
+                && this.inputValues.cPersonField.isInteger
                 )
       },
     validClientEdit(){
       return (this.editValues.nameField.length > 0
           && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
-          //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
+          && this.inputValues.emailField.includes('@')
+          && this.inputValues.cPersonField.isInteger
       )
     }
   },

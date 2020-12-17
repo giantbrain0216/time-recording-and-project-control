@@ -5,7 +5,7 @@
 <script>
 import BarChart from './BarChart.vue'
 export default {
-  name:"ClientChart",
+  name:"EmployeeChart",
   props: {employeeID: Number},
   components: {
     BarChart

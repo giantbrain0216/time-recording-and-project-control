@@ -1,7 +1,7 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 4 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
           <table class="table v-middle border">
             <thead>
@@ -37,7 +37,7 @@
           </table>
         </vs-card>
       </vs-col>
-      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
+      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
         <vs-card v-show="employeeSelected" class="cardx">
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="employeeSelected = false"></vs-button>
@@ -51,7 +51,6 @@
             <p><strong>Competences: </strong>{{currentEmployee.competences}}</p>
             <hr>
             <p><strong>Projects (ID): </strong>{{currentEmployee.projectIDs}}</p>
-            <hr>
           </div>
         </vs-card>
       </vs-col>
@@ -67,7 +66,7 @@
           @cancel="closeAdd"
           @accept="addEmployee"
           @close="closeAdd"
-          :is-valid="validEmploye"
+          :is-valid="validEmployee"
           :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
@@ -77,7 +76,7 @@
           <vs-input placeholder="Competences" class="mb-3" v-model="inputValues.competencesField"/>
           <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="inputValues.projectsField"/>
           <vs-alert
-              :active="!validEmploye"
+              :active="!validEmployee"
               color="danger"
               icon="new_releases"
           >
@@ -91,7 +90,7 @@
           @cancel="closeEdit"
           @accept="updateEmployee"
           @close="closeEdit"
-          :is-valid="validEmployeeEdi"
+          :is-valid="validEmployeeEdit"
           :active.sync="activeEditPromt"
       >
         <div class="con-exemple-prompt">
@@ -101,7 +100,7 @@
           <vs-input :placeholder="editValues.competencesField" class="mb-3" v-model="editValues.competencesField"/>
           <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
           <vs-alert
-              :active="!validEmployeeEdi"
+              :active="!validEmployeeEdit"
               color="warning"
               icon="new_releases"
           >
@@ -115,6 +114,7 @@
 
 <script>
 import axios from 'axios';
+import EmployeeChart from "@/views/components/dashboard/EmployeeChart";
 
 export default {
   name: "employeeList",
@@ -137,6 +137,7 @@ export default {
         competencesField: '',
         projectsField: ''
       },
+      components: {EmployeeChart},
     };
   },
 
@@ -148,13 +149,13 @@ export default {
 
   computed:{
     validEmployee(){
-      return (26 > this.inputValues.nameField.length > 4
-              && 26 > this.inputValues.domicileField.length > 4
+      return (this.inputValues.nameField.length > 4 && this.inputValues.nameField.length < 26
+              && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
       )
     },
     validEmployeeEdit(){
-      return (26 > this.editValues.nameField.length > 4
-              && 26 > this.editValues.domicileField.length > 4
+      return (this.inputValues.nameField.length > 4 && this.inputValues.nameField.length < 26
+              && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
       )
     }
   },
@@ -258,7 +259,6 @@ export default {
       this.fetchEmployee(id)
       this.employeeSelected = true
     }
-
   }
 }
 </script>
