@@ -57,9 +57,11 @@
           </div>
         </vs-card>
       </vs-col>
-      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12"><vs-card class="cardx">
-        <ClientChart :clientID="this.currentClient.clientID"/>
-        </vs-card></vs-col>
+      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
+        <vs-card class="cardx">
+          <ClientChart :clientID="this.currentClient.clientID"/>
+        </vs-card>
+      </vs-col>
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
       <vs-prompt
         title="Add Client"
@@ -218,6 +220,8 @@ export default {
       await axios.get(`http://localhost:8080/clients/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
+            // eslint-disable-next-line no-console
+            console.log(response.data)
             this.currentClient = response.data
           })
           .catch(e => {
@@ -246,12 +250,12 @@ export default {
         'projectIDs': this.inputValues.projectsField
       })
       this.acceptAlert()
-      this.fetchCustomers()
+      await this.fetchCustomers()
     },
 
     deleteClient: async function(id){
       await axios.delete(`http://localhost:8080/clients/` + id)
-      this.fetchCustomers()
+      await this.fetchCustomers()
     },
 
     async updateEditID(id){
