@@ -57,7 +57,9 @@
           </div>
         </vs-card>
       </vs-col>
-
+      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12"><vs-card class="cardx">
+        <ClientChart :clientID="this.currentClient.clientID"/>
+        </vs-card></vs-col>
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
       <vs-prompt
         title="Add Client"
@@ -115,11 +117,13 @@
 
 <script>
 import axios from 'axios';
-
+import ClientChart from "@/views/components/dashboard/ClientChart";
 
 export default {
   name: "clientList",
-
+  components: {
+    ClientChart,
+  },
   data: () => {
     return {
       clients: [],
@@ -155,12 +159,14 @@ export default {
         return (this.inputValues.nameField.length > 0
                 && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length> 4
                 && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length> 7
+                //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
                 )
       },
     validClientEdit(){
       return (this.editValues.nameField.length > 0
           && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
+          //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
       )
     }
   },
@@ -267,6 +273,7 @@ export default {
       this.fetchCustomer(id)
       this.clientSelected = true
     }
+
   }
 }
 </script>
