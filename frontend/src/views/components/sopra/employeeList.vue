@@ -7,7 +7,9 @@
             <thead>
             <tr class="">
               <th class="border-top-0">Name</th>
-              <th class="border-top-0">ID</th>
+              <!--<th class="border-top-0">ID</th>-->
+              <th class="border-top-0">Competences</th>
+              <th class="border-top-0">Project IDs</th>
               <th class="border-top-0">Actions</th>
             </tr>
             </thead>
@@ -21,7 +23,9 @@
                   </div>
                 </div>
               </td>
-              <td>{{employee.employeeID}}</td>
+              <!--<td>{{employee.employeeID}}</td>-->
+              <td>{{employee.competences}}</td>
+              <td>{{employee.projectIDs}}</td>
               <td>
                 <div>
                   <vs-button @click="deleteEmployee(employee.employeeID)" class="m-1" color="danger" type="filled">
@@ -60,7 +64,7 @@
           <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
         </vs-card>
       </vs-col>
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
+      <vs-button @click="activePrompt = true" color="primary" type="filled">Add New Employee</vs-button>
       <vs-prompt
           title="Add Employee"
           color="danger"
@@ -173,7 +177,7 @@ export default {
         'id':this.currentEmployee.employeeID,
         'name': this.editValues.nameField,
         'domicile': this.editValues.domicileField,
-        'competences': this.editValues.competencesField,
+        'competences': this.editValues.competencesField.toUpperCase(),
         'projectIDs': this.editValues.projectsField
       })
       await this.fetchEmployees()
