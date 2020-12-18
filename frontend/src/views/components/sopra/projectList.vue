@@ -107,7 +107,7 @@
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <vs-input label-placeholder="Planned Effort In Hours" class="mb-3" v-model="inputValues.plannedEffortField"/>
-          <vs-input label-placeholder="Performed Effort In Hours)</i>" class="mb-3" v-model="inputValues.performedEffortField"/>
+          <vs-input label-placeholder="Performed Effort In Hours" class="mb-3" v-model="inputValues.performedEffortField"/>
           <vs-input label-placeholder="competences" class="mb-3" v-model="inputValues.competencesField"/>
           <vs-alert
               :active="!validProject"
@@ -210,17 +210,17 @@ export default {
 
 
     validProject() {
-      return (this.inputValues.clientIDField.length > 0
+      return true;/*(this.inputValues.clientIDField.length > 0
           && this.inputValues.plannedEffortField.length > 0
           && this.inputValues.performedEffortField.length > 0
-          && this.inputValues.competencesField.length > 0)
+          && this.inputValues.competencesField.length > 0)*/
 
     },
 
     validProjectEdit() {
-      return ( this.editValues.plannedEffortField.length > 0 && this.editValues.clientIDField.length > 0
+      return true; /* ( this.editValues.plannedEffortField.length > 0 && this.editValues.clientIDField.length > 0
           && this.editValues.performedEffortField.length > 0
-          && this.editValues.competencesField.length > 0     )
+          && this.editValues.competencesField.length > 0     )*/
     }
   },
 
@@ -262,14 +262,14 @@ export default {
     },
 
     updateProject: async function () {
-      var dateControl = document.querySelector('input[id="startedit"]');
-      var startdateedit = dateControl.value;
-      var timeControl = document.querySelector('input[id="endedit"]');
-      var enddateedit = timeControl.value;
-      this.editValues.plannedStartField = startdateedit + " " + "00:00"
-      this.editValues.plannedEndField = enddateedit + " " + "00:00"
-      await axios.put(`http://localhost:8080/projects`), {
-        "projectNumber":this.editProjectID,
+      var dateControlEdit = document.querySelector('input[id="startedit"]');
+      var startdateedit = dateControlEdit.value;
+      var timeControlEdit = document.querySelector('input[id="endedit"]');
+      var enddateedit = timeControlEdit.value;
+      this.editValues.plannedStartField = startdateedit + " " + "00:00";
+      this.editValues.plannedEndField = enddateedit + " " + "00:00";
+      await axios.put(`http://localhost:8080/projects`, {
+       "projectNumber":this.editProjectID,
         "projectName": this.currentProject.projectName,
         "clientID": parseInt(this.editValues.clientIDField),
         "plannedStart":  startdateedit + " " + "00:00",
@@ -277,7 +277,7 @@ export default {
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
         "performedEffort": parseInt(this.editValues.performedEffortField),
         "competences": this.editValues.competencesField,
-      }
+      })
       await this.fetchAllProjects();
     },
     updateProjectID: async function (id) {
