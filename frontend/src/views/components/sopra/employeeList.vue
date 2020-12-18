@@ -95,15 +95,16 @@
           :active.sync="activeEditPromt"
       >
         <div class="con-exemple-prompt">
-          <strong>Please Modify Employee Data of</strong><h6 class="edit-employee">{{editValues.nameField}}</h6>
+          <strong>Please Modify Employee Data of</strong>
+          <h6 class="edit-employeee">{{editValues.nameField}}</h6>
           <br>
-          <label>Name:</label>
+          <label>Name: </label>
           <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
-          <label>Domicile</label>
+          <label>Domicile: </label>
           <vs-input :placeholder="editValues.domicileField" class="mb-3" v-model="editValues.domicileField"/>
-          <label>Competences</label>
+          <label>Competences: </label>
           <vs-input :placeholder="editValues.competencesField" class="mb-3" v-model="editValues.competencesField"/>
-          <label>Projects (IDs)</label>
+          <label>Projects (IDs): </label>
           <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
           <vs-alert
               :active="!validEmployeeEdit"
@@ -136,7 +137,7 @@ export default {
         nameField: '',
         domicileField: '',
         competencesField: '',
-        projectsField: ''
+        projectsField: '',
       },
       editValues: {
         nameField: '',
@@ -156,13 +157,13 @@ export default {
 
   computed:{
     validEmployee(){
-      return (this.inputValues.nameField.length > 4 && this.inputValues.nameField.length < 26
+      return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 26
               && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
       )
     },
     validEmployeeEdit(){
-      return (this.inputValues.nameField.length > 4 && this.inputValues.nameField.length < 26
-              && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
+      return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 26
+              && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 26
       )
     }
   },
@@ -248,8 +249,11 @@ export default {
     },
 
     deleteEmployee: async function(id){
-      await axios.delete(`http://localhost:8080/employees/` + id)
-      await this.fetchEmployees()
+      await this.fetchEmployee(id);
+      if (confirm(`Are you sure you want to delete ${this.currentEmployee.name}`)) {
+        await axios.delete(`http://localhost:8080/employees/` + id)
+        await this.fetchEmployees()
+      }
     },
 
     async updateEditID(id){
@@ -270,9 +274,8 @@ export default {
 }
 </script>
 
-<style>
-
-.edit-employee {
+<style scoped>
+.edit-employeee{
   color: red;
 }
 </style>

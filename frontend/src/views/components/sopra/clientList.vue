@@ -217,7 +217,7 @@ export default {
         'contactPersonID': this.selectedEmployee,
         'projectIDs': this.editValues.projectsField
       })
-      await this.fetchCustomers()
+      this.fetchCustomers()
 
 
     },

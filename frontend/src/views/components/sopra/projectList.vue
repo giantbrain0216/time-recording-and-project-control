@@ -138,8 +138,8 @@
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
             <small>Planned End</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
-                                                :value="dateToday"
-                                                min="2018-01-01" max="2030-12-31">
+                                              :value="dateToday"
+                                              min="2018-01-01" max="2030-12-31">
           </div>
           <vs-input label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
@@ -270,7 +270,7 @@ export default {
       this.editValues.plannedStartField = startdateedit + " " + "00:00";
       this.editValues.plannedEndField = enddateedit + " " + "00:00";
       await axios.put(`http://localhost:8080/projects`, {
-       "projectNumber":this.editProjectID,
+        "projectNumber":this.editProjectID,
         "projectName": this.currentProject.projectName,
         "clientID": parseInt(this.editValues.clientIDField),
         "plannedStart":  startdateedit + " " + "00:00",
