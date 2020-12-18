@@ -279,6 +279,7 @@ export default {
         "performedEffort": parseInt(this.editValues.performedEffortField),
         "competences": this.editValues.competencesField,
       })
+      this.editAlert()
       await this.fetchAllProjects();
     },
     updateProjectID: async function (id) {
@@ -323,6 +324,14 @@ export default {
       this.$vs.notify({
         title: 'Confirmation:',
         text: 'Project has been successfully deleted.'
+      })
+    },
+
+    editAlert(){
+      this.$vs.notify({
+        title: 'Confirmation:',
+        color:"success" ,type:"flat",
+        text: 'Project has been successfully edited.'
       })
     },
 
