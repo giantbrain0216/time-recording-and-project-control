@@ -55,7 +55,7 @@
                        @click="projectSelected = false"></vs-button>
           </div>
           <div>
-            <p><strong>ID of the Project: </strong>{{ currentProject.projectNumber }}</p>
+            <p><strong>ID of the Client: </strong>{{ currentProject.clientID }}</p>
             <hr>
             <p><strong>Planned Start: </strong>{{ currentProject.plannedStart.substring(0, 10) }}</p>
             <hr>
@@ -396,6 +396,15 @@ export default {
     deleteProject: async function () {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber);
+      await this.fetchCustomer(this.currentProject.clientID)
+      await axios.put(`http://localhost:8080/clients/`, {
+        'id': this.currentClient.clientID,
+        'name': this.currentClient.name,
+        'email': this.currentClient.email,
+        'telephoneNumber': this.currentClient.telephoneNumber,
+        'contactPersonID': this.currentClient.contactPersonID,
+        'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(),"") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+      })
       this.deleteAlert()
       await this.fetchAllProjects();
     },
