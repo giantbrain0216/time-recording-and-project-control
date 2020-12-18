@@ -150,18 +150,20 @@ export default {
 
   computed:{
       validClient(){
+        var re = /\S+@\S+\.\S+/;
         return (this.inputValues.nameField.length > 0
                 && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length > 4
                 && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length > 7
-                && this.inputValues.emailField.includes('@')
+                && re.test(this.inputValues.emailField)
                 && this.inputValues.cPersonField.isInteger
                 )
       },
     validClientEdit(){
+      var re = /\S+@\S+\.\S+/;
       return (this.editValues.nameField.length > 0
           && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
-          && this.inputValues.emailField.includes('@')
+          && re.test(this.editValues.emailField)
           && this.inputValues.cPersonField.isInteger
       )
     }

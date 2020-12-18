@@ -131,21 +131,21 @@
         <h5>Project Name : {{ currentProject.projectName }}</h5>
 
         <div class="con-exemple-prompt">
-          <vs-input :text="currentProject.clientID" class="mb-3 mt-2" v-model="editValues.clientIDField"/>
+          <vs-input label="ID of the Client" :text="currentProject.clientID" class="mb-3 mt-2" v-model="editValues.clientIDField"/>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
+            <small>Planned End</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31">
           </div>
-          <vs-input :text="editValues.plannedEffort" class="mb-3"
+          <vs-input label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
-          <vs-input :text="currentProject.performedEffort" class="mb-3"
+          <vs-input label="Performed Effort" :placeholder="currentProject.performedEffort" class="mb-3"
                     v-model="editValues.performedEffortField"/>
-          <vs-input :text="currentProject.competences" class="mb-3" v-model="editValues.competencesField"/>
+          <vs-input label="Competences" :placeholder="currentProject.competences" class="mb-3" v-model="editValues.competencesField"/>
           <vs-alert
               :active="!validProjectEdit"
               color="warning"
@@ -210,6 +210,7 @@ export default {
 
 
     validProject() {
+
       return true;/*(this.inputValues.clientIDField.length > 0
           && this.inputValues.plannedEffortField.length > 0
           && this.inputValues.performedEffortField.length > 0
@@ -348,7 +349,6 @@ export default {
     },
 
     closeEditForm() {
-
       this.editValues.clientIDField = "";
       this.editValues.plannedStartField = "";
       this.editValues.plannedEndField = "";
