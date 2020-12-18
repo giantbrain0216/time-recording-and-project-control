@@ -94,11 +94,11 @@
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
           <vs-input label-placeholder="ID of the client" class="mb-3" v-model="inputValues.clientIDField"/>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="startdate" name="plannedStart"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="enddate" name="plannedEnd"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <vs-input label-placeholder="planned effort" class="mb-3" v-model="inputValues.plannedEffortField"/>
@@ -128,11 +128,11 @@
         <div class="con-exemple-prompt">
           <vs-input :text="currentProject.clientID" class="mb-3 mt-2" v-model="editValues.clientIDField"/>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="startdateedit" name="plannedStartEdit"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="enddateedit" name="plannedEndEdit"
+            <small>Planned Start</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31">
           </div>
@@ -237,17 +237,17 @@ export default {
       this.projectSelected = true
     },
     addProject: async function () {
-      var dateControl = document.querySelector('input[type="startdate"]');
+      var dateControl = document.querySelector('input[id="start"]');
       var startdate = dateControl.value;
-      var timeControl = document.querySelector('input[id="enddate"]');
+      var timeControl = document.querySelector('input[id="end"]');
       var enddate = timeControl.value;
-      this.inputValues.plannedStartField = startdate + " " + "00:00:00"
-      this.inputValues.plannedEndField = enddate + " " + "00:00:00"
+      this.inputValues.plannedStartField = startdate + " " + "00:00"
+      this.inputValues.plannedEndField = enddate + " " + "00:00"
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
         "clientID": parseInt(this.inputValues.clientIDField),
-        "plannedStart": startdate + " " + "00:00:00",
-        "plannedEnd": enddate + " " + "00:00:00",
+        "plannedStart": startdate + " " + "00:00",
+        "plannedEnd": enddate + " " + "00:00",
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": parseInt(this.inputValues.performedEffortField),
         "competences": this.inputValues.competencesField,
@@ -257,14 +257,14 @@ export default {
     },
 
     updateProject: async function () {
-      var dateControl = document.querySelector('input[type="startdateedit"]');
+      var dateControl = document.querySelector('input[id="startedit"]');
       var startdateedit = dateControl.value;
-      var timeControl = document.querySelector('input[id="enddateedit"]');
+      var timeControl = document.querySelector('input[id="endedit"]');
       var enddateedit = timeControl.value;
-      this.editValues.plannedStartField = startdateedit + " " + "00:00:00"
-      this.editValues.plannedEndField = enddateedit + " " + "00:00:00"
+      this.editValues.plannedStartField = startdateedit + " " + "00:00"
+      this.editValues.plannedEndField = enddateedit + " " + "00:00"
       await axios.put(`http://localhost:8080/projects`), {
-        "id":this.currentProject.projectNumber,
+        "id":this.editProjectID,
         "projectName": this.currentProject.projectName,
         "clientID": parseInt(this.editValues.clientIDField),
         "plannedStart": this.editValues.plannedStartField,
