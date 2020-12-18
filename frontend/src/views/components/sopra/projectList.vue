@@ -7,11 +7,11 @@
           <table class="table v-middle border">
             <thead>
             <tr class="">
-              <th class="border-top-0">Name</th>
-              <th class="border-top-0">ID of the Client</th>
-              <th class="border-top-0">Deadline</th>
-              <th class="border-top-0">Progress</th>
-              <th class="border-top-0">Actions</th>
+              <th class="border-top-0" style="color: cornflowerblue">Name</th>
+              <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
+              <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
+              <th class="border-top-0" style="color: cornflowerblue">Progress</th>
+              <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -19,7 +19,7 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="">
-                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="cursor:pointer">
+                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}</a>
                   </div>
                 </div>
@@ -33,11 +33,11 @@
                 <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
               <td>
                 <div>
-                  <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1" color="danger" type="filled">
+                  <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger" icon="delete" type="filled">
                     Delete
                   </vs-button>
                   <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
-                  " color="warning" type="filled">
+                  " color="warning" icon="edit" type="filled">
                     Edit
                   </vs-button>
                 </div>
@@ -87,7 +87,7 @@
       </vs-prompt>
 
 
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Project</vs-button>
+      <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Project</vs-button>
       <vs-prompt
           title="Add New Project"
           color="success"
@@ -135,6 +135,8 @@
           >
             All fields must be filled in
           </vs-alert>
+
+
         </div>
       </vs-prompt>
 
