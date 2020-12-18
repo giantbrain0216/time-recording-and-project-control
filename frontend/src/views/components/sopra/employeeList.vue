@@ -52,6 +52,7 @@
             <hr>
             <p><strong>Projects (ID): </strong>{{currentEmployee.projectIDs}}</p>
             <hr>
+            <p><strong>Competences: </strong>{{currentEmployee.competences}}</p>
           </div>
         </vs-card>
       </vs-col>
@@ -157,12 +158,12 @@ export default {
 
   computed:{
     validEmployee(){
-      return (this.inputValues.nameField.length > 2 && this.inputValues.nameField.length < 26
+      return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 26
               && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
       )
     },
     validEmployeeEdit(){
-      return (this.editValues.nameField.length > 2 && this.editValues.nameField.length < 26
+      return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 26
               && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 26
       )
     }
