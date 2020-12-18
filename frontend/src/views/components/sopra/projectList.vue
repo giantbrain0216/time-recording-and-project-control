@@ -103,7 +103,7 @@
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
+            <small>Planned End</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <vs-input label-placeholder="Planned Effort In Hours" class="mb-3" v-model="inputValues.plannedEffortField"/>
@@ -134,11 +134,11 @@
           <vs-input label="ID of the Client" :text="currentProject.clientID" class="mb-3 mt-2" v-model="editValues.clientIDField"/>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
-                                                :value="dateToday"
+                                                :value="startDatum"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
             <small>Planned End</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
-                                                :value="dateToday"
+                                                :value="endDatum"
                                                 min="2018-01-01" max="2030-12-31">
           </div>
           <vs-input label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
@@ -168,6 +168,8 @@ export default {
     return {
       projects: [],
       dateToday: "",
+      startDatum:"",
+      endDatum:"",
       currentProject: {},
       editProjectID: 0,
       projectSelected: false,
@@ -197,12 +199,11 @@ export default {
   created() {
     this.fetchAllProjects();
     var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
+   var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
 
     this.dateToday = yyyy + "-" + mm + '-' + dd;
-
 
   },
 
@@ -230,6 +231,22 @@ export default {
     showDeletePrompt: function (id){
       this.fetchProject(id)
       this.activeDeletePrompt = true
+    },
+
+    plannedStart: function () {
+      var startdate = this.currentProject.plannedStart;
+      this.startDatum = startdate.substring(0, 10)
+      // var dateControl = document.querySelector('input[id="startedit"]')
+
+      // eslint-disable-next-line no-console
+      console.log(startdate)
+      //return startdate;
+
+    },
+
+    plannedEnd: function (){
+      var enddate = this.currentProject.plannedEnd;
+      this.endDatum = enddate.substring(0, 10)
     },
 
     closeDeletePrompt: function (){
@@ -292,7 +309,8 @@ export default {
       this.editValues.plannedEndField = this.currentProject.plannedEnd
       this.editValues.plannedStartField = this.currentProject.plannedStart
       this.editValues.plannedEffortField = this.currentProject.plannedEffort
-
+      this.plannedStart()
+      this.plannedEnd()
     },
 
 
@@ -370,8 +388,8 @@ export default {
       })
     },
 
-    fetchProject: function (id) {
-      axios.get(`http://localhost:8080/projects/${id}`)
+    fetchProject: async function (id) {
+     await axios.get(`http://localhost:8080/projects/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
             this.currentProject = response.data
