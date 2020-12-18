@@ -45,7 +45,7 @@
         <vs-card v-show="employeeSelected" class="cardx">
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="employeeSelected = false"></vs-button>
-            <h1 >Details vom {{currentEmployee.name}} </h1>
+            <h1 >Details of {{currentEmployee.name}} </h1>
           </div>
           <div>
             <p><strong>Name: </strong>{{currentEmployee.name}}</p>
@@ -75,7 +75,7 @@
           :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
-          Bitte Mitarbeiterdaten eingeben
+          Please insert employee data
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Domicile" class="mb-3" v-model="inputValues.domicileField"/>
           <vs-input placeholder="Competences" class="mb-3" v-model="inputValues.competencesField"/>
@@ -85,7 +85,7 @@
               color="danger"
               icon="new_releases"
           >
-            Die Felder müssen gefüllt werden.
+           Fields can't be empty.
           </vs-alert>
         </div>
       </vs-prompt>
@@ -99,22 +99,23 @@
           :active.sync="activeEditPromt"
       >
         <div class="con-exemple-prompt">
-          <strong>Please Modify Employee Data of</strong><h6 class="edit-employee">{{editValues.nameField}}</h6>
+          <strong>Please Modify Employee Data of</strong>
+          <h6 class="edit-employeee">{{editValues.nameField}}</h6>
           <br>
-          <label>Name:</label>
+          <label>Name: </label>
           <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
-          <label>Domicile</label>
+          <label>Domicile: </label>
           <vs-input :placeholder="editValues.domicileField" class="mb-3" v-model="editValues.domicileField"/>
-          <label>Competences</label>
+          <label>Competences: </label>
           <vs-input :placeholder="editValues.competencesField" class="mb-3" v-model="editValues.competencesField"/>
-          <label>Projects (IDs)</label>
+          <label>Projects (IDs): </label>
           <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
           <vs-alert
               :active="!validEmployeeEdit"
               color="warning"
               icon="new_releases"
           >
-            Die Felder müssen gefüllt werden.
+            Fields can't be empty.
           </vs-alert>
         </div>
       </vs-prompt>
@@ -140,7 +141,7 @@ export default {
         nameField: '',
         domicileField: '',
         competencesField: '',
-        projectsField: ''
+        projectsField: '',
       },
       editValues: {
         nameField: '',
@@ -160,12 +161,12 @@ export default {
 
   computed:{
     validEmployee(){
-      return (this.inputValues.nameField.length > 2 && this.inputValues.nameField.length < 26
+      return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 26
               && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
       )
     },
     validEmployeeEdit(){
-      return (this.editValues.nameField.length > 2 && this.editValues.nameField.length < 26
+      return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 26
               && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 26
       )
     }
@@ -189,8 +190,8 @@ export default {
 
     acceptAlert(){
       this.$vs.notify({
-        title:'Benachrichtigung:',
-        text:'Mitarbeiter wurde erfolgreich angelegt.'
+        title:'Successfully:',
+        text:'added Employee.'
       })
     },
     closeAdd(){
@@ -199,8 +200,8 @@ export default {
       this.inputValues.competencesField = ''
       this.inputValues.projectsField = ''
       this.$vs.notify({
-        title:'Beendet',
-        text:'Hinzufügen wurde abgebrochen.'
+        title:'Closed',
+        text:'Adding was cancelled.'
       })
     },
 
@@ -252,8 +253,11 @@ export default {
     },
 
     deleteEmployee: async function(id){
-      await axios.delete(`http://localhost:8080/employees/` + id)
-      await this.fetchEmployees()
+      await this.fetchEmployee(id);
+      if (confirm(`Are you sure you want to delete ${this.currentEmployee.name}`)) {
+        await axios.delete(`http://localhost:8080/employees/` + id)
+        await this.fetchEmployees()
+      }
     },
 
     async updateEditID(id){
@@ -269,15 +273,13 @@ export default {
     updateDetailedEmployee(id){
       this.fetchEmployee(id)
       this.employeeSelected = true
-    },
-
+    }
   }
 }
 </script>
 
-<style>
-
-.edit-employee {
+<style scoped>
+.edit-employeee{
   color: red;
 }
 </style>

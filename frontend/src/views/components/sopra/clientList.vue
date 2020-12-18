@@ -46,12 +46,12 @@
         <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="clientSelected = false"></vs-button>
-            <h1 >Details vom {{currentClient.name}} </h1>
+            <h1 >Details of {{currentClient.name}} </h1>
           </div>
           <div>
             <p><strong>Name: </strong>{{currentClient.name}}</p>
             <hr>
-            <p><strong>Email: </strong>{{currentClient.clientID}}</p>
+            <p><strong>Client ID: </strong>{{currentClient.clientID}}</p>
             <hr>
             <p><strong>Tel: </strong>{{currentClient.telephoneNumber}}</p>
             <hr>
@@ -65,7 +65,7 @@
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
       <vs-prompt
         title="Add Client"
-        color="danger"
+        color="primary"
         @cancel="closeAdd"
         @accept="addClient"
         @close="closeAdd"
@@ -73,18 +73,32 @@
         :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
-          Bitte Kundendaten eingeben
+          Please insert client data.
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
           <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
-          <vs-input placeholder="Contact person" type="integer" class="mb-3" v-model="inputValues.cPersonField"/>
-          <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="inputValues.projectsField"/>
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <div>Contact Person:      </div>
+            <vs-dropdown class="ml-1">
+              <a class="a-icon" href="#">
+                {{this.selectedEmployeeName}}
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item @click="updateSelectedEmployee(employee.employeeID,employee.name)" v-for="employee in employees" :key="employee.employeeID">
+                  {{employee.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+
+
+          </div>
           <vs-alert
             :active="!validClient"
             color="danger"
             icon="new_releases"
           >
-          Die Felder müssen gefüllt werden.
+          Fields can't bee empty
           </vs-alert>
         </div>
       </vs-prompt>
@@ -99,17 +113,39 @@
       >
         <div class="con-exemple-prompt">
           Please Modify Client Data
-          <vs-input :placeholder="inputValues.nameField" class="mb-3" v-model="editValues.nameField" />
-          <vs-input :placeholder="inputValues.emailField" class="mb-3" v-model="editValues.emailField"/>
-          <vs-input :placeholder="inputValues.numberField" class="mb-3" v-model="editValues.numberField"/>
-          <vs-input :placeholder="inputValues.cPersonField" class="mb-3" v-model="editValues.cPersonField"/>
-          <vs-input :placeholder="inputValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
+
+          <div>  </div>
+          <div>Name</div>
+          <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
+          Email
+          <vs-input :placeholder="editValues.emailField" class="mb-3" v-model="editValues.emailField"/>
+          Telephone Number
+          <vs-input :placeholder="editValues.numberField" class="mb-3" v-model="editValues.numberField"/>
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <div>Contact Person:      </div>
+            <vs-dropdown class="ml-1">
+              <a class="a-icon" href="#">
+                {{this.selectedEmployeeName}}
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item @click="updateSelectedEmployee(employee.employeeID,employee.name)" v-for="employee in employees" :key="employee.employeeID">
+                  {{employee.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+
+
+          </div>
+
+
+          <div class="mb-3"><h5>{{"Projects ID's: " + editValues.projectsField}}</h5></div>
           <vs-alert
               :active="!validClientEdit"
               color="warning"
               icon="new_releases"
           >
-            Die Felder müssen gefüllt werden.
+            Fields can't be empty
           </vs-alert>
         </div>
       </vs-prompt>
@@ -124,6 +160,9 @@ export default {
   name: "clientList",
   data: () => {
     return {
+      employees:[],
+      selectedEmployee:0,
+      selectedEmployeeName:"Contact Person",
       clients: [],
       currentClient:{},
       clientSelected:false,
@@ -133,21 +172,20 @@ export default {
         nameField: '',
         emailField: '',
         numberField: '',
-        cPersonField: '',
-        projectsField: ''
       },
       editValues: {
         nameField: '',
         emailField: '',
         numberField: '',
-        cPersonField: '',
-        projectsField: ''
+        projectsField:"",
+
       },
     };
   },
 
-  created() {
-    this.fetchCustomers();
+  async created() {
+    await this.fetchCustomers();
+    await this.fetchEmployees()
 
 
   },
@@ -156,19 +194,19 @@ export default {
       validClient(){
         var re = /\S+@\S+\.\S+/;
         return (this.inputValues.nameField.length > 0
-                && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length > 4
+                && 50 > this.inputValues.emailField.length && this.inputValues.emailField.length > 4
                 && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length > 7
                 && re.test(this.inputValues.emailField)
-                && this.inputValues.cPersonField.isInteger
+                && this.selectedEmployee != 0
                 )
       },
     validClientEdit(){
       var re = /\S+@\S+\.\S+/;
       return (this.editValues.nameField.length > 0
-          && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
+          && 50 > this.editValues.emailField.length && this.editValues.emailField.length> 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
           && re.test(this.editValues.emailField)
-          && this.inputValues.cPersonField.isInteger
+          && this.selectedEmployee != 0
       )
     }
   },
@@ -180,10 +218,10 @@ export default {
         'name': this.editValues.nameField,
         'email': this.editValues.emailField,
         'telephoneNumber': this.editValues.numberField,
-        'contactPersonID': parseInt(this.editValues.cPersonField),
+        'contactPersonID': this.selectedEmployee,
         'projectIDs': this.editValues.projectsField
       })
-      await this.fetchCustomers()
+      this.fetchCustomers()
 
 
     },
@@ -192,28 +230,30 @@ export default {
 
     acceptAlert(){
       this.$vs.notify({
-        title:'Benachrichtigung:',
-        text:'Mitarbeiter wurde erfolgreich angelegt.'
+        title:'Notification:',
+        text:'Employee was added.'
       })
     },
     closeAdd(){
-      this.inputValues.nameField = '',
-      this.inputValues.emailField = '',
-      this.inputValues.numberField = '',
-      this.inputValues.cPersonField = '',
-      this.inputValues.projectsField = '',
+      this.inputValues.nameField = '';
+      this.inputValues.emailField = '';
+      this.inputValues.numberField = '';
+      this.selectedEmployeeName = "Contact Person"
+      this.selectedEmployee = 0
       this.$vs.notify({
-        title:'Beendet',
-        text:'Hinzufügen wurde abgebrochen.'
+        title:'Closed',
+        text:'Adding was cancelled.'
       })
+
     },
 
     closeEdit(){
-      this.editValues.nameField = '',
-          this.editValues.emailField = '',
-          this.editValues.numberField = '',
-          this.editValues.cPersonField = '',
-          this.editValues.projectsField = '',
+      this.editValues.nameField = '';
+          this.editValues.emailField = '';
+          this.editValues.numberField = '';
+          this.editValues.projectsField = '';
+          this.selectedEmployeeName = "Contact Person"
+          this.selectedEmployee = 0
           this.$vs.notify({
             title:'Closed',
             text:'Edit was cancelled.'
@@ -233,6 +273,18 @@ export default {
           })
     },
 
+    fetchEmployees: async function(){
+      await axios.get(`http://localhost:8080/employees/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.employees = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+
+    },
+
     fetchCustomers: async function (){
       await axios.get(`http://localhost:8080/clients/`)
           .then(response => {
@@ -250,11 +302,13 @@ export default {
         'name': this.inputValues.nameField,
         'email': this.inputValues.emailField,
         'telephoneNumber': this.inputValues.numberField,
-        'contactPersonID': parseInt(this.inputValues.cPersonField),
-        'projectIDs': this.inputValues.projectsField
+        'contactPersonID': this.selectedEmployee,
+        'projectIDs': ""
       })
       this.acceptAlert()
       await this.fetchCustomers()
+      this.selectedEmployeeName = "Contact Person"
+      this.selectedEmployee = 0
     },
 
     deleteClient: async function(id){
@@ -267,7 +321,12 @@ export default {
       this.editValues.nameField = this.currentClient.name
       this.editValues.emailField = this.currentClient.email
       this.editValues.numberField = this.currentClient.telephoneNumber
-      this.editValues.cPersonField = this.currentClient.contactPersonID
+      this.selectedEmployee = this.currentClient.contactPersonID
+      for(var i =0;i<this.employees.length;i++){
+        if(this.employees[i].employeeID == this.currentClient.contactPersonID){
+          this.selectedEmployeeName = this.employees[i].name
+        }
+      }
       this.editValues.projectsField = this.currentClient.projectIDs
       this.activeEditPromt = true;
 
@@ -276,6 +335,11 @@ export default {
     updateDetailedClient(id){
       this.fetchCustomer(id)
       this.clientSelected = true
+    },
+
+    updateSelectedEmployee(id, name){
+      this.selectedEmployee = id;
+      this.selectedEmployeeName = name;
     }
 
   }
