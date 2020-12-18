@@ -181,6 +181,7 @@ export default {
       currentClient: {},
       currentProject: {},
       editProjectID: 0,
+      createdClientID:0,
       projectSelected: false,
       activeEditPromt: false,
       activePrompt: false,
@@ -292,6 +293,8 @@ export default {
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": 0,
         "competences": this.inputValues.competencesField,
+      }).then((result) => {
+        this.createdClientID = result.data;
       })
 
       await this.fetchCustomer(this.inputValues.clientIDField)
@@ -302,7 +305,7 @@ export default {
         'email': this.currentClient.email,
         'telephoneNumber': this.currentClient.telephoneNumber,
         'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs + "-" + 5 //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+        'projectIDs': this.currentClient.projectIDs + "-" + this.createdClientID //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
       })
 
 
