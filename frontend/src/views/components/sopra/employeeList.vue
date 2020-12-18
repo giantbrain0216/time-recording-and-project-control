@@ -95,10 +95,16 @@
           :active.sync="activeEditPromt"
       >
         <div class="con-exemple-prompt">
-          Please Modify Employee Data
+          <strong>Please Modify Employee Data of</strong>
+          <h6 class="edit-employeee">{{editValues.nameField}}</h6>
+          <br>
+          <label>Name: </label>
           <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
+          <label>Domicile: </label>
           <vs-input :placeholder="editValues.domicileField" class="mb-3" v-model="editValues.domicileField"/>
+          <label>Competences: </label>
           <vs-input :placeholder="editValues.competencesField" class="mb-3" v-model="editValues.competencesField"/>
+          <label>Projects (IDs): </label>
           <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
           <vs-alert
               :active="!validEmployeeEdit"
@@ -151,13 +157,13 @@ export default {
 
   computed:{
     validEmployee(){
-      return (this.inputValues.nameField.length > 4 && this.inputValues.nameField.length < 26
+      return (this.inputValues.nameField.length > 2 && this.inputValues.nameField.length < 26
               && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
       )
     },
     validEmployeeEdit(){
-      return (this.inputValues.nameField.length > 4 && this.inputValues.nameField.length < 26
-              && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
+      return (this.editValues.nameField.length > 2 && this.editValues.nameField.length < 26
+              && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 26
       )
     }
   },
@@ -266,4 +272,7 @@ export default {
 </script>
 
 <style scoped>
+.edit-employeee{
+  color: red;
+}
 </style>
