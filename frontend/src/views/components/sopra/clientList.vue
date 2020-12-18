@@ -47,7 +47,7 @@
           <div>
             <p><strong>Name: </strong>{{currentClient.name}}</p>
             <hr>
-            <p><strong>Email: </strong>{{currentClient.clientID}}</p>
+            <p><strong>Client ID: </strong>{{currentClient.clientID}}</p>
             <hr>
             <p><strong>Tel: </strong>{{currentClient.telephoneNumber}}</p>
             <hr>
@@ -74,6 +74,21 @@
           <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
           <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
           <vs-input placeholder="Contact person" type="integer" class="mb-3" v-model="inputValues.cPersonField"/>
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <vs-dropdown class="mr-4">
+              <a class="a-icon" href="#">
+                Contact Person
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item v-for="employee in employees" :key="employee.employeeID">
+                  {{employee.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+
+
+          </div>
           <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="inputValues.projectsField"/>
           <vs-alert
             :active="!validClient"
@@ -120,6 +135,9 @@ export default {
   name: "clientList",
   data: () => {
     return {
+      employees:[],
+      selectedEmployee:0,
+
       clients: [],
       currentClient:{},
       clientSelected:false,
@@ -144,6 +162,7 @@ export default {
 
   created() {
     this.fetchCustomers();
+    this.fetchEmployees()
 
 
   },
@@ -227,6 +246,18 @@ export default {
           .catch(e => {
             this.errors.push(e)
           })
+    },
+
+    fetchEmployees: async function(){
+      await axios.get(`http://localhost:8080/employees/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.employees = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+
     },
 
     fetchCustomers: async function (){
