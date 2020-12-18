@@ -2,27 +2,27 @@
 		{
 			url:"/starterkit",
 			name:"Starterkit",
-			icon:"favorite_border"
+			icon:"home"
 		},
 		{
 			url: "/clientlist",
 			name: "Client List",
-			icon:"tag_faces"  /*error_outline*/
+			icon:"people"  /*error_outline*/
 		},
 		{
 			url :"/projectList",
 			name:"Project list",
-			icon:"credit_card"
+			icon:"list"
 		},
 		{
 			url :"/employeeList",
 			name: "Employee list",
-			icon: "tag_faces"
+			icon: "folder_shared"
 		},
 		{
 			url:"/timeRegistration",
 			name:"Time Registration",
-			icon:"tag_faces"
+			icon:"watch_later"
 		},
 
 ]
