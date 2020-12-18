@@ -9,6 +9,8 @@
             <tr class="">
               <th class="border-top-0">Name</th>
               <th class="border-top-0">ID of the Client</th>
+              <th class="border-top-0">Deadline</th>
+              <th class="border-top-0">Progress</th>
               <th class="border-top-0">Actions</th>
             </tr>
             </thead>
@@ -24,6 +26,9 @@
               </td>
               <td>{{ project.clientID }}</td>
               <!-- <td>{{ project.projectName }}</td> -->
+              <td> {{project.plannedEnd.substring(0,10)}}</td>
+              <td  style="text-align: center">            <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary</vs-progress>
+                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2)}} %</i> </td>
               <td>
                 <div>
                   <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1" color="danger" type="filled">
@@ -50,13 +55,13 @@
           <div>
             <p><strong>ID of the Project: </strong>{{ currentProject.projectNumber }}</p>
             <hr>
-            <p><strong>Planned Start: </strong>{{ currentProject.plannedStart }}</p>
+            <p><strong>Planned Start: </strong>{{ currentProject.plannedStart.substring(0,10) }}</p>
             <hr>
-            <p><strong>Planned End: </strong>{{ currentProject.plannedEnd }}</p>
+            <p><strong>Planned End: </strong>{{ currentProject.plannedEnd.substring(0,10) }}</p>
             <hr>
-            <p><strong>Planned Effort: </strong>{{ currentProject.plannedEffort }}</p>
+            <p><strong>Planned Effort <i>(In Hours)</i>: </strong>{{ currentProject.plannedEffort }}</p>
             <hr>
-            <p><strong>Performed Effort: </strong>{{ currentProject.performedEffort }}</p>
+            <p><strong>Performed Effort <i>(In Hours)</i>: </strong>{{ currentProject.performedEffort }}</p>
             <hr>
             <p><strong>Competences: </strong>{{ currentProject.competences }}</p>
             <hr>
@@ -101,8 +106,8 @@
             <small>Planned Start</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
-          <vs-input label-placeholder="planned effort" class="mb-3" v-model="inputValues.plannedEffortField"/>
-          <vs-input label-placeholder="performed effort" class="mb-3" v-model="inputValues.performedEffortField"/>
+          <vs-input label-placeholder="Planned Effort In Hours" class="mb-3" v-model="inputValues.plannedEffortField"/>
+          <vs-input label-placeholder="Performed Effort In Hours)</i>" class="mb-3" v-model="inputValues.performedEffortField"/>
           <vs-input label-placeholder="competences" class="mb-3" v-model="inputValues.competencesField"/>
           <vs-alert
               :active="!validProject"
@@ -264,11 +269,11 @@ export default {
       this.editValues.plannedStartField = startdateedit + " " + "00:00"
       this.editValues.plannedEndField = enddateedit + " " + "00:00"
       await axios.put(`http://localhost:8080/projects`), {
-        "id":this.editProjectID,
+        "projectNumber":this.editProjectID,
         "projectName": this.currentProject.projectName,
         "clientID": parseInt(this.editValues.clientIDField),
-        "plannedStart": this.editValues.plannedStartField,
-        "plannedEnd": this.editValues.plannedEndField,
+        "plannedStart":  startdateedit + " " + "00:00",
+        "plannedEnd": enddateedit + " " + "00:00",
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
         "performedEffort": parseInt(this.editValues.performedEffortField),
         "competences": this.editValues.competencesField,
