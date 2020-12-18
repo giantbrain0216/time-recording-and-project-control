@@ -99,8 +99,22 @@
       >
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
-          <vs-input type="number" label-placeholder="ID of the client" class="mb-3"
-                    v-model="inputValues.clientIDField"/>
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <div> Client:      </div>
+            <vs-dropdown class="ml-1">
+              <a class="a-icon" href="#">
+                {{this.selectedClientName}}
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item v-for="client in clients" :key="client.clientID" @click="updateSelectedClient(client.clientID,client.name)" >
+                  {{client.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+
+
+          </div>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
                                                 :value="dateToday"
@@ -173,6 +187,7 @@ export default {
   data: () => {
     return {
       projects: [],
+      clients:[],
       dateToday: "",
       startDatum: "",
       startdate1: "",
@@ -182,6 +197,8 @@ export default {
       currentProject: {},
       editProjectID: 0,
       createdClientID:0,
+      selectedClientID :0,
+      selectedClientName:"Owner of the project",
       projectSelected: false,
       activeEditPromt: false,
       activePrompt: false,
@@ -207,6 +224,7 @@ export default {
   },
 
   created() {
+    this.fetchClients();
     this.fetchAllProjects();
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -216,6 +234,7 @@ export default {
     this.dateToday = yyyy + "-" + mm + '-' + dd;
 
   },
+
 
   computed: {
 
@@ -247,6 +266,20 @@ export default {
           var dateControl1 = document.querySelector('input[id="end"]');
           this.enddate1 = dateControl1.value;
         }, */
+    fetchClients: async function (){
+      await axios.get(`http://localhost:8080/clients`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.clients = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+    },
+    updateSelectedClient(id, name){
+      this.selectedClientID = id;
+      this.selectedClientName = name;
+    },
     showDeletePrompt: function (id) {
       this.fetchProject(id)
       this.activeDeletePrompt = true
@@ -287,7 +320,7 @@ export default {
       this.inputValues.plannedEndField = enddate + " " + "00:00"
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
-        "clientID": parseInt(this.inputValues.clientIDField),
+        "clientID": parseInt(this.selectedClientID),
         "plannedStart": startdate + " " + "00:00",
         "plannedEnd": enddate + " " + "00:00",
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
@@ -297,7 +330,7 @@ export default {
         this.createdClientID = result.data;
       })
 
-      await this.fetchCustomer(this.inputValues.clientIDField)
+      await this.fetchCustomer(this.selectedClientID)
 
       await axios.put(`http://localhost:8080/clients/`, {
         'id': this.currentClient.clientID,

@@ -74,9 +74,9 @@
       >
         <div class="con-exemple-prompt">
           Please insert client data.
-          <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
-          <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
-          <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
+          <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
+          <vs-input label-placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
+          <vs-input label-placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
           <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
             <div>Contact Person:      </div>
             <vs-dropdown class="ml-1">
