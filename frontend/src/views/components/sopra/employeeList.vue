@@ -118,6 +118,7 @@ import EmployeeChart from "@/views/components/dashboard/EmployeeChart";
 
 export default {
   name: "employeeList",
+  components: {EmployeeChart},
   data: () => {
     return {
       employees: [],
@@ -137,7 +138,7 @@ export default {
         competencesField: '',
         projectsField: ''
       },
-      components: {EmployeeChart},
+
     };
   },
 
