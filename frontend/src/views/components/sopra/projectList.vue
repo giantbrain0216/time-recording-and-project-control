@@ -148,8 +148,8 @@
           </div>
           <vs-input type="number" label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
-          <vs-input type="number" label="Performed Effort" :placeholder="currentProject.performedEffort" class="mb-3"
-                    v-model="editValues.performedEffortField"/>
+          <vs-input disabled="true" type="number" label="Performed Effort" :placeholder="currentProject.performedEffort" class="mb-3"
+                    />
           <vs-input label="Competences" :placeholder="currentProject.competences" class="mb-3"
                     v-model="editValues.competencesField"/>
           <vs-alert
@@ -336,7 +336,7 @@ export default {
         "plannedStart": startdateedit + " " + "00:00",
         "plannedEnd": enddateedit + " " + "00:00",
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
-        "performedEffort": parseInt(this.editValues.performedEffortField),
+        "performedEffort": this.currentProject.performedEffortField,
         "competences": this.editValues.competencesField,
       })
       this.editAlert()
