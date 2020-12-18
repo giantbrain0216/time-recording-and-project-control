@@ -41,8 +41,8 @@
       <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
         <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
-            <h4 >Details vom {{currentClient.name}} </h4>
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="clientSelected = false"></vs-button>
+            <h1 >Details vom {{currentClient.name}} </h1>
           </div>
           <div>
             <p><strong>Name: </strong>{{currentClient.name}}</p>
@@ -58,9 +58,6 @@
           </div>
         </vs-card>
       </vs-col>
-      <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12"><vs-card class="cardx">
-        <ClientChart :clientID="this.currentClient.clientID"/>
-        </vs-card></vs-col>
       <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
       <vs-prompt
         title="Add Client"
@@ -76,7 +73,7 @@
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
           <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
-          <vs-input placeholder="Contact person" class="mb-3" v-model="inputValues.cPersonField"/>
+          <vs-input placeholder="Contact person" type="integer" class="mb-3" v-model="inputValues.cPersonField"/>
           <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="inputValues.projectsField"/>
           <vs-alert
             :active="!validClient"
@@ -154,16 +151,18 @@ export default {
   computed:{
       validClient(){
         return (this.inputValues.nameField.length > 0
-                && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length> 4
-                && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length> 7
-                //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
+                && 26 > this.inputValues.emailField.length && this.inputValues.emailField.length > 4
+                && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length > 7
+                && this.inputValues.emailField.includes('@')
+                && this.inputValues.cPersonField.isInteger
                 )
       },
     validClientEdit(){
       return (this.editValues.nameField.length > 0
           && 26 > this.editValues.emailField.length && this.editValues.emailField.length> 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length> 7
-          //&& this.inputValues.emailField.contains("@") && !this.inputValues.cPersonField.isNaN()
+          && this.inputValues.emailField.includes('@')
+          && this.inputValues.cPersonField.isInteger
       )
     }
   },
@@ -219,6 +218,8 @@ export default {
       await axios.get(`http://localhost:8080/clients/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
+            // eslint-disable-next-line no-console
+            console.log(response.data)
             this.currentClient = response.data
           })
           .catch(e => {
@@ -247,12 +248,12 @@ export default {
         'projectIDs': this.inputValues.projectsField
       })
       this.acceptAlert()
-      this.fetchCustomers()
+      await this.fetchCustomers()
     },
 
     deleteClient: async function(id){
       await axios.delete(`http://localhost:8080/clients/` + id)
-      this.fetchCustomers()
+      await this.fetchCustomers()
     },
 
     async updateEditID(id){
