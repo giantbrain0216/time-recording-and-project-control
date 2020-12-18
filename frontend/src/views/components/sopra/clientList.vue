@@ -42,7 +42,7 @@
         <vs-card v-show="clientSelected" class="cardx">
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="clientSelected = false"></vs-button>
-            <h1 >Details vom {{currentClient.name}} </h1>
+            <h1 >Details of {{currentClient.name}} </h1>
           </div>
           <div>
             <p><strong>Name: </strong>{{currentClient.name}}</p>
@@ -69,7 +69,7 @@
         :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
-          Bitte Kundendaten eingeben
+          Please insert client data.
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
           <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
@@ -94,7 +94,7 @@
             color="danger"
             icon="new_releases"
           >
-          Die Felder müssen gefüllt werden.
+          Fields can't bee empty
           </vs-alert>
         </div>
       </vs-prompt>
@@ -141,7 +141,7 @@
               color="warning"
               icon="new_releases"
           >
-            Die Felder müssen gefüllt werden.
+            Fields can't be empty
           </vs-alert>
         </div>
       </vs-prompt>
@@ -226,8 +226,8 @@ export default {
 
     acceptAlert(){
       this.$vs.notify({
-        title:'Benachrichtigung:',
-        text:'Mitarbeiter wurde erfolgreich angelegt.'
+        title:'Notification:',
+        text:'Employee was added.'
       })
     },
     closeAdd(){
@@ -237,8 +237,8 @@ export default {
       this.selectedEmployeeName = "Contact Person"
       this.selectedEmployee = 0
       this.$vs.notify({
-        title:'Beendet',
-        text:'Hinzufügen wurde abgebrochen.'
+        title:'Closed',
+        text:'Adding was cancelled.'
       })
 
     },
