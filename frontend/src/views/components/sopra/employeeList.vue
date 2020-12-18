@@ -52,7 +52,6 @@
             <hr>
             <p><strong>Projects (ID): </strong>{{currentEmployee.projectIDs}}</p>
             <hr>
-            <p><strong>Competences: </strong>{{currentEmployee.competences}}</p>
           </div>
         </vs-card>
       </vs-col>
@@ -138,7 +137,7 @@ export default {
         nameField: '',
         domicileField: '',
         competencesField: '',
-        projectsField: ''
+        projectsField: '',
       },
       editValues: {
         nameField: '',
@@ -250,8 +249,11 @@ export default {
     },
 
     deleteEmployee: async function(id){
-      await axios.delete(`http://localhost:8080/employees/` + id)
-      await this.fetchEmployees()
+      await this.fetchEmployee(id);
+      if (confirm(`Are you sure you want to delete ${this.currentEmployee.name}`)) {
+        await axios.delete(`http://localhost:8080/employees/` + id)
+        await this.fetchEmployees()
+      }
     },
 
     async updateEditID(id){
