@@ -51,6 +51,7 @@
             <p><strong>Competences: </strong>{{currentEmployee.competences}}</p>
             <hr>
             <p><strong>Projects (ID): </strong>{{currentEmployee.projectIDs}}</p>
+            <hr>
           </div>
         </vs-card>
       </vs-col>
@@ -94,10 +95,15 @@
           :active.sync="activeEditPromt"
       >
         <div class="con-exemple-prompt">
-          Please Modify Employee Data
+          <strong>Please Modify Employee Data of</strong><h6 class="edit-employee">{{editValues.nameField}}</h6>
+          <br>
+          <label>Name:</label>
           <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
+          <label>Domicile</label>
           <vs-input :placeholder="editValues.domicileField" class="mb-3" v-model="editValues.domicileField"/>
+          <label>Competences</label>
           <vs-input :placeholder="editValues.competencesField" class="mb-3" v-model="editValues.competencesField"/>
+          <label>Projects (IDs)</label>
           <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
           <vs-alert
               :active="!validEmployeeEdit"
@@ -264,5 +270,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+
+.edit-employee {
+  color: red;
+}
 </style>

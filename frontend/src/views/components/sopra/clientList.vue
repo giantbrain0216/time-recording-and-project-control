@@ -179,7 +179,7 @@ export default {
         'contactPersonID': parseInt(this.editValues.cPersonField),
         'projectIDs': this.editValues.projectsField
       })
-      this.fetchCustomers()
+      await this.fetchCustomers()
 
 
     },
