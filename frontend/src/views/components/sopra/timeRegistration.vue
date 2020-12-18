@@ -16,7 +16,7 @@
               <!-- <a href="#">Hola mundo</a> -->
               <vs-dropdown-menu>
                 <vs-dropdown-item  @click="updateProject(project.projectNumber)" v-for="project in projects" :key="project.projectNumber">
-                  {{"Project " + project.projectNumber}}
+                  {{project.projectName}}
                 </vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
@@ -35,17 +35,17 @@
           </div>
           <div class="m-3"><input type="date" id="date" name="date"
                       :value="dateToday"
-                      min="2018-01-01" max="2030-12-31"></div>
+                      min="2018-01-01" :max="dateToday"></div>
           <div class="m-3"><input type="time" id="starttime" name="starttime"
-                      min="06:00" max="22:00" required>
+                      min="06:00" max="22:00" v-model="starttime" required>
             <small>   Start Time</small>
           </div>
 
           <div class="m-3"><input type="time" id="endtime" name="endtime"
-                      min="06:00" max="22:00" required>
+                      min="06:00" max="22:00" v-model="endtime" required>
             <small>   End Time</small>
           </div>
-          <div @click="submitTimeRegistration" class="m-3"><vs-button color="success" type="relief">Success</vs-button></div>
+          <div @click="submitTimeRegistration" class="m-3"><vs-button color="success" type="relief" v-bind:disabled="!validTime(starttime,endtime)">Save Time Registration</vs-button></div>
         </div>
 
       </vs-card>
@@ -67,7 +67,9 @@ export default {
       employees:[],
       currentEmployee: "Employee",
       currentEmployeeID:0,
-      dateToday: ""
+      dateToday: "",
+      starttime: "",
+      endtime: ""
     };
   },
 
@@ -131,7 +133,13 @@ export default {
           {"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString})
 
 
-    }
+    },
+
+    validTime(starttime,endtime){
+      var startdate = new Date("1970-01-01 " + starttime);
+      var enddate = new Date("1970-01-01 " + endtime);
+      return (startdate.getTime() < enddate.getTime())
+    },
 
   }
 
