@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 public class Assignment {
 
     @DatabaseField(columnName = "ID", id = true)
-    @NotNull
     private Integer id;
 
     @DatabaseField(columnName = "ID of the Employee")
