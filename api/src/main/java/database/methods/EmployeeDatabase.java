@@ -4,8 +4,10 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import controllers.Application;
 import entities.Client;
 import entities.Employee;
+import org.springframework.boot.ApplicationArguments;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -155,6 +157,13 @@ public class EmployeeDatabase {
             System.out.println("there is no elements in the database. ");
             return new ArrayList<Employee>();
         }
+    }
+
+    public static void main(String[] args) throws SQLException {
+        Application application = new Application();
+        EmployeeDatabase employeeDatabase = new EmployeeDatabase(application.connectionSource);
+        employeeDatabase.addToDatabase(new Employee("Radu","Sindelfingen","VUE.JS",40));
+        employeeDatabase.addToDatabase(new Employee("Clirim","Vaihingen","SQL",40));
     }
 
 

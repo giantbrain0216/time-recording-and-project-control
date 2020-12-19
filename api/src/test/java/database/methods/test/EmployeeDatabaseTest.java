@@ -36,10 +36,10 @@ public class EmployeeDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Employee employeeToAdd = new Employee("Assil", "Tunis", "CSS", "6");
+        Employee employeeToAdd = new Employee("Assil", "Tunis", "CSS", 40);
         employeeDatabase.addToDatabase(employeeToAdd);
         Assert.assertEquals("CSS", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getCompetences());
-        Assert.assertEquals("6", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getProjectIDs());
+       // Assert.assertEquals("6", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getProjectIDs());
         Assert.assertEquals("Assil", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getName());
         Assert.assertEquals("Tunis", employeeDatabase.getEmployee(employeeToAdd.getEmployeeID()).getDomicile());
         // checks that the employee exists in the database
@@ -54,15 +54,15 @@ public class EmployeeDatabaseTest {
      */
     @Test
     public void modifyEmployeeDataTest() throws SQLException {
-        Employee employeeToModify = new Employee("Test", "Tunis", "HTML", "6");
+        Employee employeeToModify = new Employee("Test", "Tunis", "HTML", 40);
         employeeDatabase.addToDatabase(employeeToModify);
         assertEquals("Tunis", employeeToModify.getDomicile());
         assertTrue(employeeToModify.getCompetences().contains("HTML"));
         employeeToModify.setDomicile("Stuttgart");
-        employeeToModify.addProject(5);
+        //employeeToModify.addProject(5);
         employeeToModify.addCompetence("JAVASCRIPT");
         employeeDatabase.modifyEmployeeData(employeeToModify);
-        assertTrue(employeeToModify.getProjectIDs().contains("5"));
+        //assertTrue(employeeToModify.getProjectIDs().contains("5"));
         assertEquals("Stuttgart", employeeToModify.getDomicile());
         assertNotEquals("Tunis", employeeToModify.getDomicile());
         assertTrue(employeeToModify.getCompetences().contains("JAVASCRIPT"));
@@ -78,7 +78,7 @@ public class EmployeeDatabaseTest {
      */
     @Test
     public void deleteEmployeeDataTest() throws SQLException {
-        Employee employeeToDelete = new Employee("Test", "Tunis", "HTML", "6");
+        Employee employeeToDelete = new Employee("Test", "Tunis", "HTML", 40);
         employeeDatabase.addToDatabase(employeeToDelete);
         // checks that the employee exists in the database
         Assert.assertTrue(employeeDatabase.getAllEmployees().stream().anyMatch(employee -> employee.getEmployeeID() == (employeeToDelete.getEmployeeID())));        employeeDatabase.deleteFromDatabase(employeeToDelete.getEmployeeID());

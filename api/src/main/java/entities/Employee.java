@@ -1,15 +1,10 @@
 package entities;
 
-import ch.qos.logback.classic.db.names.ColumnName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import controllers.Application;
-import database.methods.EmployeeDatabase;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * This class represents a worker in the itestra society, which is used to add
@@ -18,7 +13,7 @@ import java.util.List;
  * The database is accessed via OR Mapper
  */
 
-@DatabaseTable(tableName = "employees")
+@DatabaseTable(tableName = "Employees")
 public class Employee {
 
     @DatabaseField(columnName = "ID of the Employee",id=true)
@@ -37,18 +32,23 @@ public class Employee {
     @DatabaseField(columnName = "Competences")
     private String competences;
 
-    @DatabaseField(columnName = "Project IDs")
+    @DatabaseField(columnName = "Working hours per week")
     @NotNull
-    private String projectIDs;
+    private Integer workingHoursPerWeek;
+
+    @DatabaseField(columnName = "Remaining working hours per week")
+    @NotNull
+    private Integer stillRemainingWorkingHoursPerWeek;
 
 
     public Employee() {}
 
-    public Employee(String name, String domicile, String competences, String projectIDs) {
+    public Employee(String name, String domicile, String competences, Integer workingHoursPerWeek) {
          this.name = name;
         this.domicile = domicile;
-        this.projectIDs = projectIDs;
+        this.workingHoursPerWeek = (workingHoursPerWeek);
         this.competences = competences.toUpperCase();
+        this.stillRemainingWorkingHoursPerWeek = (0);
     }
 
     public int getEmployeeID() {
@@ -80,27 +80,6 @@ public class Employee {
 
     }
 
-    public String getProjectIDs() {
-        return projectIDs;
-    }
-
-    public void addProject(Integer projectID) {
-        this.projectIDs += "-" + projectID;
-    }
-
-    public void removeProject(Integer projectIDToRemove){
-        if (!this.projectIDs.contains(projectIDToRemove.toString())) {
-            System.out.println("This employee does not have this competence");
-        }
-
-        if (this.projectIDs.contains(projectIDToRemove + "-")) {
-            this.projectIDs = this.competences.replace(projectIDToRemove + "-", "");
-        } else if (this.projectIDs.contains("-" + projectIDToRemove)) {
-            this.projectIDs = this.competences.replace("-" + projectIDToRemove, "");
-        } else {
-            this.projectIDs = "";
-        }
-    }
     /**
      * a competence will be removed from the list of competences of the employee.
      * If this competence the first saved competence and the employee has other
@@ -134,11 +113,28 @@ public class Employee {
                 ", name='" + name + '\'' +
                 ", domicile='" + domicile + '\'' +
                 ", competences='" + competences + '\'' +
-                ", projectIDs='" + projectIDs + '\'' +
-                '}' + "\n";
+                ", workingHoursPerWeek=" + workingHoursPerWeek +
+                ", stillRemainingWorkingHoursPerWeek=" + stillRemainingWorkingHoursPerWeek +
+                '}';
     }
 
     public void setID(int id) {
         this.employeeID = id;
+    }
+
+    public Integer getWorkingHoursPerWeek() {
+        return workingHoursPerWeek;
+    }
+
+    public void setWorkingHoursPerWeek(Integer workingHoursPerWeek) {
+        this.workingHoursPerWeek = workingHoursPerWeek;
+    }
+
+    public Integer getStillRemainingWorkingHoursPerWeek() {
+        return stillRemainingWorkingHoursPerWeek;
+    }
+
+    public void setStillRemainingWorkingHoursPerWeek(Integer stillRemainingWorkingHoursPerWeek) {
+        this.stillRemainingWorkingHoursPerWeek = stillRemainingWorkingHoursPerWeek;
     }
 }

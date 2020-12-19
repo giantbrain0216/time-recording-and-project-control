@@ -95,7 +95,7 @@ public class ClientController {
      * @return
      */
     @PutMapping("/clients")
-    public void updateProject(@Valid @RequestBody Client requestBody){
+    public void updateProject( @Valid @RequestBody Client requestBody){
         clientDatabase.modifyClientData(requestBody);
 
     }
