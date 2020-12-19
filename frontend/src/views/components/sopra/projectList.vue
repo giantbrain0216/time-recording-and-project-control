@@ -5,18 +5,19 @@
               code-toggler>
         <vs-card class="cardx">
           <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-            <div>Only see projects from:      </div>
+            <div>Only see projects from:</div>
             <vs-dropdown class="ml-1">
               <a class="a-icon" href="#">
-                {{this.selectedClientNameEdit}}
+                {{ this.selectedClientNameEdit }}
                 <vs-icon class="" icon="expand_more"></vs-icon>
               </a>
               <vs-dropdown-menu>
                 <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
                   All Clients
                 </vs-dropdown-item>
-                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)" v-for="client in clients" :key="client.clientID">
-                  {{client.name }}
+                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)"
+                                  v-for="client in clients" :key="client.clientID">
+                  {{ client.name }}
                 </vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
@@ -30,7 +31,7 @@
               <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
               <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
               <th class="border-top-0" style="color: cornflowerblue">Progress</th>
-              <th class="border-top-0" style="color: cornflowerblue;text-align: center" >Actions</th>
+              <th class="border-top-0" style="color: cornflowerblue;text-align: center">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -38,7 +39,8 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="">
-                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">
+                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
+                       style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}</a>
                   </div>
                 </div>
@@ -52,15 +54,16 @@
                 <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
               <td>
                 <div>
-                  <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger" icon="delete" type="filled">
+                  <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger"
+                             icon="delete" type="filled">
                     Delete
                   </vs-button>
                   <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
                   " color="warning" icon="edit" type="filled">
                     Edit
                   </vs-button>
-                  <vs-button  class=" m-1
-                  " color="success" icon="add" type="filled">
+                  <vs-button class=" m-1" @click="updateeProjectID(project.projectNumber)" color="success" icon="add"
+                             type="filled">
                     Assign
                   </vs-button>
                 </div>
@@ -123,15 +126,16 @@
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
           <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-            <div> Client:      </div>
+            <div> Client:</div>
             <vs-dropdown class="ml-1">
               <a class="a-icon" href="#">
-                {{this.selectedClientName}}
+                {{ this.selectedClientName }}
                 <vs-icon class="" icon="expand_more"></vs-icon>
               </a>
               <vs-dropdown-menu>
-                <vs-dropdown-item v-for="client in clients" :key="client.clientID" @click="updateSelectedClient(client.clientID,client.name)" >
-                  {{client.name }}
+                <vs-dropdown-item v-for="client in clients" :key="client.clientID"
+                                  @click="updateSelectedClient(client.clientID,client.name)">
+                  {{ client.name }}
                 </vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
@@ -163,6 +167,7 @@
         </div>
       </vs-prompt>
 
+
       <vs-prompt
           title="Edit Project"
           color="danger"
@@ -187,8 +192,9 @@
           </div>
           <vs-input type="number" label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
-          <vs-input disabled="true" type="number" label="Performed Effort" :placeholder="currentProject.performedEffort" class="mb-3"
-                    />
+          <vs-input disabled="true" type="number" label="Performed Effort" :placeholder="currentProject.performedEffort"
+                    class="mb-3"
+          />
           <vs-input label="Competences" :placeholder="currentProject.competences" class="mb-3"
                     v-model="editValues.competencesField"/>
           <vs-alert
@@ -198,6 +204,51 @@
           >
             All fields must be filled in
           </vs-alert>
+        </div>
+      </vs-prompt>
+
+      <vs-prompt
+          title="Assign Employee"
+          color="success"
+          @cancel="closeAssignPrompt"
+          @accept="assignProject"
+          @close="closeAssignPrompt"
+          :is-valid="validEmployeeAssign"
+          :active.sync="activeAssignPropmt"
+      >
+        <h5>Project Name: <strong style="color: red"> {{ this.currentProject.projectName }}</strong></h5>
+        <hr>
+        <div class="con-exemple-prompt">
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <div> Employee:</div>
+            <vs-dropdown class="ml-1">
+              <a class="a-icon" href="#">
+                {{ this.selectedEmployeeName }}
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item v-for="employee in employees" :key="employee.employeeID"
+                                  @click="updateSelectedEmployee(employee.employeeID,employee.name)">
+                  {{ employee.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+            <vs-input type="number" label-placeholder="Number of Hours This Week" class="mb-3" v-model="assignHours"/>
+
+
+          </div>
+          <div>Remaining Working Hours This Week: {{ this.currentEmployee.remainingWorkingHoursPerWeek }}</div>
+
+
+          <vs-alert
+              :active="!validEmployeeAssign"
+              color="danger"
+              icon="new_releases"
+          >
+            You cannot assign an employee more hours than his remaining ones !
+          </vs-alert>
+
+
         </div>
       </vs-prompt>
     </vs-row>
@@ -212,19 +263,25 @@ export default {
   data: () => {
     return {
       projects: [],
-      clients:[],
+      clients: [],
+      employees: [],
       dateToday: "",
       startDatum: "",
       startdate1: "",
       enddate1: "",
       endDatum: "",
+      assignHours: '',
       currentClient: {},
       currentProject: {},
+      currentEmployee: {},
       editProjectID: 0,
-      createdClientID:0,
-      selectedClientID :0,
-      selectedClientName:"Owner of the project",
+      createdClientID: 0,
+      selectedClientID: 0,
+      selectedEmployeeName: "Employee",
+      selectedEmployeeID: 0,
+      selectedClientName: "Owner of the project",
       projectSelected: false,
+      activeAssignPropmt: false,
       activeEditPromt: false,
       activePrompt: false,
       activeDeletePrompt: false,
@@ -249,6 +306,7 @@ export default {
   },
 
   created() {
+    this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllProjects();
     var today = new Date();
@@ -263,6 +321,9 @@ export default {
 
   computed: {
 
+    validEmployeeAssign() {
+      return this.currentEmployee.remainingWorkingHoursPerWeek >= this.assignHours && this.selectedEmployeeName !== "Employee" && this.assignHours !== ""
+    },
 
     validProject() {
       //this.getStartDate()
@@ -291,7 +352,28 @@ export default {
           var dateControl1 = document.querySelector('input[id="end"]');
           this.enddate1 = dateControl1.value;
         }, */
-    fetchClients: async function (){
+
+    assignProject: async function () {
+      await axios.put(`http://localhost:8080/employees/`, {
+        "employeeID": this.currentEmployee.employeeID,
+        "name": this.currentEmployee.name,
+        "domicile": this.currentEmployee.domicile,
+        "competences": this.currentEmployee.competences,//.toUpperCase(),
+        "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
+        "remainingWorkingHoursPerWeek": parseInt(this.currentEmployee.remainingWorkingHoursPerWeek) - parseInt(this.assignHours),
+      })
+      await this.fetchEmployee(this.currentEmployee.employeeID)
+
+      await axios.post(`http://localhost:8080/assignments/`, {
+        "employeeID": this.currentEmployee.employeeID,
+        "projectID": this.currentProject.projectNumber,
+        "plannedWorkingHours": this.assignHours
+      })
+      await this.fetchAllProjects()
+      await this.fetchAllEmployees()
+      this.assignProjectAlert()
+    },
+    fetchClients: async function () {
       await axios.get(`http://localhost:8080/clients`)
           .then(response => {
             // JSON responses are automatically parsed.
@@ -301,18 +383,42 @@ export default {
             this.errors.push(e)
           })
     },
-    updateSelectedClient(id, name){
+    updateSelectedClient(id, name) {
       this.selectedClientID = id;
       this.selectedClientName = name;
     },
-    updateSelectedClientEdit(id,name){
+    updateSelectedEmployee(id, name) {
+      this.selectedEmployeeID = id;
+      this.selectedEmployeeName = name;
+      this.fetchEmployee(id)
+    },
+
+    async fetchEmployee(id) {
+      await axios.get(`http://localhost:8080/employees/${id}`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.currentEmployee = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+      // this.projectSelected = true
+
+    },
+
+    closeAssignPrompt() {
+      this.activeAssignPropmt = false;
+      this.cancelAssignAlert()
+      this.selectedEmployeeName="Employee"
+      this.currentEmployee= {}
+    },
+    updateSelectedClientEdit(id, name) {
       this.selectedClientNameEdit = name;
-      if(id==0){
+      if (id == 0) {
         this.fetchAllProjects();
-      }else{
+      } else {
         this.fetchProjectsSortedByCustomer(id)
       }
-
 
 
     },
@@ -414,6 +520,12 @@ export default {
       this.editAlert()
       await this.fetchAllProjects();
     },
+
+    updateeProjectID: async function (id) {
+      await this.fetchProject(id);
+      this.activeAssignPropmt = true
+
+    },
     updateProjectID: async function (id) {
       await this.fetchProject(id);
       this.activeEditPromt = true
@@ -439,7 +551,7 @@ export default {
         'email': this.currentClient.email,
         'telephoneNumber': this.currentClient.telephoneNumber,
         'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(),"") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+        'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(), "") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
       })
       this.deleteAlert()
       await this.fetchAllProjects();
@@ -449,6 +561,16 @@ export default {
           .then(response => {
             // JSON responses are automatically parsed.
             this.projects = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+    },
+    fetchAllEmployees: async function () {
+      await axios.get(`http://localhost:8080/employees/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.employees = response.data
           })
           .catch(e => {
             this.errors.push(e)
@@ -464,6 +586,21 @@ export default {
       this.$vs.notify({
         title: 'Confirmation:',
         text: 'Project has been successfully deleted.'
+      })
+    },
+    cancelAssignAlert() {
+      this.$vs.notify({
+        title: 'Cancel:',
+        color: "warning", type: "flat",
+        text: 'Assignment has been cancelled.'
+      })
+    },
+
+    assignProjectAlert() {
+      this.$vs.notify({
+        title: 'Cancel:',
+        color: "success", type: "flat",
+        text: 'Assignment has been successfully performed.'
       })
     },
     editAlert() {
@@ -517,12 +654,12 @@ export default {
           })
       // this.projectSelected = true
     },
-    async fetchProjectsSortedByCustomer(id){
+    async fetchProjectsSortedByCustomer(id) {
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {
             var array = []
-            for(var i = 0; i<response.data.length;i++){
-              if(response.data[i].clientID == id){
+            for (var i = 0; i < response.data.length; i++) {
+              if (response.data[i].clientID == id) {
                 array.push(response.data[i])
               }
             }
@@ -550,7 +687,8 @@ export default {
           } else {
             state = 'running'
           }
-        } return state
+        }
+        return state
       })
     },
 
@@ -564,16 +702,16 @@ export default {
 
       this.fetchAllProjects()
       this.projects.forEach((project) => {
-        if (project.projectNumber === id) {
-          let deadline = new Date(project.plannedEnd)
-          if (deadline < today) {
-             state = 'cancelled'
-          } else {
-            state = 'running'
+            if (project.projectNumber === id) {
+              let deadline = new Date(project.plannedEnd)
+              if (deadline < today) {
+                state = 'cancelled'
+              } else {
+                state = 'running'
+              }
+            }
+            return state
           }
-        }
-        return state
-      }
       )
     }
   }
