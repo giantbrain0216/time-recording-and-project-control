@@ -189,7 +189,8 @@ export default {
         'domicile': this.editValues.domicileField,
         'competences': this.editValues.competencesField,//.toUpperCase(),
         'workingHoursPerWeek': this.editValues.workingHoursField,
-        'remainingWorkingHoursPerWeek': this.currentEmployee.remainingWorkingHoursPerWeek + this.editValues.workingHoursField,
+        'remainingWorkingHoursPerWeek': parseInt(this.currentEmployee.remainingWorkingHoursPerWeek)
+            + parseInt(this.editValues.workingHoursField) - parseInt(this.currentEmployee.workingHoursPerWeek),
       })
       await this.fetchEmployees()
       this.acceptEditAlert()
