@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @DatabaseTable(tableName = "Employees")
 public class Employee {
 
-    @DatabaseField(columnName = "ID of the Employee",id=true)
+    @DatabaseField(columnName = "ID of the Employee", id = true)
     private Integer employeeID;
 
     @Size(min = 1, max = 40)
@@ -37,17 +37,18 @@ public class Employee {
     private Integer workingHoursPerWeek;
 
     @DatabaseField(columnName = "Remaining working hours per week")
-    private Integer stillRemainingWorkingHoursPerWeek;
+    private Integer remainingWorkingHoursPerWeek;
 
 
-    public Employee() {}
+    public Employee() {
+    }
 
     public Employee(String name, String domicile, String competences, Integer workingHoursPerWeek) {
-         this.name = name;
+        this.name = name;
         this.domicile = domicile;
-        this.workingHoursPerWeek = (workingHoursPerWeek);
+        this.workingHoursPerWeek = workingHoursPerWeek;
         this.competences = competences.toUpperCase();
-        this.stillRemainingWorkingHoursPerWeek = (0);
+        this.remainingWorkingHoursPerWeek = workingHoursPerWeek;
     }
 
     public int getEmployeeID() {
@@ -113,7 +114,7 @@ public class Employee {
                 ", domicile='" + domicile + '\'' +
                 ", competences='" + competences + '\'' +
                 ", workingHoursPerWeek=" + workingHoursPerWeek +
-                ", stillRemainingWorkingHoursPerWeek=" + stillRemainingWorkingHoursPerWeek +
+                ", stillRemainingWorkingHoursPerWeek=" + getRemainingWorkingHoursPerWeek() +
                 '}';
     }
 
@@ -129,11 +130,11 @@ public class Employee {
         this.workingHoursPerWeek = workingHoursPerWeek;
     }
 
-    public Integer getStillRemainingWorkingHoursPerWeek() {
-        return stillRemainingWorkingHoursPerWeek;
+    public Integer getRemainingWorkingHoursPerWeek() {
+        return remainingWorkingHoursPerWeek;
     }
 
-    public void setStillRemainingWorkingHoursPerWeek(Integer stillRemainingWorkingHoursPerWeek) {
-        this.stillRemainingWorkingHoursPerWeek = stillRemainingWorkingHoursPerWeek;
+    public void setRemainingWorkingHoursPerWeek(Integer remainingWorkingHoursPerWeek) {
+        this.remainingWorkingHoursPerWeek = remainingWorkingHoursPerWeek;
     }
 }
