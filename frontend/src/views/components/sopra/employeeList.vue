@@ -160,8 +160,7 @@ export default {
         competencesField: '',
         projectsField: ''
       },
-
-    };
+    }
   },
 
   created() {
