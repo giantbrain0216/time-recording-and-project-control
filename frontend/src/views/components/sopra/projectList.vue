@@ -40,8 +40,8 @@
                   <div class="">
                     <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}
-                      <p v-if="calculateStatus(project.projectNumber)">running</p>
-                      <p v-else-if="!calculateStatus(project.projectNumber)">cancelled</p>
+                      <b-card style="font-size:10px;" class="text-success" v-if="calculateStatus(project.projectNumber)">running</b-card>
+                      <b-card style="font-size:10px;" class="text-secondary" v-else-if="!calculateStatus(project.projectNumber)">cancelled</b-card>
 
                     </a>
                   </div>
@@ -539,7 +539,7 @@ export default {
       for(var i=0;i<this.projects.length;i++){
         if (this.projects[i].projectNumber === id) {
           let deadline = new Date(this.projects[i].plannedEnd)
-          if (today.getTime() < deadline.getTime()) {
+          if (today.getTime() > deadline.getTime()) {
             // eslint-disable-next-line no-console
             console.log("Returning false")
             return false;
