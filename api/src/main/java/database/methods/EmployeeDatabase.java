@@ -158,13 +158,4 @@ public class EmployeeDatabase {
             return new ArrayList<Employee>();
         }
     }
-
-    public static void main(String[] args) throws SQLException {
-        Application application = new Application();
-        EmployeeDatabase employeeDatabase = new EmployeeDatabase(application.connectionSource);
-        employeeDatabase.addToDatabase(new Employee("Radu","Sindelfingen","VUE.JS",40));
-        employeeDatabase.addToDatabase(new Employee("Clirim","Vaihingen","SQL",40));
-    }
-
-
 }
