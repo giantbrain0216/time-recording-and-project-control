@@ -59,22 +59,15 @@ export default {
 
     getPlannedEffort: function () {
       let plannedEffort = 0;
-      this.fetchAllProjects()
       this.projects.forEach((project) => plannedEffort += parseInt(project.plannedEffort))
       return plannedEffort;
     },
 
     getPerformedEffort: function () {
       let performedEffort = 0
-      this.fetchAllProjects()
       this.projects.forEach((project) => performedEffort += parseInt(project.performedEffort))
       return performedEffort
     },
-
-    getProjectsProgress: function () {
-      this.progressBar = (this.performedEffort * 100) / this.plannedEffort
-      return parseInt(this.progressBar)
-    }
   }
 
 

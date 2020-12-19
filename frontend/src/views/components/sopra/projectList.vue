@@ -35,7 +35,6 @@
               </td>
               <td>
                 <div class="d-flex align-items-center">
-
                 </div>
               </td>
               <td>
@@ -197,7 +196,6 @@ export default {
     return {
       projects: [],
       clients:[],
-      status,
       dateToday: "",
       startDatum: "",
       startdate1: "",
@@ -496,25 +494,47 @@ export default {
       // this.projectSelected = true
     },
 
-    calculateStatus: function (id) {
-      let status
+    /**
+     * should compare two dates for checking if the project deadline is exceeded
+     * @param id
+     */
+    calculateS: function (id) {
+      let state
       let today = new Date()
-      let yyyy = today.getFullYear()
-      let dd = String(today.getDate()).padStart(2, '0')
-      let mm = String(today.getMonth() + 1).padStart(2, '0')
 
-      this.fetchProject(id)
-      // eslint-disable-next-line no-console
-      if (yyyy < parseInt(this.currentProject.plannedEnd.substring(0,4))) {
-        if (parseInt(mm) < parseInt(this.currentProject.plannedEnd.substring(9, 10))) {
-          if (parseInt(dd) < parseInt(this.currentProject.plannedEnd.substring(6,7))) {
-            status = 'cancelled'
+      this.projects.forEach((project) => {
+        if (project.projectNumber === id) {
+          let deadline = new Date(project.plannedEnd())
+          if (today.toDateString() > deadline.toDateString()) {
+            state = 'cancelled'
+          } else {
+            state = 'running'
+          }
+        } return state
+      })
+    },
+
+    /**
+     * should compare two dates for checking if the project deadline is exceeded
+     * @param id
+     */
+    calculateStatus: function (id) {
+      let state
+      let today = new Date()
+
+      this.fetchAllProjects()
+      this.projects.forEach((project) => {
+        if (project.projectNumber === id) {
+          let deadline = new Date(project.plannedEnd)
+          if (deadline < today) {
+             state = 'cancelled'
+          } else {
+            state = 'running'
           }
         }
-      } else {
-        status = 'running'
+        return state
       }
-      return status
+      )
     }
   }
 }
