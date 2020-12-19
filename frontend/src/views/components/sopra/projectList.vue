@@ -15,9 +15,8 @@
                 <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
                   All Clients
                 </vs-dropdown-item>
-                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)"
-                                  v-for="client in clients" :key="client.clientID">
-                  {{ client.name }}
+                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)" v-for="client in clients" :key="client.clientID">
+                  {{client.name }}
                 </vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
@@ -31,7 +30,7 @@
               <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
               <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
               <th class="border-top-0" style="color: cornflowerblue">Progress</th>
-              <th class="border-top-0" style="color: cornflowerblue;text-align: center">Actions</th>
+              <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -42,6 +41,12 @@
                     <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
                        style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}</a>
+                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">
+                      {{ project.projectName }}
+                      <b-card style="font-size:10px;" class="text-success" v-if="calculateStatus(project.projectNumber)">running</b-card>
+                      <b-card style="font-size:10px;" class="text-secondary" v-else-if="!calculateStatus(project.projectNumber)">cancelled</b-card>
+
+                    </a>
                   </div>
                 </div>
               </td>
@@ -166,7 +171,6 @@
 
         </div>
       </vs-prompt>
-
 
       <vs-prompt
           title="Edit Project"
@@ -309,12 +313,7 @@ export default {
     this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllProjects();
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
 
-    this.dateToday = yyyy + "-" + mm + '-' + dd;
 
   },
 
@@ -419,6 +418,7 @@ export default {
       } else {
         this.fetchProjectsSortedByCustomer(id)
       }
+
 
 
     },
@@ -675,45 +675,47 @@ export default {
      * should compare two dates for checking if the project deadline is exceeded
      * @param id
      */
-    calculateS: function (id) {
-      let state
+    calculateStatus: function (id) {
       let today = new Date()
 
-      this.projects.forEach((project) => {
-        if (project.projectNumber === id) {
-          let deadline = new Date(project.plannedEnd())
-          if (today.toDateString() > deadline.toDateString()) {
-            state = 'cancelled'
+      for(var i=0;i<this.projects.length;i++){
+        if (this.projects[i].projectNumber === id) {
+          let deadline = new Date(this.projects[i].plannedEnd)
+          if (today.getTime() > deadline.getTime()) {
+            // eslint-disable-next-line no-console
+            console.log("Returning false")
+            return false;
           } else {
-            state = 'running'
+            // eslint-disable-next-line no-console
+            console.log("Returning true")
+            return true;
           }
         }
-        return state
-      })
+      }
     },
 
     /**
      * should compare two dates for checking if the project deadline is exceeded
      * @param id
      */
-    calculateStatus: function (id) {
+    /*calculateStatus: function (id) {
       let state
       let today = new Date()
 
       this.fetchAllProjects()
       this.projects.forEach((project) => {
-            if (project.projectNumber === id) {
-              let deadline = new Date(project.plannedEnd)
-              if (deadline < today) {
-                state = 'cancelled'
-              } else {
-                state = 'running'
-              }
-            }
-            return state
+        if (project.projectNumber === id) {
+          let deadline = new Date(project.plannedEnd)
+          if (deadline < today) {
+             state = 'cancelled'
+          } else {
+            state = 'running'
           }
+        }
+        return state
+      }
       )
-    }
+    }*/
   }
 }
 </script>
