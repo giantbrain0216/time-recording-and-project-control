@@ -14,19 +14,18 @@ import javax.validation.constraints.NotNull;
 public class Assignment {
 
     @DatabaseField(columnName = "ID", id = true)
-    @NotNull
     private Integer id;
 
     @DatabaseField(columnName = "ID of the Employee")
-    @NotNull
+ //   @NotNull
     private Integer employeeID;
 
     @DatabaseField(columnName = "ID of the Project")
-    @NotNull
+ //   @NotNull
     private Integer projectID;
 
     @DatabaseField(columnName = "Planned Working Hours")
-    @NotNull
+   // @NotNull
     private Integer plannedWorkingHours;
 
     public Assignment(){}

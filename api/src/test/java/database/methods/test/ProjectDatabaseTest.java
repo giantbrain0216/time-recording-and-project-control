@@ -41,7 +41,7 @@ public class ProjectDatabaseTest {
     @Test
     public void addToDatabaseTest() throws SQLException {
         Project project = new Project("Project Test",21, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 100, 89, "HTML-CSS");
+                new Date(2020 - 11 - 11), 100,  "HTML-CSS");
         projectDatabase.addToDatabase(project);
 
         Assert.assertTrue(projectDatabase.getAllProjects().contains(project));
@@ -64,7 +64,7 @@ public class ProjectDatabaseTest {
         projectDatabase.deleteFromDatabase(1);
         assertEquals(0, projectDatabase.getAllProjects().size());
         projectDatabase.addToDatabase(new Project("Project Test",21, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 268, 14, "HTML"));
+                new Date(2020 - 11 - 11), 268,  "HTML"));
     }
     /**
      * This method tests whether an object can be successfully modified in the

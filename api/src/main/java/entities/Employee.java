@@ -113,8 +113,8 @@ public class Employee {
                 ", name='" + name + '\'' +
                 ", domicile='" + domicile + '\'' +
                 ", competences='" + competences + '\'' +
-                ", workingHoursPerWeek=" + workingHoursPerWeek +
-                ", stillRemainingWorkingHoursPerWeek=" + getRemainingWorkingHoursPerWeek() +
+                ", working HoursPerWeek=" + workingHoursPerWeek +
+                ", Remaining Working Hours Per Week=" + getRemainingWorkingHoursPerWeek() +
                 '}';
     }
 

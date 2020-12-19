@@ -66,15 +66,14 @@ public class Project {
      * @param plannedStart    date of start
      * @param plannedEnd      date of end
      * @param plannedEffort   effort to achieve
-     * @param performedEffort effort that has been achieved
      * @param competences     needed to achieve this project
      */
     public Project(final String projectName, final Integer clientID, final Date plannedStart,
-                   final Date plannedEnd, final Integer plannedEffort, final Integer performedEffort, final String competences) {
+                   final Date plannedEnd, final Integer plannedEffort, final String competences) {
         this.clientID = clientID;
         this.projectName = projectName;
         this.competences = competences;
-        this.performedEffort = performedEffort;
+        this.performedEffort = 0;
         this.plannedStart = plannedStart;
         this.plannedEffort = plannedEffort;
         this.plannedEnd = plannedEnd;
