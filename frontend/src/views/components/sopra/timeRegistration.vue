@@ -9,18 +9,6 @@
           </h4>
         </div>
         <div>
-          <div class="d-flex align-items-center dropdownbtn-alignment m-3">
-            <vs-button class="btnx" type="filled">{{this.currentProject}}</vs-button>
-            <vs-dropdown>
-              <vs-button class="btn-drop" type="filled" icon="expand_more"></vs-button>
-              <!-- <a href="#">Hola mundo</a> -->
-              <vs-dropdown-menu>
-                <vs-dropdown-item  @click="updateProject(project.projectNumber)" v-for="project in projects" :key="project.projectNumber">
-                  {{project.projectName}}
-                </vs-dropdown-item>
-              </vs-dropdown-menu>
-            </vs-dropdown>
-          </div>
           <div  class="d-flex align-items-center dropdownbtn-alignment m-3">
             <vs-button color="success" class="btnx" type="filled">{{this.currentEmployee}}</vs-button>
             <vs-dropdown>
@@ -33,9 +21,22 @@
               </vs-dropdown-menu>
             </vs-dropdown>
           </div>
+          <div class="d-flex align-items-center dropdownbtn-alignment m-3">
+            <vs-button class="btnx" type="filled">{{this.currentProject}}</vs-button>
+            <vs-dropdown>
+              <vs-button class="btn-drop" type="filled" icon="expand_more"></vs-button>
+              <!-- <a href="#">Hola mundo</a> -->
+              <vs-dropdown-menu>
+                <vs-dropdown-item  @click="updateProject(project.projectNumber)" v-for="project in projects" :key="project.projectNumber">
+                  {{project.projectName}}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+          </div>
           <div class="m-3"><input type="date" id="date" name="date"
-                      :value="dateToday"
-                      min="2018-01-01" :max="dateToday"></div>
+                                  :value="dateToday"
+                                  min="2018-01-01" :max="dateToday"></div>
+
           <div class="m-3"><input type="time" id="starttime" name="starttime"
                       min="06:00" max="22:00" v-model="starttime" required>
             <small>   Start Time</small>
@@ -79,11 +80,8 @@
             <td><div class="d-flex align-items-center">{{registration.end}}</div></td>
             <td>
               <div>
-                <vs-button class="m-1" color="danger" type="filled">
+                <vs-button @click="activeDeletePrompt=true; currentRegistration=registration.id" class="m-1" color="danger" type="filled">
                   Delete
-                </vs-button>
-                <vs-button class="m-1" color="primary" type="filled">
-                  Edit
                 </vs-button>
               </div>
             </td>
@@ -94,6 +92,20 @@
       </vs-card>
     </vs-col>
     </vs-row>
+
+    <vs-prompt
+        title="Delete Registration"
+        color="danger"
+        @cancel='closeDeletePrompt("Registration has not been deleted.")'
+        @accept="deleteRegistration"
+        @close='closeDeletePrompt("Registration has not been deleted.")'
+        :is-valid="true"
+        :active.sync="activeDeletePrompt"
+    >
+      <div class="con-exemple-prompt">
+        <h4>{{"Are you sure you want to delete the registration with ID: " + currentRegistration}}</h4>
+      </div>
+    </vs-prompt>
   </div>
 </template>
 
@@ -114,7 +126,10 @@ export default {
       dateToday: "",
       starttime: "",
       endtime: "",
-      timeregistrations:[]
+      timeregistrations:[],
+      activeDeletePrompt:false,
+      currentRegistration:0,
+
     };
   },
 
@@ -155,7 +170,6 @@ export default {
           .then(response => {
             // JSON responses are automatically parsed.
             for (let i = 0; i < response.data.length; i++) {
-              console.log("Comparing " + response.data[i].employeeID+ "with " + id)
               if(response.data[i].employeeID === id){
                   this.timeregistrations.push(response.data[i])
               }
@@ -202,7 +216,44 @@ export default {
       var endString = startdate + " " + endtime
 
       await axios.post(`http://localhost:8080/timeregistrations`,
-          {"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString})
+          {"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString}).then(() => {
+         axios.get(`http://localhost:8080/projects/` + this.currentProjectID).then(response => {
+          var startDate = new Date("1970-01-01 " + startime);
+          var endDate = new Date("1970-01-01 " + endtime);
+          let hours = Math.round(Math.abs(endDate - startDate) / 36e5);
+          var project = response.data
+          project.performedEffort = project.performedEffort + hours
+          axios.put(`http://localhost:8080/projects/`,project).then(()=>{
+            this.submitRegistrationAlert()
+            dateControl.value = this.dateToday
+            this.starttime = ""
+            this.endtime = ""
+            this.currentProject= "Project"
+            this.currentProjectID=0
+            this.currentEmployee= "Employee"
+            this.currentEmployeeID=0
+            this.timeregistrations=[]
+          }).catch((error) => {
+            // handle this error here
+            if (error.response){
+              this.submitRegistrationFailed( error.message);
+            }
+          })
+
+        }).catch((error) => {
+          // handle this error here
+          if (error.response){
+            this.submitRegistrationFailed( error.message);
+          }
+        })
+          })
+          .catch((error) => {
+          // handle this error here
+          if (error.response){
+            this.submitRegistrationFailed( error.message);
+          }
+        })
+
 
 
     },
@@ -212,6 +263,91 @@ export default {
       var enddate = new Date("1970-01-01 " + endtime);
       return (startdate.getTime() < enddate.getTime())
     },
+    closeDeleteAlert(message){
+      // eslint-disable-next-line no-console
+      console.log(message)
+      this.$vs.notify({
+        title: 'Cancelled:',
+        color:"rgb(187, 138, 200)", type:"gradient",
+        text: message//'Registration has not been deleted.'
+      })
+    },
+
+    closeDeletePrompt: function (message){
+      this.activeDeletePrompt = false;
+      this.closeDeleteAlert(message)
+
+    },
+    deleteAlert() {
+      this.activeDeletePrompt = false;
+      this.$vs.notify({
+        title: 'Confirmation:',
+        text: 'Registration has been successfully deleted.'
+      })
+    },
+    submitRegistrationAlert() {
+
+      this.$vs.notify({
+        title: 'Confirmation:',
+        text: 'Registration has been successfully added.'
+      })
+    },
+
+    submitRegistrationFailed(message){
+      this.$vs.notify({
+        title: 'Confirmation:',
+        text: message
+      })
+    },
+
+    async deleteRegistration(){
+      var timeOfRegistration = 0;
+      await axios.get(`http://localhost:8080/timeregistrations/` + this.currentRegistration).then(response => {
+        var reg = response.data
+        var startDate = new Date(reg.start);
+        var endDate = new Date(reg.end);
+        timeOfRegistration = Math.round(Math.abs(endDate - startDate) / 36e5);
+
+      }).catch((error) => {
+        if (error.response){
+          this.closeDeletePrompt( error.message);
+        }
+      })
+
+      await axios.delete(`http://localhost:8080/timeregistrations/` + this.currentRegistration).then(() => {
+        var projectID = 0;
+        for(var i=0;i<this.timeregistrations.length;i++){
+          if(this.timeregistrations[i].id === this.currentRegistration) {
+            projectID = this.timeregistrations[i].projectID
+          }
+        }
+
+        axios.get(`http://localhost:8080/projects/` + projectID).then(response => {
+          var project = response.data
+          project.performedEffort = project.performedEffort - timeOfRegistration
+          axios.put(`http://localhost:8080/projects/`, project).then(()=>{
+            this.deleteAlert()
+          }).catch((error) => {
+            // handle this error here
+            if (error.response){
+              this.closeDeletePrompt( error.message);
+            }
+          })
+
+        }).catch((error) => {
+          // handle this error here
+          if (error.response){
+            this.closeDeletePrompt( error.message);
+          }
+        })
+      }).catch((error) => {
+        // handle this error here
+        if (error.response){
+          this.closeDeletePrompt( error.message);
+        }
+      })
+      await this.fetchTimeRegistrations(this.currentEmployeeID)
+    }
 
 
   }
