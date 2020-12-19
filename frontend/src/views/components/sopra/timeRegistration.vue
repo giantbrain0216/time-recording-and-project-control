@@ -70,6 +70,7 @@
             <th class="border-top-0">Registration ID</th>
             <th class="border-top-0">From</th>
             <th class="border-top-0">To</th>
+            <th class="border-top-0">Delete</th>
           </tr>
           </thead>
           <tbody>
