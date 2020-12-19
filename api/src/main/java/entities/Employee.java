@@ -37,7 +37,6 @@ public class Employee {
     private Integer workingHoursPerWeek;
 
     @DatabaseField(columnName = "Remaining working hours per week")
-    @NotNull
     private Integer stillRemainingWorkingHoursPerWeek;
 
 
