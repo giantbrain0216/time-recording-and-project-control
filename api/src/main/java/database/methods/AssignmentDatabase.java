@@ -108,7 +108,7 @@ public class AssignmentDatabase {
      * @param employeeID of the employee involved in the projects
      * @return list of projects in which the employee is involved
      */
-    public List<Assignment> getProjects(Integer employeeID) {
+    public List<Assignment> getAssignments(Integer employeeID) {
         List<Assignment> allAssignments = this.getAllAssignments();
         return allAssignments.stream().filter(assignment -> assignment.getEmployeeID().equals(employeeID))
                 .collect(Collectors.toList());
@@ -122,7 +122,7 @@ public class AssignmentDatabase {
      * @param projectID in which the employees are involved
      * @return list of employees involved in the project with given ID
      */
-    public List<Assignment> getEmployees(Integer projectID) {
+    public List<Assignment> getAssignments(int projectID) {
         List<Assignment> allAssignments = this.getAllAssignments();
         return allAssignments.stream().filter(assignment -> assignment.getProjectID().equals(projectID))
                 .collect(Collectors.toList());
