@@ -24,7 +24,7 @@
               <td>{{employee.employeeID}}</td>
               <td>
                 <div>
-                  <vs-button @click="deleteEmployee(employee.employeeID)" class="m-1" color="danger" type="filled">
+                  <vs-button @click="deletionPrompt(employee.employeeID)" class="m-1" color="danger" type="filled">
                     Delete
                   </vs-button>
                   <vs-button @click="updateEditID(employee.employeeID)" class="m-1" color="primary" type="filled">
@@ -41,7 +41,7 @@
         <vs-card v-show="employeeSelected" class="cardx">
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off" @click="employeeSelected = false"></vs-button>
-            <h1 >Details vom {{currentEmployee.name}} </h1>
+            <h1 >Details of {{currentEmployee.name}} </h1>
           </div>
           <div>
             <p><strong>Name: </strong>{{currentEmployee.name}}</p>
@@ -60,7 +60,7 @@
           <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
         </vs-card>
       </vs-col>
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
+      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Employee</vs-button>
       <vs-prompt
           title="Add Employee"
           color="danger"
@@ -71,7 +71,7 @@
           :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
-          Bitte Mitarbeiterdaten eingeben
+          Please insert employee data
           <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input placeholder="Domicile" class="mb-3" v-model="inputValues.domicileField"/>
           <vs-input placeholder="Competences" class="mb-3" v-model="inputValues.competencesField"/>
@@ -81,7 +81,7 @@
               color="danger"
               icon="new_releases"
           >
-            Die Felder müssen gefüllt werden.
+           Fields can't be empty.
           </vs-alert>
         </div>
       </vs-prompt>
@@ -111,8 +111,22 @@
               color="warning"
               icon="new_releases"
           >
-            Die Felder müssen gefüllt werden.
+            Fields can't be empty.
           </vs-alert>
+        </div>
+      </vs-prompt>
+      <vs-prompt
+          title="Deletion"
+          color="red"
+          @close="closeDeletio"
+          @cancel="closeDeletio"
+          @accept="deleteEmployee"
+          :is-valid="true"
+          :active.sync="activeDeletionPrompt"
+      >
+        <div class="con-exemple-prompt">
+          Are you sure you want to delete <br>
+          <h6>{{currentEmployee.name}}</h6>
         </div>
       </vs-prompt>
     </vs-row>
@@ -133,6 +147,7 @@ export default {
       employeeSelected:false,
       activePrompt:false,
       activeEditPromt:false,
+      activeDeletionPrompt: false,
       inputValues: {
         nameField: '',
         domicileField: '',
@@ -151,8 +166,6 @@ export default {
 
   created() {
     this.fetchEmployees();
-
-
   },
 
   computed:{
@@ -178,26 +191,55 @@ export default {
         'projectIDs': this.editValues.projectsField
       })
       await this.fetchEmployees()
-
-
+      this.acceptEditAlert()
     },
 
+    deletionPrompt: function (id) {
+      this.fetchEmployee(id)
+      this.activeDeletionPrompt = true
+    },
 
+    acceptEditAlert() {
+      this.$vs.notify({
+        title:'Successfully:',
+        text:'modified Employee.',
+        color:'green'
+      })
+    },
 
     acceptAlert(){
       this.$vs.notify({
-        title:'Benachrichtigung:',
-        text:'Mitarbeiter wurde erfolgreich angelegt.'
+        title:'Successfully:',
+        text:'added Employee.',
+        color:'green'
       })
     },
+
+    acceptDeletionAlert() {
+      this.$vs.notify({
+        title:'Deletion',
+        text:'was successful.',
+        color:'green',
+      })
+    },
+
     closeAdd(){
       this.inputValues.nameField = ''
       this.inputValues.domicileField = ''
       this.inputValues.competencesField = ''
       this.inputValues.projectsField = ''
       this.$vs.notify({
-        title:'Beendet',
-        text:'Hinzufügen wurde abgebrochen.'
+        title:'Closed',
+        text:'Adding was cancelled.',
+        color:'red'
+      })
+    },
+
+    closeDeletio() {
+      this.$vs.notify({
+        title:'Closed',
+        text:'Deletion was cancelled.',
+        color:'red'
       })
     },
 
@@ -208,7 +250,8 @@ export default {
       this.inputValues.projectsField = ''
       this.$vs.notify({
         title:'Closed',
-        text:'Edit was cancelled.'
+        text:'Edit was cancelled.',
+        color:'red'
       })
     },
 
@@ -248,12 +291,11 @@ export default {
       await this.fetchEmployees()
     },
 
-    deleteEmployee: async function(id){
-      await this.fetchEmployee(id);
-      if (confirm(`Are you sure you want to delete ${this.currentEmployee.name}`)) {
-        await axios.delete(`http://localhost:8080/employees/` + id)
-        await this.fetchEmployees()
-      }
+    deleteEmployee: async function(){
+      this.activeDeletePrompt = false;
+      await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`)
+      await this.fetchEmployees()
+      this.acceptDeletionAlert()
     },
 
     async updateEditID(id){
