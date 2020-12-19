@@ -6,13 +6,16 @@
         <table class="table v-middle border">
           <thead>
           <tr class="">
-            <th class="border-top-0">Name</th>
             <th class="border-top-0">ID</th>
+            <th class="border-top-0">Name</th>
+            <th class="border-top-0">EMAIL</th>
+            <th class="border-top-0">Project IDs</th>
             <th class="border-top-0">Actions</th>
             </tr>
           </thead>
           <tbody>
           <tr v-for="client in clients" :key="client.clientID">
+            <td>{{client.clientID}}</td>
             <td>
               <div class="d-flex align-items-center">
                 <a @click="updateDetailedClient(client.clientID)">
@@ -22,7 +25,8 @@
                 </div>
               </div>
             </td>
-            <td>{{client.clientID}}</td>
+            <td>{{client.email}}</td>
+            <td>{{client.projectIDs}}</td>
             <td>
               <div>
                 <vs-button @click="deleteClient(client.clientID)" class="m-1" color="danger" type="filled">
@@ -70,9 +74,9 @@
       >
         <div class="con-exemple-prompt">
           Please insert client data.
-          <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
-          <vs-input placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
-          <vs-input placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
+          <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
+          <vs-input label-placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
+          <vs-input label-placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
           <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
             <div>Contact Person:      </div>
             <vs-dropdown class="ml-1">

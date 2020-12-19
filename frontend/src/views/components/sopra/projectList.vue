@@ -7,11 +7,11 @@
           <table class="table v-middle border">
             <thead>
             <tr class="">
-              <th class="border-top-0">Name</th>
-              <th class="border-top-0">ID of the Client</th>
-              <th class="border-top-0">Deadline</th>
-              <th class="border-top-0">Progress</th>
-              <th class="border-top-0">Actions</th>
+              <th class="border-top-0" style="color: cornflowerblue">Name</th>
+              <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
+              <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
+              <th class="border-top-0" style="color: cornflowerblue">Progress</th>
+              <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -19,23 +19,25 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="">
-                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="cursor:pointer">
+                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}</a>
                   </div>
                 </div>
               </td>
               <td>{{ project.clientID }}</td>
               <!-- <td>{{ project.projectName }}</td> -->
-              <td> {{project.plannedEnd.substring(0,10)}}</td>
-              <td  style="text-align: center">            <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary</vs-progress>
-                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2)}} %</i> </td>
+              <td> {{ project.plannedEnd.substring(0, 10) }}</td>
+              <td style="text-align: center">
+                <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary
+                </vs-progress>
+                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
               <td>
                 <div>
-                  <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1" color="danger" type="filled">
+                  <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger" icon="delete" type="filled">
                     Delete
                   </vs-button>
                   <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
-                  " color="warning" type="filled">
+                  " color="warning" icon="edit" type="filled">
                     Edit
                   </vs-button>
                 </div>
@@ -53,11 +55,11 @@
                        @click="projectSelected = false"></vs-button>
           </div>
           <div>
-            <p><strong>ID of the Project: </strong>{{ currentProject.projectNumber }}</p>
+            <p><strong>ID of the Client: </strong>{{ currentProject.clientID }}</p>
             <hr>
-            <p><strong>Planned Start: </strong>{{ currentProject.plannedStart.substring(0,10) }}</p>
+            <p><strong>Planned Start: </strong>{{ currentProject.plannedStart.substring(0, 10) }}</p>
             <hr>
-            <p><strong>Planned End: </strong>{{ currentProject.plannedEnd.substring(0,10) }}</p>
+            <p><strong>Planned End: </strong>{{ currentProject.plannedEnd.substring(0, 10) }}</p>
             <hr>
             <p><strong>Planned Effort <i>(In Hours)</i>: </strong>{{ currentProject.plannedEffort }}</p>
             <hr>
@@ -80,12 +82,12 @@
           :active.sync="activeDeletePrompt"
       >
         <div class="con-exemple-prompt">
-          <h4>Are you sure to delete the project :</h4>  <h5>{{currentProject.projectName}}</h5>
+          <h4>Are you sure to delete the project :</h4>  <h5>{{ currentProject.projectName }}</h5>
         </div>
       </vs-prompt>
 
 
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Project</vs-button>
+      <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Project</vs-button>
       <vs-prompt
           title="Add New Project"
           color="success"
@@ -97,17 +99,34 @@
       >
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
-          <vs-input label-placeholder="ID of the client" class="mb-3" v-model="inputValues.clientIDField"/>
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <div> Client:      </div>
+            <vs-dropdown class="ml-1">
+              <a class="a-icon" href="#">
+                {{this.selectedClientName}}
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item v-for="client in clients" :key="client.clientID" @click="updateSelectedClient(client.clientID,client.name)" >
+                  {{client.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+
+
+          </div>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
                                                 :value="dateToday"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
-                                                :value="dateToday"
-                                                min="2018-01-01" max="2030-12-31"></div>
-          <vs-input label-placeholder="Planned Effort In Hours" class="mb-3" v-model="inputValues.plannedEffortField"/>
-          <vs-input label-placeholder="Performed Effort In Hours" class="mb-3" v-model="inputValues.performedEffortField"/>
+            <small>Planned End</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
+                                              :value="dateToday"
+                                              min="2018-01-01" max="2030-12-31"></div>
+          <vs-input type="number" label-placeholder="Planned Effort In Hours" class="mb-3"
+                    v-model="inputValues.plannedEffortField"/>
+          <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
+          />
           <vs-input label-placeholder="competences" class="mb-3" v-model="inputValues.competencesField"/>
           <vs-alert
               :active="!validProject"
@@ -116,6 +135,8 @@
           >
             All fields must be filled in
           </vs-alert>
+
+
         </div>
       </vs-prompt>
 
@@ -129,23 +150,24 @@
           :active.sync="activeEditPromt"
       >
         <h5>Project Name : {{ currentProject.projectName }}</h5>
-
+        <h6 class="mb-2 mt-2">ID of the Client : {{ currentProject.clientID }}</h6>
+        <hr>
         <div class="con-exemple-prompt">
-          <vs-input label="ID of the Client" :text="currentProject.clientID" class="mb-3 mt-2" v-model="editValues.clientIDField"/>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
-                                                :value="dateToday"
+                                                :value="startDatum"
                                                 min="2018-01-01" max="2030-12-31"></div>
           <div class="mb-3">
             <small>Planned End</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
-                                              :value="dateToday"
-                                              min="2018-01-01" max="2030-12-31">
+                                              :value="endDatum"
+                                              min="startDatum" max="2030-12-31">
           </div>
-          <vs-input label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
+          <vs-input type="number" label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
-          <vs-input label="Performed Effort" :placeholder="currentProject.performedEffort" class="mb-3"
-                    v-model="editValues.performedEffortField"/>
-          <vs-input label="Competences" :placeholder="currentProject.competences" class="mb-3" v-model="editValues.competencesField"/>
+          <vs-input disabled="true" type="number" label="Performed Effort" :placeholder="currentProject.performedEffort" class="mb-3"
+                    />
+          <vs-input label="Competences" :placeholder="currentProject.competences" class="mb-3"
+                    v-model="editValues.competencesField"/>
           <vs-alert
               :active="!validProjectEdit"
               color="warning"
@@ -167,13 +189,22 @@ export default {
   data: () => {
     return {
       projects: [],
+      clients:[],
       dateToday: "",
+      startDatum: "",
+      startdate1: "",
+      enddate1: "",
+      endDatum: "",
+      currentClient: {},
       currentProject: {},
       editProjectID: 0,
+      createdClientID:0,
+      selectedClientID :0,
+      selectedClientName:"Owner of the project",
       projectSelected: false,
       activeEditPromt: false,
       activePrompt: false,
-      activeDeletePrompt:false,
+      activeDeletePrompt: false,
       inputValues: {
         projectName: "",
         clientIDField: "",
@@ -195,6 +226,7 @@ export default {
   },
 
   created() {
+    this.fetchClients();
     this.fetchAllProjects();
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -203,36 +235,75 @@ export default {
 
     this.dateToday = yyyy + "-" + mm + '-' + dd;
 
-
   },
+
 
   computed: {
 
 
     validProject() {
-
-      return true;/*(this.inputValues.clientIDField.length > 0
-          && this.inputValues.plannedEffortField.length > 0
-          && this.inputValues.performedEffortField.length > 0
-          && this.inputValues.competencesField.length > 0)*/
+      //this.getStartDate()
+      //this.getEndDate()
+      //   this.startdate1 = dateControl.value;
+      //var timeControl1 = document.querySelector('input[id="end"]');
+      //this.enddate1 = timeControl.value;
+      return (parseFloat(this.inputValues.plannedEffortField) > 0
+          && this.inputValues.competencesField.length > 0)
 
     },
 
     validProjectEdit() {
-      return true; /* ( this.editValues.plannedEffortField.length > 0 && this.editValues.clientIDField.length > 0
-          && this.editValues.performedEffortField.length > 0
-          && this.editValues.competencesField.length > 0     )*/
+      return true
     }
   },
 
   methods: {
+    /*
+        getStartDate() {
+          var dateControl1 = document.querySelector('input[id="start"]');
+          this.startdate1 = dateControl1.value;
+        },
 
-    showDeletePrompt: function (id){
+        getEndDate(){
+          var dateControl1 = document.querySelector('input[id="end"]');
+          this.enddate1 = dateControl1.value;
+        }, */
+    fetchClients: async function (){
+      await axios.get(`http://localhost:8080/clients`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.clients = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+    },
+    updateSelectedClient(id, name){
+      this.selectedClientID = id;
+      this.selectedClientName = name;
+    },
+    showDeletePrompt: function (id) {
       this.fetchProject(id)
       this.activeDeletePrompt = true
     },
 
-    closeDeletePrompt: function (){
+    plannedStart: function () {
+      var startdate = this.currentProject.plannedStart;
+      this.startDatum = startdate.substring(0, 10)
+      // var dateControl = document.querySelector('input[id="startedit"]')
+
+      // eslint-disable-next-line no-console
+      console.log(startdate)
+      //return startdate;
+
+    },
+
+    plannedEnd: function () {
+      var enddate = this.currentProject.plannedEnd;
+      this.endDatum = enddate.substring(0, 10)
+    },
+
+    closeDeletePrompt: function () {
       this.activeDeletePrompt = false;
       this.closeDeleteAlert()
 
@@ -251,15 +322,42 @@ export default {
       this.inputValues.plannedEndField = enddate + " " + "00:00"
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
-        "clientID": parseInt(this.inputValues.clientIDField),
+        "clientID": parseInt(this.selectedClientID),
         "plannedStart": startdate + " " + "00:00",
         "plannedEnd": enddate + " " + "00:00",
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
-        "performedEffort": parseInt(this.inputValues.performedEffortField),
+        "performedEffort": 0,
         "competences": this.inputValues.competencesField,
+      }).then((result) => {
+        this.createdClientID = result.data;
       })
+
+      await this.fetchCustomer(this.selectedClientID)
+
+      await axios.put(`http://localhost:8080/clients/`, {
+        'id': this.currentClient.clientID,
+        'name': this.currentClient.name,
+        'email': this.currentClient.email,
+        'telephoneNumber': this.currentClient.telephoneNumber,
+        'contactPersonID': this.currentClient.contactPersonID,
+        'projectIDs': this.currentClient.projectIDs + "-" + this.createdClientID //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+      })
+
+
       this.acceptAlert();
       await this.fetchAllProjects()
+    },
+    fetchCustomer: async function (id) {
+      await axios.get(`http://localhost:8080/clients/${id}`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            // eslint-disable-next-line no-console
+            console.log(response.data)
+            this.currentClient = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
     },
 
     updateProject: async function () {
@@ -270,15 +368,16 @@ export default {
       this.editValues.plannedStartField = startdateedit + " " + "00:00";
       this.editValues.plannedEndField = enddateedit + " " + "00:00";
       await axios.put(`http://localhost:8080/projects`, {
-        "projectNumber":this.editProjectID,
+        "projectNumber": this.editProjectID,
         "projectName": this.currentProject.projectName,
-        "clientID": parseInt(this.editValues.clientIDField),
-        "plannedStart":  startdateedit + " " + "00:00",
+        "clientID": this.currentProject.clientID,
+        "plannedStart": startdateedit + " " + "00:00",
         "plannedEnd": enddateedit + " " + "00:00",
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
-        "performedEffort": parseInt(this.editValues.performedEffortField),
+        "performedEffort": this.currentProject.performedEffortField,
         "competences": this.editValues.competencesField,
       })
+      this.editAlert()
       await this.fetchAllProjects();
     },
     updateProjectID: async function (id) {
@@ -291,13 +390,23 @@ export default {
       this.editValues.plannedEndField = this.currentProject.plannedEnd
       this.editValues.plannedStartField = this.currentProject.plannedStart
       this.editValues.plannedEffortField = this.currentProject.plannedEffort
-
+      this.plannedStart()
+      this.plannedEnd()
     },
 
 
     deleteProject: async function () {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber);
+      await this.fetchCustomer(this.currentProject.clientID)
+      await axios.put(`http://localhost:8080/clients/`, {
+        'id': this.currentClient.clientID,
+        'name': this.currentClient.name,
+        'email': this.currentClient.email,
+        'telephoneNumber': this.currentClient.telephoneNumber,
+        'contactPersonID': this.currentClient.contactPersonID,
+        'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(),"") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+      })
       this.deleteAlert()
       await this.fetchAllProjects();
     },
@@ -326,10 +435,18 @@ export default {
       })
     },
 
-    closeDeleteAlert(){
+    editAlert() {
+      this.$vs.notify({
+        title: 'Confirmation:',
+        color: "success", type: "flat",
+        text: 'Project has been successfully edited.'
+      })
+    },
+
+    closeDeleteAlert() {
       this.$vs.notify({
         title: 'Cancelled:',
-        color:"rgb(187, 138, 200)", type:"gradient",
+        color: "rgb(187, 138, 200)", type: "gradient",
         text: 'Project has not been deleted.'
       })
     },
@@ -343,7 +460,7 @@ export default {
       this.inputValues.competencesField = "";
       this.$vs.notify({
         title: 'Closed',
-        color:"warning",
+        color: "warning",
         text: 'Add was cancelled successfully.'
       })
     },
@@ -361,8 +478,8 @@ export default {
       })
     },
 
-    fetchProject: function (id) {
-      axios.get(`http://localhost:8080/projects/${id}`)
+    fetchProject: async function (id) {
+      await axios.get(`http://localhost:8080/projects/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
             this.currentProject = response.data
