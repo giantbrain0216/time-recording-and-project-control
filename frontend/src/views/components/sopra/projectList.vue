@@ -603,7 +603,7 @@ export default {
 
     assignProjectAlert() {
       this.$vs.notify({
-        title: 'Cancel:',
+        title: 'Confirmation:',
         color: "success", type: "flat",
         text: 'Assignment has been successfully performed.'
       })
