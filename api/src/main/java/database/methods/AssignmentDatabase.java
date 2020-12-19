@@ -1,6 +1,9 @@
 package database.methods;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 import entities.Assignment;
 import entities.Client;
 import entities.Employee;
@@ -15,6 +18,19 @@ import java.util.stream.Collectors;
 
 public class AssignmentDatabase {
     private Dao<Assignment, Integer> assignmentDAO;
+
+    /**
+     * creates an object from type DAO which will be used to manage the database.
+     * Creates the table of assignments in the data base in case it has not been
+     * yet created
+     *
+     * @param connectionSource to set up the connection with the database
+     * @throws SQLException if the element cannot be created.
+     */
+    public AssignmentDatabase(ConnectionSource connectionSource) throws SQLException {
+        assignmentDAO = DaoManager.createDao(connectionSource, Assignment.class);
+        TableUtils.createTableIfNotExists(connectionSource, Assignment.class);
+    }
 
 
     /**
