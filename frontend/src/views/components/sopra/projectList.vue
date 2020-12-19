@@ -15,8 +15,9 @@
                 <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
                   All Clients
                 </vs-dropdown-item>
-                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)" v-for="client in clients" :key="client.clientID">
-                  {{client.name }}
+                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)"
+                                  v-for="client in clients" :key="client.clientID">
+                  {{ client.name }}
                 </vs-dropdown-item>
               </vs-dropdown-menu>
             </vs-dropdown>
@@ -41,10 +42,15 @@
                     <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
                        style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}</a>
-                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">
+                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
+                       style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}
-                      <b-card style="font-size:10px;" class="text-success" v-if="calculateStatus(project.projectNumber)">running</b-card>
-                      <b-card style="font-size:10px;" class="text-secondary" v-else-if="!calculateStatus(project.projectNumber)">cancelled</b-card>
+                      <b-card style="font-size:10px;" class="text-success"
+                              v-if="calculateStatus(project.projectNumber)">running
+                      </b-card>
+                      <b-card style="font-size:10px;" class="text-secondary"
+                              v-else-if="!calculateStatus(project.projectNumber)">cancelled
+                      </b-card>
 
                     </a>
                   </div>
@@ -321,7 +327,7 @@ export default {
   computed: {
 
     validEmployeeAssign() {
-      return this.currentEmployee.remainingWorkingHoursPerWeek >= this.assignHours && this.selectedEmployeeName !== "Employee" && this.assignHours !== ""
+      return this.currentEmployee.remainingWorkingHoursPerWeek >= this.assignHours && this.selectedEmployeeName !== "Employee" && this.assignHours !== "" && this.assignHours > 0
     },
 
     validProject() {
@@ -408,8 +414,8 @@ export default {
     closeAssignPrompt() {
       this.activeAssignPropmt = false;
       this.cancelAssignAlert()
-      this.selectedEmployeeName="Employee"
-      this.currentEmployee= {}
+      this.selectedEmployeeName = "Employee"
+      this.currentEmployee = {}
     },
     updateSelectedClientEdit(id, name) {
       this.selectedClientNameEdit = name;
@@ -418,7 +424,6 @@ export default {
       } else {
         this.fetchProjectsSortedByCustomer(id)
       }
-
 
 
     },
@@ -678,7 +683,7 @@ export default {
     calculateStatus: function (id) {
       let today = new Date()
 
-      for(var i=0;i<this.projects.length;i++){
+      for (var i = 0; i < this.projects.length; i++) {
         if (this.projects[i].projectNumber === id) {
           let deadline = new Date(this.projects[i].plannedEnd)
           if (today.getTime() > deadline.getTime()) {
