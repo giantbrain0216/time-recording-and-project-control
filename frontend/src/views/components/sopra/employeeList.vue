@@ -34,10 +34,10 @@
               <td>{{ employee.remainingWorkingHoursPerWeek }}</td>
               <td>
                 <div>
-                  <vs-button @click="deletionPrompt(employee.employeeID)" class="m-1" color="danger" type="filled">
+                  <vs-button @click="deletionPrompt(employee.employeeID)"  icon="delete" class="m-1" color="danger" type="filled">
                     Delete
                   </vs-button>
-                  <vs-button @click="updateEditID(employee.employeeID)" class="m-1" color="primary" type="filled">
+                  <vs-button @click="updateEditID(employee.employeeID)" icon="edit" class="m-1" color="primary" type="filled">
                     Edit
                   </vs-button>
                 </div>
@@ -87,7 +87,7 @@
               <td>{{ assignment.projectID }}</td>
               <td>{{ assignment.plannedWorkingHours }}</td>
               <td>
-                <vs-button @click="deleteAssignment();currentAssignmentID=assignment.id" class="m-1" color="danger"
+                <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
                            type="filled">
                   Delete
                 </vs-button>
@@ -112,7 +112,7 @@
           <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
         </vs-card>
       </vs-col>
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Employee</vs-button>
+      <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Employee</vs-button>
       <vs-prompt
           title="Add Employee"
           color="danger"
@@ -180,6 +180,20 @@
           <h6>{{ currentEmployee.name }}</h6>
         </div>
       </vs-prompt>
+      <vs-prompt
+          title="Deletion"
+          color="red"
+          @close="closeDeletio"
+          @cancel="closeDeletio"
+          @accept="deleteAssignment"
+          :is-valid="true"
+          :active.sync="deleteAssignmentPrompt"
+      >
+        <div class="con-exemple-prompt">
+          <h6>Are you sure you want to delete the next Assignment <br>
+           Employee: {{this.currentEmployee.name}},  Project ID :{{ this.currentAssignment.projectID }}, Planned Working Hours : {{ this.currentAssignment.plannedWorkingHours  }}</h6>
+        </div>
+      </vs-prompt>
     </vs-row>
   </div>
 </template>
@@ -199,6 +213,7 @@ export default {
       currentEmployee: {},
       employeeSelected: false,
       activePrompt: false,
+      deleteAssignmentPrompt:false,
       currentAssignmentID: 0,
       currentAssignment: {},
       activeEditPromt: false,
@@ -239,9 +254,7 @@ export default {
   methods: {
 
     async deleteAssignment() {
-      await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
-        this.currentAssignment = response.data
-      })
+
       await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignmentID)
 
 
@@ -252,20 +265,21 @@ export default {
         "employeeID": this.currentEmployee.employeeID,
         "name": this.currentEmployee.name,
         "domicile": this.currentEmployee.domicile,
-        "competences": this.currentEmployee.competences,//.toUpperCase(),
+        "competences": this.currentEmployee.competences,//.
         "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
-        "remainingWorkingHoursPerWeek": this.currentEmployee.remainingWorkingHoursPerWeek +
-            this.currentAssignment.plannedWorkingHours
+        "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
+            this.currentAssignment.plannedWorkingHours)
       })
       await this.fetchEmployees()
       await this.fetchAllAssignments()
+      this.alertAssignAlert()
     },
     async updateEmployee() {
       await axios.put(`http://localhost:8080/employees/`, {
         'employeeID': this.currentEmployee.employeeID,
         'name': this.editValues.nameField,
         'domicile': this.editValues.domicileField,
-        'competences': this.editValues.competencesField,//.toUpperCase(),
+        'competences': this.editValues.competencesField,//.
         'workingHoursPerWeek': this.editValues.workingHoursField,
         'remainingWorkingHoursPerWeek': parseInt(this.currentEmployee.remainingWorkingHoursPerWeek)
             + parseInt(this.editValues.workingHoursField) - parseInt(this.currentEmployee.workingHoursPerWeek),
@@ -296,6 +310,13 @@ export default {
       })
     },
 
+    alertAssignAlert(){
+      this.$vs.notify({
+        title: 'Deletion',
+        text: 'Deletion of the Assignment was successful.',
+        color: 'red',
+      })
+    },
     acceptAlert() {
       this.$vs.notify({
         title: 'Successfully:',
@@ -331,6 +352,15 @@ export default {
         color: 'red'
       })
     },
+
+   async updateCurrentAssignment(id){
+     this.currentAssignmentID = id
+     await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
+        this.currentAssignment = response.data
+      })
+     this.deleteAssignmentPrompt = true;
+    },
+
 
     closeEdit() {
       this.inputValues.nameField = ''
@@ -383,7 +413,7 @@ export default {
       await axios.post('http://localhost:8080/employees', {
         'name': this.inputValues.nameField,
         'domicile': this.inputValues.domicileField,
-        'competences': this.inputValues.competencesField,//.toUpperCase(),
+        'competences': this.inputValues.competencesField,//.
         'workingHoursPerWeek': this.inputValues.workingHoursField,
         'remainingWorkingHoursPerWeek': this.inputValues.workingHoursField,
       })
