@@ -9,7 +9,7 @@
               <th class="border-top-0">Name</th>
               <!--<th class="border-top-0">ID</th>-->
               <th class="border-top-0">Competences</th>
-              <th class="border-top-0">Project IDs</th>
+              <th class="border-top-0">Remaining Working Hours Per Week</th>
               <th class="border-top-0">Actions</th>
             </tr>
             </thead>
@@ -25,7 +25,7 @@
               </td>
               <!--<td>{{employee.employeeID}}</td>-->
               <td>{{employee.competences}}</td>
-              <td>{{employee.projectIDs}}</td>
+              <td>{{employee.remainingWorkingHoursPerWeek}}</td>
               <td>
                 <div>
                   <vs-button @click="deleteEmployee(employee.employeeID)" class="m-1" color="danger" type="filled">
@@ -54,8 +54,10 @@
             <hr>
             <p><strong>Competences: </strong>{{currentEmployee.competences}}</p>
             <hr>
-            <p><strong>Projects (ID): </strong>{{currentEmployee.projectIDs}}</p>
+            <p><strong>Working Hours Per Week: </strong>{{currentEmployee.workingHoursPerWeek}}</p>
             <hr>
+            <p><strong>Remaining Working Hours : </strong>{{currentEmployee.remainingWorkingHoursPerWeek}}</p>
+
           </div>
         </vs-card>
       </vs-col>
@@ -75,11 +77,10 @@
           :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
-          Please insert employee data
-          <vs-input placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
-          <vs-input placeholder="Domicile" class="mb-3" v-model="inputValues.domicileField"/>
-          <vs-input placeholder="Competences" class="mb-3" v-model="inputValues.competencesField"/>
-          <vs-input placeholder="Projects (IDs)" class="mb-3" v-model="inputValues.projectsField"/>
+          <vs-input label-placeholder="Name" class="mb-4" v-model="inputValues.nameField" />
+          <vs-input label-placeholder="Domicile" class="mb-4" v-model="inputValues.domicileField"/>
+          <vs-input label-placeholder="Competences" class="mb-4" v-model="inputValues.competencesField"/>
+          <vs-input type="number"  label-placeholder="Working Hours Per Week" class="mb-4" v-model="inputValues.workingHoursField"/>
           <vs-alert
               :active="!validEmployee"
               color="danger"
@@ -99,17 +100,13 @@
           :active.sync="activeEditPromt"
       >
         <div class="con-exemple-prompt">
-          <strong>Please Modify Employee Data of</strong>
-          <h6 class="edit-employeee">{{editValues.nameField}}</h6>
+          <h5>Please Modify Employee Data of <strong class="edit-employeee">{{editValues.nameField}}</strong></h5>
+          <h5>ID of the Employee: <strong class="edit-employeee">{{currentEmployee.employeeID}}</strong></h5>
+<hr>
           <br>
-          <label>Name: </label>
-          <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField" />
-          <label>Domicile: </label>
-          <vs-input :placeholder="editValues.domicileField" class="mb-3" v-model="editValues.domicileField"/>
-          <label>Competences: </label>
-          <vs-input :placeholder="editValues.competencesField" class="mb-3" v-model="editValues.competencesField"/>
-          <label>Projects (IDs): </label>
-          <vs-input :placeholder="editValues.projectsField" class="mb-3" v-model="editValues.projectsField"/>
+          <vs-input label="Domicile" :placeholder="currentEmployee.domicile" class="mb-4" v-model="editValues.domicileField"/>
+          <vs-input label="Competences" :placeholder="currentEmployee.competences" class="mb-4" v-model="editValues.competencesField"/>
+          <vs-input label="Working Hours Peer Week" type="number" :placeholder="currentEmployee.workingHoursPerWeek" class="mb-4" v-model="editValues.workingHoursField"/>
           <vs-alert
               :active="!validEmployeeEdit"
               color="warning"
@@ -141,13 +138,13 @@ export default {
         nameField: '',
         domicileField: '',
         competencesField: '',
-        projectsField: '',
+        workingHoursField: '',
       },
       editValues: {
         nameField: '',
         domicileField: '',
         competencesField: '',
-        projectsField: ''
+        workingHoursField: ''
       },
 
     };
@@ -175,11 +172,12 @@ export default {
   methods: {
     async updateEmployee(){
       await axios.put(`http://localhost:8080/employees/`,{
-        'id':this.currentEmployee.employeeID,
+        'employeeID':this.currentEmployee.employeeID,
         'name': this.editValues.nameField,
         'domicile': this.editValues.domicileField,
-        'competences': this.editValues.competencesField.toUpperCase(),
-        'projectIDs': this.editValues.projectsField
+        'competences': this.editValues.competencesField,//.toUpperCase(),
+        'workingHoursPerWeek': this.editValues.workingHoursField,
+        'remainingWorkingHoursPerWeek': this.currentEmployee.remainingWorkingHoursPerWeek + this.editValues.workingHoursField,
       })
       await this.fetchEmployees()
 
@@ -198,7 +196,7 @@ export default {
       this.inputValues.nameField = ''
       this.inputValues.domicileField = ''
       this.inputValues.competencesField = ''
-      this.inputValues.projectsField = ''
+      this.inputValues.workingHoursField = ''
       this.$vs.notify({
         title:'Closed',
         text:'Adding was cancelled.'
@@ -209,7 +207,7 @@ export default {
       this.inputValues.nameField = ''
       this.inputValues.domicileField = ''
       this.inputValues.competencesField = ''
-      this.inputValues.projectsField = ''
+      this.inputValues.workingHoursField = ''
       this.$vs.notify({
         title:'Closed',
         text:'Edit was cancelled.'
@@ -245,8 +243,9 @@ export default {
       await axios.post('http://localhost:8080/employees' , {
         'name': this.inputValues.nameField,
         'domicile': this.inputValues.domicileField,
-        'competences': this.inputValues.competencesField,
-        'projectIDs': this.inputValues.projectsField
+        'competences': this.inputValues.competencesField,//.toUpperCase(),
+        'workingHoursPerWeek': this.inputValues.workingHoursField,
+        'remainingWorkingHoursPerWeek':this.inputValues.workingHoursField,
       })
       this.acceptAlert()
       await this.fetchEmployees()
@@ -265,7 +264,7 @@ export default {
       this.editValues.nameField = this.currentEmployee.name
       this.editValues.domicileField = this.currentEmployee.domicile
       this.editValues.competencesField = this.currentEmployee.competences
-      this.editValues.projectsField = this.currentEmployee.projectIDs
+      this.editValues.workingHoursField = this.currentEmployee.workingHoursPerWeek
       this.activeEditPromt = true;
 
     },

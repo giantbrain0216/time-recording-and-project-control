@@ -11,7 +11,7 @@
               <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
               <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
               <th class="border-top-0" style="color: cornflowerblue">Progress</th>
-              <th class="border-top-0" style="color: cornflowerblue">Actions</th>
+              <th class="border-top-0" style="color: cornflowerblue;text-align: center" >Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -39,6 +39,10 @@
                   <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
                   " color="warning" icon="edit" type="filled">
                     Edit
+                  </vs-button>
+                  <vs-button  class=" m-1
+                  " color="success" icon="add" type="filled">
+                    Assign
                   </vs-button>
                 </div>
               </td>
