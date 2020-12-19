@@ -5,7 +5,7 @@
               code-toggler>
         <vs-card class="cardx">
           <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-            <div>Only see projects from:      </div>
+            <div >Only see projects from:</div>
             <vs-dropdown class="ml-1">
               <a class="a-icon" href="#">
                 {{this.selectedClientNameEdit}}
@@ -39,7 +39,11 @@
                 <div class="d-flex align-items-center">
                   <div class="">
                     <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">
-                      {{ project.projectName }}</a>
+                      {{ project.projectName }}
+                      <p v-if="calculateStatus(project.projectNumber)">running</p>
+                      <p v-else-if="!calculateStatus(project.projectNumber)">cancelled</p>
+
+                    </a>
                   </div>
                 </div>
               </td>
@@ -247,12 +251,7 @@ export default {
   created() {
     this.fetchClients();
     this.fetchAllProjects();
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
 
-    this.dateToday = yyyy + "-" + mm + '-' + dd;
 
   },
 
@@ -534,27 +533,30 @@ export default {
      * should compare two dates for checking if the project deadline is exceeded
      * @param id
      */
-    calculateS: function (id) {
-      let state
+    calculateStatus: function (id) {
       let today = new Date()
 
-      this.projects.forEach((project) => {
-        if (project.projectNumber === id) {
-          let deadline = new Date(project.plannedEnd())
-          if (today.toDateString() > deadline.toDateString()) {
-            state = 'cancelled'
+      for(var i=0;i<this.projects.length;i++){
+        if (this.projects[i].projectNumber === id) {
+          let deadline = new Date(this.projects[i].plannedEnd)
+          if (today.getTime() < deadline.getTime()) {
+            // eslint-disable-next-line no-console
+            console.log("Returning false")
+            return false;
           } else {
-            state = 'running'
+            // eslint-disable-next-line no-console
+            console.log("Returning true")
+            return true;
           }
-        } return state
-      })
+        }
+      }
     },
 
     /**
      * should compare two dates for checking if the project deadline is exceeded
      * @param id
      */
-    calculateStatus: function (id) {
+    /*calculateStatus: function (id) {
       let state
       let today = new Date()
 
@@ -571,7 +573,7 @@ export default {
         return state
       }
       )
-    }
+    }*/
   }
 }
 </script>
