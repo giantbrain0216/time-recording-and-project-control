@@ -98,7 +98,7 @@
             color="danger"
             icon="new_releases"
           >
-          Fields can't bee empty
+          Fields can't be empty
           </vs-alert>
         </div>
       </vs-prompt>

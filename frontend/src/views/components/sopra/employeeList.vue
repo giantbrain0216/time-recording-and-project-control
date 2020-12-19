@@ -28,7 +28,7 @@
               <td>{{employee.remainingWorkingHoursPerWeek}}</td>
               <td>
                 <div>
-                  <vs-button @click="deleteEmployee(employee.employeeID)" class="m-1" color="danger" type="filled">
+                  <vs-button @click="deletionPrompt(employee.employeeID)" class="m-1" color="danger" type="filled">
                     Delete
                   </vs-button>
                   <vs-button @click="updateEditID(employee.employeeID)" class="m-1" color="primary" type="filled">
@@ -66,7 +66,7 @@
           <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
         </vs-card>
       </vs-col>
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add New Employee</vs-button>
+      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Employee</vs-button>
       <vs-prompt
           title="Add Employee"
           color="danger"
@@ -116,6 +116,20 @@
           </vs-alert>
         </div>
       </vs-prompt>
+      <vs-prompt
+          title="Deletion"
+          color="red"
+          @close="closeDeletio"
+          @cancel="closeDeletio"
+          @accept="deleteEmployee"
+          :is-valid="true"
+          :active.sync="activeDeletionPrompt"
+      >
+        <div class="con-exemple-prompt">
+          Are you sure you want to delete <br>
+          <h6>{{currentEmployee.name}}</h6>
+        </div>
+      </vs-prompt>
     </vs-row>
   </div>
 </template>
@@ -134,6 +148,7 @@ export default {
       employeeSelected:false,
       activePrompt:false,
       activeEditPromt:false,
+      activeDeletionPrompt: false,
       inputValues: {
         nameField: '',
         domicileField: '',
@@ -146,14 +161,11 @@ export default {
         competencesField: '',
         workingHoursField: ''
       },
-
-    };
+    }
   },
 
   created() {
     this.fetchEmployees();
-
-
   },
 
   computed:{
@@ -180,18 +192,38 @@ export default {
         'remainingWorkingHoursPerWeek': this.currentEmployee.remainingWorkingHoursPerWeek + this.editValues.workingHoursField,
       })
       await this.fetchEmployees()
-
-
+      this.acceptEditAlert()
     },
 
+    deletionPrompt: function (id) {
+      this.fetchEmployee(id)
+      this.activeDeletionPrompt = true
+    },
 
+    acceptEditAlert() {
+      this.$vs.notify({
+        title:'Successfully:',
+        text:'modified Employee.',
+        color:'green'
+      })
+    },
 
     acceptAlert(){
       this.$vs.notify({
         title:'Successfully:',
-        text:'added Employee.'
+        text:'added Employee.',
+        color:'green'
       })
     },
+
+    acceptDeletionAlert() {
+      this.$vs.notify({
+        title:'Deletion',
+        text:'was successful.',
+        color:'green',
+      })
+    },
+
     closeAdd(){
       this.inputValues.nameField = ''
       this.inputValues.domicileField = ''
@@ -199,7 +231,16 @@ export default {
       this.inputValues.workingHoursField = ''
       this.$vs.notify({
         title:'Closed',
-        text:'Adding was cancelled.'
+        text:'Adding was cancelled.',
+        color:'red'
+      })
+    },
+
+    closeDeletio() {
+      this.$vs.notify({
+        title:'Closed',
+        text:'Deletion was cancelled.',
+        color:'red'
       })
     },
 
@@ -210,7 +251,8 @@ export default {
       this.inputValues.workingHoursField = ''
       this.$vs.notify({
         title:'Closed',
-        text:'Edit was cancelled.'
+        text:'Edit was cancelled.',
+        color:'red'
       })
     },
 
@@ -251,12 +293,11 @@ export default {
       await this.fetchEmployees()
     },
 
-    deleteEmployee: async function(id){
-      await this.fetchEmployee(id);
-      if (confirm(`Are you sure you want to delete ${this.currentEmployee.name}`)) {
-        await axios.delete(`http://localhost:8080/employees/` + id)
-        await this.fetchEmployees()
-      }
+    deleteEmployee: async function(){
+      this.activeDeletePrompt = false;
+      await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`)
+      await this.fetchEmployees()
+      this.acceptDeletionAlert()
     },
 
     async updateEditID(id){

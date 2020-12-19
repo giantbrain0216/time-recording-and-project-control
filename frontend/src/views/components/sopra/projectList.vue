@@ -4,6 +4,25 @@
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <div>Only see projects from:      </div>
+            <vs-dropdown class="ml-1">
+              <a class="a-icon" href="#">
+                {{this.selectedClientNameEdit}}
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
+                  All Clients
+                </vs-dropdown-item>
+                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)" v-for="client in clients" :key="client.clientID">
+                  {{client.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+
+
+          </div>
           <table class="table v-middle border">
             <thead>
             <tr class="">
@@ -286,6 +305,17 @@ export default {
       this.selectedClientID = id;
       this.selectedClientName = name;
     },
+    updateSelectedClientEdit(id,name){
+      this.selectedClientNameEdit = name;
+      if(id==0){
+        this.fetchAllProjects();
+      }else{
+        this.fetchProjectsSortedByCustomer(id)
+      }
+
+
+
+    },
     showDeletePrompt: function (id) {
       this.fetchProject(id)
       this.activeDeletePrompt = true
@@ -414,7 +444,6 @@ export default {
       this.deleteAlert()
       await this.fetchAllProjects();
     },
-
     fetchAllProjects: async function () {
       await axios.get(`http://localhost:8080/projects/`)
           .then(response => {
@@ -431,14 +460,12 @@ export default {
         text: 'Project has been successfully added.'
       })
     },
-
     deleteAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
         text: 'Project has been successfully deleted.'
       })
     },
-
     editAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
@@ -446,7 +473,6 @@ export default {
         text: 'Project has been successfully edited.'
       })
     },
-
     closeDeleteAlert() {
       this.$vs.notify({
         title: 'Cancelled:',
@@ -468,7 +494,6 @@ export default {
         text: 'Add was cancelled successfully.'
       })
     },
-
     closeEditForm() {
       this.editValues.clientIDField = "";
       this.editValues.plannedStartField = "";
@@ -481,7 +506,6 @@ export default {
         text: 'Edit was cancelled successfully.'
       })
     },
-
     fetchProject: async function (id) {
       await axios.get(`http://localhost:8080/projects/${id}`)
           .then(response => {
@@ -493,6 +517,65 @@ export default {
           })
       // this.projectSelected = true
     },
+    async fetchProjectsSortedByCustomer(id){
+      await axios.get(`http://localhost:8080/projects`)
+          .then(response => {
+            var array = []
+            for(var i = 0; i<response.data.length;i++){
+              if(response.data[i].clientID == id){
+                array.push(response.data[i])
+              }
+            }
+            this.projects = array
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+
+    },
+
+    /**
+     * should compare two dates for checking if the project deadline is exceeded
+     * @param id
+     */
+    calculateS: function (id) {
+      let state
+      let today = new Date()
+
+      this.projects.forEach((project) => {
+        if (project.projectNumber === id) {
+          let deadline = new Date(project.plannedEnd())
+          if (today.toDateString() > deadline.toDateString()) {
+            state = 'cancelled'
+          } else {
+            state = 'running'
+          }
+        } return state
+      })
+    },
+
+    /**
+     * should compare two dates for checking if the project deadline is exceeded
+     * @param id
+     */
+    calculateStatus: function (id) {
+      let state
+      let today = new Date()
+
+      this.fetchAllProjects()
+      this.projects.forEach((project) => {
+        if (project.projectNumber === id) {
+          let deadline = new Date(project.plannedEnd)
+          if (deadline < today) {
+             state = 'cancelled'
+          } else {
+            state = 'running'
+          }
+        }
+        return state
+      }
+      )
+    }
   }
 }
 </script>
