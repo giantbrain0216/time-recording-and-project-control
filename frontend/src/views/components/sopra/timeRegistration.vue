@@ -46,7 +46,11 @@
                       min="06:00" max="22:00" v-model="endtime" required>
             <small>   End Time</small>
           </div>
-          <div @click="submitTimeRegistration" class="m-3"><vs-button color="success" type="relief" v-bind:disabled="!validTime(starttime,endtime)">Save Time Registration</vs-button></div>
+          <div class="m-3">
+            <vs-textarea counter="100" label="Beschreibung" :counter-danger.sync="counterDanger" v-model="textarea" />
+          </div>
+
+          <div @click="submitTimeRegistration" class="m-3"><vs-button color="success" type="relief" v-bind:disabled="!validInput(starttime,endtime)">Save Time Registration</vs-button></div>
         </div>
 
       </vs-card>
@@ -129,6 +133,8 @@ export default {
       timeregistrations:[],
       activeDeletePrompt:false,
       currentRegistration:0,
+      textarea: '',
+      counterDanger: false
 
     };
   },
@@ -258,10 +264,10 @@ export default {
 
     },
 
-    validTime(starttime,endtime){
+    validInput(starttime, endtime){
       var startdate = new Date("1970-01-01 " + starttime);
       var enddate = new Date("1970-01-01 " + endtime);
-      return (startdate.getTime() < enddate.getTime())
+      return (startdate.getTime() < enddate.getTime() && !this.counterDanger && this.textarea != '' && this.currentProjectID != 0 && this.currentEmployeeID != 0 )
     },
     closeDeleteAlert(message){
       // eslint-disable-next-line no-console

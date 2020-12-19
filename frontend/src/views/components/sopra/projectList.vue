@@ -4,6 +4,25 @@
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+            <div>Only see projects from:      </div>
+            <vs-dropdown class="ml-1">
+              <a class="a-icon" href="#">
+                {{this.selectedClientNameEdit}}
+                <vs-icon class="" icon="expand_more"></vs-icon>
+              </a>
+              <vs-dropdown-menu>
+                <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
+                  All Clients
+                </vs-dropdown-item>
+                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)" v-for="client in clients" :key="client.clientID">
+                  {{client.name }}
+                </vs-dropdown-item>
+              </vs-dropdown-menu>
+            </vs-dropdown>
+
+
+          </div>
           <table class="table v-middle border">
             <thead>
             <tr class="">
@@ -11,7 +30,6 @@
               <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
               <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
               <th class="border-top-0" style="color: cornflowerblue">Progress</th>
-              <th class="border-top-0" style="color: cornflowerblue">Status</th>
               <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
             </thead>
@@ -31,12 +49,7 @@
               <td style="text-align: center">
                 <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary
                 </vs-progress>
-                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i>
-              </td>
-              <td>
-                <div class="d-flex align-items-center">
-                </div>
-              </td>
+                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
               <td>
                 <div>
                   <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger" icon="delete" type="filled">
@@ -234,11 +247,13 @@ export default {
   created() {
     this.fetchClients();
     this.fetchAllProjects();
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
     this.dateToday = yyyy + "-" + mm + '-' + dd;
+
   },
 
 
@@ -285,6 +300,17 @@ export default {
     updateSelectedClient(id, name){
       this.selectedClientID = id;
       this.selectedClientName = name;
+    },
+    updateSelectedClientEdit(id,name){
+      this.selectedClientNameEdit = name;
+      if(id==0){
+        this.fetchAllProjects();
+      }else{
+        this.fetchProjectsSortedByCustomer(id)
+      }
+
+
+
     },
     showDeletePrompt: function (id) {
       this.fetchProject(id)
@@ -414,7 +440,6 @@ export default {
       this.deleteAlert()
       await this.fetchAllProjects();
     },
-
     fetchAllProjects: async function () {
       await axios.get(`http://localhost:8080/projects/`)
           .then(response => {
@@ -431,14 +456,12 @@ export default {
         text: 'Project has been successfully added.'
       })
     },
-
     deleteAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
         text: 'Project has been successfully deleted.'
       })
     },
-
     editAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
@@ -446,7 +469,6 @@ export default {
         text: 'Project has been successfully edited.'
       })
     },
-
     closeDeleteAlert() {
       this.$vs.notify({
         title: 'Cancelled:',
@@ -468,7 +490,6 @@ export default {
         text: 'Add was cancelled successfully.'
       })
     },
-
     closeEditForm() {
       this.editValues.clientIDField = "";
       this.editValues.plannedStartField = "";
@@ -481,7 +502,6 @@ export default {
         text: 'Edit was cancelled successfully.'
       })
     },
-
     fetchProject: async function (id) {
       await axios.get(`http://localhost:8080/projects/${id}`)
           .then(response => {
@@ -492,6 +512,22 @@ export default {
             this.errors.push(e)
           })
       // this.projectSelected = true
+    },
+    async fetchProjectsSortedByCustomer(id){
+      await axios.get(`http://localhost:8080/projects`)
+          .then(response => {
+            var array = []
+            for(var i = 0; i<response.data.length;i++){
+              if(response.data[i].clientID == id){
+                array.push(response.data[i])
+              }
+            }
+            this.projects = array
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+
     },
 
     /**
