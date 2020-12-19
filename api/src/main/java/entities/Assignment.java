@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @DatabaseTable(tableName = "Assignment")
 public class Assignment {
 
-    @DatabaseField(columnName = "ID")
+    @DatabaseField(columnName = "ID", id = true)
     @NotNull
     private Integer id;
 
@@ -25,9 +25,17 @@ public class Assignment {
     @NotNull
     private Integer projectID;
 
-    @DatabaseField(columnName = "Hours worked")
+    @DatabaseField(columnName = "Planned Working Hours")
     @NotNull
-    private Float workedHours;
+    private Integer plannedWorkingHours;
+
+    public Assignment(){}
+
+    public Assignment(Integer employeeID, Integer projectID, Integer workedHours){
+        this.projectID = projectID;
+        this.employeeID = employeeID;
+        this.plannedWorkingHours = workedHours;
+    }
 
 
     public Integer getId() {
@@ -54,11 +62,22 @@ public class Assignment {
         this.projectID = projectID;
     }
 
-    public Float getWorkedHours() {
-        return workedHours;
+
+    public Integer getPlannedWorkingHours() {
+        return plannedWorkingHours;
     }
 
-    public void setWorkedHours(Float workedHours) {
-        this.workedHours = workedHours;
+    public void setPlannedWorkingHours(Integer plannedWorkingHours) {
+        this.plannedWorkingHours = plannedWorkingHours;
+    }
+
+    @Override
+    public String toString() {
+        return "Assignment{" +
+                "id=" + id +
+                ", employeeID=" + employeeID +
+                ", projectID=" + projectID +
+                ", plannedWorkingHours=" + plannedWorkingHours +
+                '}';
     }
 }

@@ -56,15 +56,6 @@ public class Client {
      */
     public Client(final String name, final String email, final String telephoneNumber,
                   final Integer contactPersonID, final String projectIDs) {
-        if (!email.contains("@")) {
-            throw new IllegalArgumentException("The E-Mail is invalid ! ");
-        }
-        if (!projectIDs.isEmpty()&&projectIDs.length()==1) {
-            if (StringUtils.countMatches(projectIDs, "-") != projectIDs.length() / 2) {
-                throw new IllegalArgumentException("The projectIDs does not match the format! The projectIDs must be " +
-                        "seperated through the delimiter -");
-            }
-        }
         this.name = name;
         this.contactPersonID = contactPersonID;
         this.email = email;

@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import controllers.Application;
+import entities.Assignment;
 import entities.Client;
 import entities.Employee;
 import org.springframework.boot.ApplicationArguments;
@@ -158,5 +159,4 @@ public class EmployeeDatabase {
             return new ArrayList<Employee>();
         }
     }
-
 }

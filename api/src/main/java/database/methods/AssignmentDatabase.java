@@ -110,7 +110,7 @@ public class AssignmentDatabase {
      */
     public List<Assignment> getProjects(Integer employeeID) {
         List<Assignment> allAssignments = this.getAllAssignments();
-        return allAssignments.stream().filter(assignment -> !assignment.getEmployeeID().equals(employeeID))
+        return allAssignments.stream().filter(assignment -> assignment.getEmployeeID().equals(employeeID))
                 .collect(Collectors.toList());
     }
 
@@ -124,7 +124,7 @@ public class AssignmentDatabase {
      */
     public List<Assignment> getEmployees(Integer projectID) {
         List<Assignment> allAssignments = this.getAllAssignments();
-        return allAssignments.stream().filter(assignment -> !assignment.getProjectID().equals(projectID))
+        return allAssignments.stream().filter(assignment -> assignment.getProjectID().equals(projectID))
                 .collect(Collectors.toList());
     }
 
