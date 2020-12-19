@@ -11,6 +11,7 @@
               <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
               <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
               <th class="border-top-0" style="color: cornflowerblue">Progress</th>
+              <th class="border-top-0" style="color: cornflowerblue">Status</th>
               <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
             </thead>
@@ -30,7 +31,13 @@
               <td style="text-align: center">
                 <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary
                 </vs-progress>
-                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
+                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+
+                </div>
+              </td>
               <td>
                 <div>
                   <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger" icon="delete" type="filled">
@@ -190,6 +197,7 @@ export default {
     return {
       projects: [],
       clients:[],
+      status,
       dateToday: "",
       startDatum: "",
       startdate1: "",
@@ -228,13 +236,11 @@ export default {
   created() {
     this.fetchClients();
     this.fetchAllProjects();
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
     this.dateToday = yyyy + "-" + mm + '-' + dd;
-
   },
 
 
@@ -489,6 +495,27 @@ export default {
           })
       // this.projectSelected = true
     },
+
+    calculateStatus: function (id) {
+      let status
+      let today = new Date()
+      let yyyy = today.getFullYear()
+      let dd = String(today.getDate()).padStart(2, '0')
+      let mm = String(today.getMonth() + 1).padStart(2, '0')
+
+      this.fetchProject(id)
+      // eslint-disable-next-line no-console
+      if (yyyy < parseInt(this.currentProject.plannedEnd.substring(0,4))) {
+        if (parseInt(mm) < parseInt(this.currentProject.plannedEnd.substring(9, 10))) {
+          if (parseInt(dd) < parseInt(this.currentProject.plannedEnd.substring(6,7))) {
+            status = 'cancelled'
+          }
+        }
+      } else {
+        status = 'running'
+      }
+      return status
+    }
   }
 }
 </script>
