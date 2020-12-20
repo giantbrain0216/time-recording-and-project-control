@@ -3,14 +3,17 @@
     <vs-row vs-justify="center">
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
+          <div slot="header">
+            <h2 style="color: cornflowerblue">Client list</h2>
+          </div>
         <table class="table v-middle border">
           <thead>
           <tr class="">
-            <th class="border-top-0">ID</th>
-            <th class="border-top-0">Name</th>
-            <th class="border-top-0">EMAIL</th>
-            <th class="border-top-0">Project IDs</th>
-            <th class="border-top-0">Actions</th>
+            <th class="border-top-0" style="color: cornflowerblue">ID</th>
+            <th class="border-top-0" style="color: cornflowerblue">Name</th>
+            <th class="border-top-0" style="color: cornflowerblue">EMAIL</th>
+            <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>
+            <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -346,5 +349,5 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 </style>

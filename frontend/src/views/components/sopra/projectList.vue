@@ -4,6 +4,9 @@
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
+          <div slot="header">
+            <h2 style="color: cornflowerblue">Project list</h2>
+          </div>
           <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
             <div>Only see projects from:</div>
             <vs-dropdown class="ml-1">

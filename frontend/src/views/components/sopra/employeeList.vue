@@ -4,13 +4,16 @@
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 4 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
+          <div slot="header">
+            <h2 style="color: cornflowerblue">Employee list</h2>
+          </div>
           <table class="table v-middle border">
             <thead>
             <tr class="">
-              <th class="border-top-0">Name</th>
-              <th class="border-top-0">Competences</th>
-              <th class="border-top-0">Remaining Working Hours Per Week</th>
-              <th class="border-top-0">Actions</th>
+              <th class="border-top-0" style="color: cornflowerblue">Name</th>
+              <th class="border-top-0" style="color: cornflowerblue">Competences</th>
+              <th class="border-top-0" style="color: cornflowerblue">Remaining Working Hours Per Week</th>
+              <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
             </thead>
             <tbody>
