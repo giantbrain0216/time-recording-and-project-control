@@ -104,7 +104,7 @@ In diesem Sprint wurden die bis zum [Meilenstein 2](SoPra WS20 / team12) erledig
 
 **Die Testabdeckung für das Backend:**  
 - finden Sie [hier](coverage/index.html)  
-All Klassen sind abgedeckt und 93% der methoden sind abgedeckt. Somit kann ma behaupten,
+All Klassen sind abgedeckt und 93% der methoden sind abgedeckt. Somit kann man behaupten,
 dass die Test alle nicht-trivialen Methoden abdecken und diese auch funktionieren.
 
 
