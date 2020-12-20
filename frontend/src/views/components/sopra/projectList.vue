@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <vs-row vs-justify="center">
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
@@ -30,61 +30,61 @@
             </div>
           </div>
           <div class="table-responsive">
-          <table class="table v-middle border">
-            <thead>
-            <tr class="">
-              <th class="border-top-0" style="color: cornflowerblue">Name</th>
-              <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
-              <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
-              <th class="border-top-0" style="color: cornflowerblue">Progress</th>
-              <th class="border-top-0" style="color: cornflowerblue">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="project in projects" :key="project.projectNumber">
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="">
-                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
-                       style="font-weight: bold; font-size: 15px; cursor:pointer">
-                      {{ project.projectName }}
-                      <b-card style="font-size:10px;" class="text-success"
-                              v-if="calculateStatus(project.projectNumber)">running
-                      </b-card>
-                      <b-card style="font-size:10px;" class="text-secondary"
-                              v-else-if="!calculateStatus(project.projectNumber)">finished
-                      </b-card>
+            <table class="table v-middle border">
+              <thead>
+              <tr class="">
+                <th class="border-top-0" style="color: cornflowerblue">Name</th>
+                <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
+                <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
+                <th class="border-top-0" style="color: cornflowerblue">Progress</th>
+                <th class="border-top-0" style="color: cornflowerblue">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="project in projects" :key="project.projectNumber">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="">
+                      <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
+                         style="font-weight: bold; font-size: 15px; cursor:pointer">
+                        {{ project.projectName }}
+                        <b-card style="font-size:10px;" class="text-success"
+                                v-if="calculateStatus(project.projectNumber)">running
+                        </b-card>
+                        <b-card style="font-size:10px;" class="text-secondary"
+                                v-else-if="!calculateStatus(project.projectNumber)">finished
+                        </b-card>
 
-                    </a>
+                      </a>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>{{ project.clientID }}</td>
-              <!-- <td>{{ project.projectName }}</td> -->
-              <td> {{ project.plannedEnd.substring(0, 10) }}</td>
-              <td style="text-align: center">
-                <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary
-                </vs-progress>
-                <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
-              <td>
-                <div>
-                  <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger"
-                             icon="delete" type="filled">
-                    Delete
-                  </vs-button>
-                  <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
+                </td>
+                <td>{{ project.clientID }}</td>
+                <!-- <td>{{ project.projectName }}</td> -->
+                <td> {{ project.plannedEnd.substring(0, 10) }}</td>
+                <td style="text-align: center">
+                  <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary
+                  </vs-progress>
+                  <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
+                <td>
+                  <div>
+                    <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger"
+                               icon="delete" type="filled">
+                      Delete
+                    </vs-button>
+                    <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
                   " color="warning" icon="edit" type="filled">
-                    Edit
-                  </vs-button>
-                  <vs-button class=" m-1" @click="updateeProjectID(project.projectNumber)" color="success" icon="add"
-                             type="filled">
-                    Assign
-                  </vs-button>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+                      Edit
+                    </vs-button>
+                    <vs-button class=" m-1" @click="updateeProjectID(project.projectNumber)" color="success" icon="add"
+                               type="filled">
+                      Assign
+                    </vs-button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
           </div>
         </vs-card>
       </vs-col>
@@ -251,11 +251,15 @@
 
           </div>
           <div class="ml-5">
-          <ul>
-            <li><h6>Remaining Working Hours This Week: <strong style="color: red" >{{ this.currentEmployee.remainingWorkingHoursPerWeek }}</strong></h6></li>
-            <li>
-              <h6 class="mt-2 mb-2" style="font-weight: bold">Effort to perform: <strong style="color: red" >{{ this.currentProject.plannedEffort - this.currentProject.performedEffort }}</strong></h6></li>
-          </ul> </div>
+            <ul>
+              <li><h6>Remaining Working Hours This Week: <strong
+                  style="color: red">{{ this.currentEmployee.remainingWorkingHoursPerWeek }}</strong></h6></li>
+              <li>
+                <h6 class="mt-2 mb-2" style="font-weight: bold">Effort to perform: <strong style="color: red">{{
+                    Math.round(this.currentProject.plannedEffort - this.currentProject.performedEffort)
+                  }}</strong> Hours</h6></li>
+            </ul>
+          </div>
           <table class="table">
             <thead>
             <tr class="">
@@ -390,17 +394,16 @@ export default {
     },
 
 
-
   },
 
   methods: {
 
-    validProjectEdit(starttime,endttime) {
-      return ( this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(starttime).getTime() <= new Date(endttime).getTime())
-          && this.editValues.competencesField.length >0 )
+    validProjectEdit(starttime, endttime) {
+      return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(starttime).getTime() <= new Date(endttime).getTime())
+          && this.editValues.competencesField.length > 0)
     },
 
-    validProject(start,end) {
+    validProject(start, end) {
       return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(end).getTime())
           && this.inputValues.competencesField.length > 0)
 
@@ -622,8 +625,8 @@ export default {
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
         "clientID": parseInt(this.selectedClientID),
-        "plannedStart":  this.start + " " + "00:00",
-        "plannedEnd":  this.end + " " + "00:00" ,
+        "plannedStart": this.start + " " + "00:00",
+        "plannedEnd": this.end + " " + "00:00",
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": 0,
         "competences": this.inputValues.competencesField,
