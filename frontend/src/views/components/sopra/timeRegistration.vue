@@ -22,9 +22,9 @@
             </vs-dropdown>
           </div>
           <div class="d-flex align-items-center dropdownbtn-alignment m-3">
-            <vs-button class="btnx" type="filled">{{this.currentProject}}</vs-button>
+            <vs-button class="btnx" type="filled" :disabled="currentEmployeeID == 0">{{this.currentProject}}</vs-button>
             <vs-dropdown>
-              <vs-button class="btn-drop" type="filled" icon="expand_more"></vs-button>
+              <vs-button class="btn-drop" type="filled" icon="expand_more" :disabled="currentEmployeeID == 0"></vs-button>
               <!-- <a href="#">Hola mundo</a> -->
               <vs-dropdown-menu>
                 <vs-dropdown-item  @click="updateProject(project.projectNumber)" v-for="project in projects" :key="project.projectNumber">
@@ -194,6 +194,39 @@ export default {
     },
 
 
+    fetchProjectsByEmployee: async function(id){
+      await axios.get(`http://localhost:8080/projects`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.projects = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+      var listOfProjectsIndexes = []
+      var listOfProjects = []
+      await axios.get(`http://localhost:8080/assignmentsbyemployee/` + id )
+          .then(response => {
+            // JSON responses are automatically parsed.
+            for (let i = 0; i < response.data.length; i++) {
+              listOfProjectsIndexes.push(response.data[i].projectID)
+            }
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+
+      for(var i=0;i<this.projects.length;i++){
+        if(listOfProjectsIndexes.indexOf(this.projects[i].projectNumber) != -1){
+          listOfProjects.push(this.projects[i])
+        }
+      }
+        this.projects = listOfProjects
+
+
+
+    },
+
     updateProject: function(id){
         this.currentProjectID = id;
       for(let i = 0; i<this.projects.length;i++){
@@ -204,6 +237,7 @@ export default {
     },
 
     updateEmployee: async function(id){
+      this.fetchProjectsByEmployee(id)
       await this.fetchTimeRegistrations(id)
       this.currentEmployeeID = id;
       for(let i = 0; i<this.employees.length;i++){
@@ -241,6 +275,7 @@ export default {
             this.currentEmployee= "Employee"
             this.currentEmployeeID=0
             this.timeregistrations=[]
+            this.textarea=""
           }).catch((error) => {
             // handle this error here
             if (error.response){
