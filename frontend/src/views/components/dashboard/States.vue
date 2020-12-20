@@ -2,15 +2,15 @@
     <vs-row>
         <vs-col vs-lg="3" vs-xs="12">
             <vs-card>
-                <h4 class="mb-1">{{Math.round(getProgressOfAll())}}% of the projects are Done</h4>
+                <h4 class="mb-1">{{Math.round(getProgressOfAll())}}% Done</h4>
                 <span>Total Poject progress</span>
                 <vs-progress :percent="(getPerformedEffort()/getPlannedEffort())*100" color="primary">primary</vs-progress>
             </vs-card>
         </vs-col>
         <vs-col vs-lg="3" vs-xs="12" >
             <vs-card>
-                <h4 class="mb-1">{{Math.round(percentageProjectsNeedEmployees) + "% of the projects need more employees"}}</h4>
-<!--                <span>Projects Needing More Employees</span>-->
+                <h4 class="mb-1">{{Math.round(percentageProjectsNeedEmployees) + "%"}}</h4>
+             <span>Projects need more Employees</span>
                 <vs-progress :percent="percentageProjectsNeedEmployees" color="danger">primary</vs-progress>
             </vs-card>
         </vs-col>
