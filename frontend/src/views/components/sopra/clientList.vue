@@ -5,8 +5,9 @@
         <vs-card class="cardx">
           <div slot="header">
             <h2 class="float-left" style="color: cornflowerblue">Client list</h2>
-            <div class="float-right mb-1"><vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button></div>
+            <div class="float-right mb-1"><vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Customer</vs-button></div>
           </div>
+          <div class="table-responsive">
         <table class="table v-middle border">
           <thead>
           <tr class="">
@@ -42,6 +43,7 @@
           </tr>
           </tbody>
         </table>
+          </div>
         </vs-card>
       </vs-col>
       <vs-col v-if="clientSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">

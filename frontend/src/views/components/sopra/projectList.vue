@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive">
+  <div >
     <vs-row vs-justify="center">
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
@@ -27,7 +27,7 @@
               </vs-dropdown>
             </div>
           </div>
-
+          <div class="table-responsive">
           <table class="table v-middle border">
             <thead>
             <tr class="">
@@ -81,6 +81,7 @@
             </tr>
             </tbody>
           </table>
+          </div>
         </vs-card>
       </vs-col>
       <vs-col v-if="projectSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
