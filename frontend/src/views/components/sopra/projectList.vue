@@ -640,7 +640,7 @@ export default {
     },
 
     async fetchCurrentProjectAssignments(id) {
-      await axios.get(`http://localhost:8080/assignmentbyproject/${id}`)
+      await axios.get(`http://localhost:8080/assignmentsbyproject/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
             this.currentProjectAssignments = response.data
