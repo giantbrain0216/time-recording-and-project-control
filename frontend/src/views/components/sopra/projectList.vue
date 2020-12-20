@@ -19,13 +19,12 @@
                     All Clients
                   </vs-dropdown-item>
                   <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)"
-                                    v-for="client in clients" :key="client.clientID">
+                                    v-for="client in clients" :key="client.clientID"
+                  >
                     {{ client.name }}
                   </vs-dropdown-item>
                 </vs-dropdown-menu>
               </vs-dropdown>
-
-
             </div>
           </div>
 
@@ -431,7 +430,7 @@ export default {
       })
       await this.fetchAllEmployees()
       await this.fetchAllProjects()      //await this.fetchEmployees()
-     // await this.fetchAllAssignments()
+      // await this.fetchAllAssignments()
       this.alertAssignAlert()
     },
 
@@ -493,16 +492,32 @@ export default {
             this.errors.push(e)
           })
     },
+
+    /**
+     * Sets selectedClientID and selectedClientName
+     *
+     * @param id of client
+     * @param name of client
+     */
     updateSelectedClient(id, name) {
       this.selectedClientID = id;
       this.selectedClientName = name;
     },
+
+    /**
+     * Sets the selectedEmployeeId and selectedEmployeeName
+     */
     updateSelectedEmployee(id, name) {
       this.selectedEmployeeID = id;
       this.selectedEmployeeName = name;
       this.fetchEmployee(id)
     },
 
+    /**
+     * Gets specific employee from DB
+     *
+     * @param id of employee
+     */
     async fetchEmployee(id) {
       await axios.get(`http://localhost:8080/employees/${id}`)
           .then(response => {
@@ -516,6 +531,9 @@ export default {
 
     },
 
+    /**
+     * Closes assignment prompt
+     */
     closeAssignPrompt() {
       this.activeAssignPropmt = false;
       // this.activeAssignPropmt = true;
@@ -523,6 +541,10 @@ export default {
       this.selectedEmployeeName = "Employee"
       this.currentEmployee = {}
     },
+
+    /**
+     *
+     */
     updateSelectedClientEdit(id, name) {
       this.selectedClientNameEdit = name;
       if (id == 0) {
@@ -533,27 +555,34 @@ export default {
 
 
     },
+
+    /**
+     * Activates deletion prompt
+     */
     showDeletePrompt: function (id) {
       this.fetchProject(id)
       this.activeDeletePrompt = true
     },
 
+    /**
+     * Gets planned start without time as String
+     */
     plannedStart: function () {
       var startdate = this.currentProject.plannedStart;
       this.startDatum = startdate.substring(0, 10)
-      // var dateControl = document.querySelector('input[id="startedit"]')
-
-      // eslint-disable-next-line no-console
-      console.log(startdate)
-      //return startdate;
-
     },
 
+    /**
+     * Gets the end date of project without time and as String
+     */
     plannedEnd: function () {
       var enddate = this.currentProject.plannedEnd;
       this.endDatum = enddate.substring(0, 10)
     },
 
+    /**
+     * Closes deletion prompt
+     */
     closeDeletePrompt: function () {
       this.activeDeletePrompt = false;
       this.closeDeleteAlert()
@@ -564,6 +593,10 @@ export default {
       this.fetchProject(id)
       this.projectSelected = true
     },
+
+    /**
+     * Adds project to the DB and updates the frontend project list.
+     */
     addProject: async function () {
       var dateControl = document.querySelector('input[id="start"]');
       var startdate = dateControl.value;
@@ -582,9 +615,7 @@ export default {
       }).then((result) => {
         this.createdClientID = result.data;
       })
-
       await this.fetchCustomer(this.selectedClientID)
-
       await axios.put(`http://localhost:8080/clients/`, {
         'id': this.currentClient.clientID,
         'name': this.currentClient.name,
@@ -593,11 +624,15 @@ export default {
         'contactPersonID': this.currentClient.contactPersonID,
         'projectIDs': this.currentClient.projectIDs + "-" + this.createdClientID //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
       })
-
-
       this.acceptAlert();
       await this.fetchAllProjects()
     },
+
+    /**
+     * Gets specific client from DB
+     *
+     * @param id of client
+     */
     fetchCustomer: async function (id) {
       await axios.get(`http://localhost:8080/clients/${id}`)
           .then(response => {
@@ -611,6 +646,9 @@ export default {
           })
     },
 
+    /**
+     * Updates project in the DB
+     */
     updateProject: async function () {
       var dateControlEdit = document.querySelector('input[id="startedit"]');
       var startdateedit = dateControlEdit.value;
@@ -632,6 +670,10 @@ export default {
       await this.fetchAllProjects();
     },
 
+    /**
+     * Gets project assignments and project for editing.
+     * Activates assignment prompt.
+     */
     updateeProjectID: async function (id) {
       await this.fetchCurrentProjectAssignments(id)
       await this.fetchProject(id);
@@ -639,6 +681,11 @@ export default {
 
     },
 
+    /**
+     * Gets assignment of currentProject
+     *
+     * @param id of assignmentByProject
+     */
     async fetchCurrentProjectAssignments(id) {
       await axios.get(`http://localhost:8080/assignmentsbyproject/${id}`)
           .then(response => {
@@ -649,6 +696,10 @@ export default {
             this.errors.push(e)
           })
     },
+
+    /**
+     * Sets update prompt with the currentProject data
+     */
     updateProjectID: async function (id) {
       await this.fetchProject(id);
       this.activeEditPromt = true
@@ -663,7 +714,9 @@ export default {
       this.plannedEnd()
     },
 
-
+    /**
+     * Deletes the currentProject from DB
+     */
     deleteProject: async function () {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber);
@@ -679,6 +732,10 @@ export default {
       this.deleteAlert()
       await this.fetchAllProjects();
     },
+
+    /**
+     * Gets all projects from DB
+     */
     fetchAllProjects: async function () {
       await axios.get(`http://localhost:8080/projects/`)
           .then(response => {
@@ -689,6 +746,10 @@ export default {
             this.errors.push(e)
           })
     },
+
+    /**
+     * Gets all employees from DB
+     */
     fetchAllEmployees: async function () {
       await axios.get(`http://localhost:8080/employees/`)
           .then(response => {
@@ -699,18 +760,30 @@ export default {
             this.errors.push(e)
           })
     },
+
+    /**
+     * Notifies that addition succeeded
+     */
     acceptAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
         text: 'Project has been successfully added.'
       })
     },
+
+    /**
+     * Notifies that deletion succeeded
+     */
     deleteAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
         text: 'Project has been successfully deleted.'
       })
     },
+
+    /**
+     * Notifies that assignment was closed
+     */
     cancelAssignAlert() {
       this.$vs.notify({
         title: 'Cancel:',
@@ -719,6 +792,9 @@ export default {
       })
     },
 
+    /**
+     * Notifies that assignment succeeded
+     */
     assignProjectAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
@@ -726,6 +802,10 @@ export default {
         text: 'Assignment has been successfully performed.'
       })
     },
+
+    /**
+     * Notifies that updating project succeeded
+     */
     editAlert() {
       this.$vs.notify({
         title: 'Confirmation:',
@@ -733,6 +813,10 @@ export default {
         text: 'Project has been successfully edited.'
       })
     },
+
+    /**
+     * Notifies that deletion was closed
+     */
     closeDeleteAlert() {
       this.$vs.notify({
         title: 'Cancelled:',
@@ -740,6 +824,10 @@ export default {
         text: 'Project has not been deleted.'
       })
     },
+
+    /**
+     * Notifies that addition prompt was closed and sets the inputValues to ''
+     */
     closeAddForm() {
       this.inputValues.clientIDField = "";
       this.inputValues.projectName = "";
@@ -754,6 +842,10 @@ export default {
         text: 'Add was cancelled successfully.'
       })
     },
+
+    /**
+     * Notifies that updating prompt for project war closed ans sets the editValues to ''
+     */
     closeEditForm() {
       this.editValues.clientIDField = "";
       this.editValues.plannedStartField = "";
@@ -766,6 +858,12 @@ export default {
         text: 'Edit was cancelled successfully.'
       })
     },
+
+    /**
+     * Gets a specific project from DB
+     *
+     * @param id of project
+     */
     fetchProject: async function (id) {
       await axios.get(`http://localhost:8080/projects/${id}`)
           .then(response => {
@@ -775,8 +873,13 @@ export default {
           .catch(e => {
             this.errors.push(e)
           })
-      // this.projectSelected = true
     },
+
+    /**
+     * Gets all projects of a specific client
+     *
+     * @param id of client
+     */
     async fetchProjectsSortedByCustomer(id) {
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {
@@ -795,8 +898,9 @@ export default {
     },
 
     /**
-     * should compare two dates for checking if the project deadline is exceeded
-     * @param id
+     * Checks if deadline of given project exceeded
+     *
+     * @param id project deadline to be checked
      */
     calculateStatus: function (id) {
       let today = new Date()
@@ -816,32 +920,9 @@ export default {
         }
       }
     },
-
-    /**
-     * should compare two dates for checking if the project deadline is exceeded
-     * @param id
-     */
-    /*calculateStatus: function (id) {
-      let state
-      let today = new Date()
-
-      this.fetchAllProjects()
-      this.projects.forEach((project) => {
-        if (project.projectNumber === id) {
-          let deadline = new Date(project.plannedEnd)
-          if (deadline < today) {
-             state = 'cancelled'
-          } else {
-            state = 'running'
-          }
-        }
-        return state
-      }
-      )
-    }*/
   }
 }
 </script>
 
-<style scoped>
+<style>
 </style>
