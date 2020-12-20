@@ -316,6 +316,14 @@ export default {
   },
 
   created() {
+
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    this.dateToday = yyyy + "-" + mm + '-' + dd;
     this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllProjects();
@@ -354,6 +362,7 @@ export default {
         },
 
         getEndDate(){
+          var dateControl1 = document.querySelector('input[id="end"]');
           var dateControl1 = document.querySelector('input[id="end"]');
           this.enddate1 = dateControl1.value;
         }, */
@@ -519,7 +528,7 @@ export default {
         "plannedStart": startdateedit + " " + "00:00",
         "plannedEnd": enddateedit + " " + "00:00",
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
-        "performedEffort": this.currentProject.performedEffortField,
+        "performedEffort": this.currentProject.performedEffort,
         "competences": this.editValues.competencesField,
       })
       this.editAlert()

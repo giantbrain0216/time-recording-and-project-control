@@ -270,9 +270,11 @@ export default {
         "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
             this.currentAssignment.plannedWorkingHours)
       })
-      await this.fetchEmployees()
+      await this.fetchEmployee(this.currentEmployee.employeeID)
+      //await this.fetchEmployees()
       await this.fetchAllAssignments()
       this.alertAssignAlert()
+//      this.
     },
     async updateEmployee() {
       await axios.put(`http://localhost:8080/employees/`, {
@@ -284,6 +286,7 @@ export default {
         'remainingWorkingHoursPerWeek': parseInt(this.currentEmployee.remainingWorkingHoursPerWeek)
             + parseInt(this.editValues.workingHoursField) - parseInt(this.currentEmployee.workingHoursPerWeek),
       })
+     await this.fetchEmployee(this.currentEmployee.employeeID)
       await this.fetchEmployees()
       this.acceptEditAlert()
     },
