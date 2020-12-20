@@ -4,14 +4,16 @@
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 4 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
+          <div slot="header">
+            <h2 style="color: cornflowerblue">Employee list</h2>
+          </div>
           <table class="table v-middle border">
             <thead>
             <tr class="">
-              <th class="border-top-0">Name</th>
-              <!--<th class="border-top-0">ID</th>-->
-              <th class="border-top-0">Competences</th>
-              <th class="border-top-0">Remaining Working Hours Per Week</th>
-              <th class="border-top-0">Actions</th>
+              <th class="border-top-0" style="color: cornflowerblue">Name</th>
+              <th class="border-top-0" style="color: cornflowerblue">Competences</th>
+              <th class="border-top-0" style="color: cornflowerblue">Remaining Working Hours Per Week</th>
+              <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -37,7 +39,7 @@
                   <vs-button @click="deletionPrompt(employee.employeeID)"  icon="delete" class="m-1" color="danger" type="filled">
                     Delete
                   </vs-button>
-                  <vs-button @click="updateEditID(employee.employeeID)" icon="edit" class="m-1" color="primary" type="filled">
+                  <vs-button @click="updateEditID(employee.employeeID)" icon="edit" class="m-1" color="warning" type="filled">
                     Edit
                   </vs-button>
                 </div>
@@ -52,7 +54,9 @@
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off"
                        @click="employeeSelected = false"></vs-button>
-            <h1>Details of {{ currentEmployee.name }} </h1>
+            <h2 style="text-align: center">
+              Details of <strong style="color: red;">{{ currentEmployee.name }} </strong>
+            </h2>
           </div>
           <div>
             <p><strong>Name: </strong>{{ currentEmployee.name }}</p>
@@ -64,58 +68,62 @@
             <p><strong>Working Hours Per Week: </strong>{{ currentEmployee.workingHoursPerWeek }}</p>
             <hr>
             <p><strong>Remaining Working Hours : </strong>{{ currentEmployee.remainingWorkingHoursPerWeek }}</p>
+            <hr>
+            <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
 
           </div>
-        </vs-card>
-        <vs-card class="cardx">
-          <h2 style="text-align: center">Assignments of <strong style="color: red;">{{ currentEmployee.name }} </strong>
-          </h2>
-          <table class="table v-middle border">
-            <thead>
-            <tr class="">
-              <th class="border-top-0">Assignment ID</th>
-              <!--<th class="border-top-0">ID</th>-->
-              <th class="border-top-0">Project ID</th>
-              <th class="border-top-0">Planned Hours</th>
-              <th class="border-top-0">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="assignment in assignmentCurrentEmployee" :key="assignment.id">
-              <td>{{ assignment.id }}</td>
-              <!--<td>{{employee.employeeID}}</td>-->
-              <td>{{ assignment.projectID }}</td>
-              <td>{{ assignment.plannedWorkingHours }}</td>
-              <td>
-                <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
-                           type="filled">
-                  Delete
-                </vs-button>
-              </td>
-              <!-- <td>
-                 <div>
-                   <vs-button @click="deletionPrompt(employee.employeeID)" class="m-1" color="danger" type="filled">
-                     Delete
-                   </vs-button>
-                   <vs-button @click="updateEditID(employee.employeeID)" class="m-1" color="primary" type="filled">
-                     Edit
-                   </vs-button>
-                 </div>
-               </td>-->
-            </tr>
-            </tbody>
-          </table>
         </vs-card>
       </vs-col>
       <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
         <vs-card class="cardx">
-          <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
+          <div slot="header">
+            <h2 style="text-align: center">
+              Assignments of <strong style="color: red;">{{ currentEmployee.name }} </strong>
+            </h2>
+          </div>
+          <div>
+            <table class="table v-middle border">
+              <thead>
+              <tr class="">
+                <th class="border-top-0">Assignment ID</th>
+                <!--<th class="border-top-0">ID</th>-->
+                <th class="border-top-0">Project ID</th>
+                <th class="border-top-0">Planned Hours</th>
+                <th class="border-top-0">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="assignment in assignmentCurrentEmployee" :key="assignment.id">
+                <td>{{ assignment.id }}</td>
+                <!--<td>{{employee.employeeID}}</td>-->
+                <td>{{ assignment.projectID }}</td>
+                <td>{{ assignment.plannedWorkingHours }}</td>
+                <td>
+                  <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
+                             type="filled">
+                    Delete
+                  </vs-button>
+                </td>
+                <!-- <td>
+                   <div>
+                     <vs-button @click="deletionPrompt(employee.employeeID)" class="m-1" color="danger" type="filled">
+                       Delete
+                     </vs-button>
+                     <vs-button @click="updateEditID(employee.employeeID)" class="m-1" color="primary" type="filled">
+                       Edit
+                     </vs-button>
+                   </div>
+                 </td>-->
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </vs-card>
       </vs-col>
       <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Employee</vs-button>
       <vs-prompt
           title="Add Employee"
-          color="danger"
+          color="primary"
           @cancel="closeAdd"
           @accept="addEmployee"
           @close="closeAdd"
@@ -213,7 +221,7 @@ export default {
       currentEmployee: {},
       employeeSelected: false,
       activePrompt: false,
-      deleteAssignmentPrompt:false,
+      deleteAssignmentPrompt: false,
       currentAssignmentID: 0,
       currentAssignment: {},
       activeEditPromt: false,
@@ -274,8 +282,8 @@ export default {
       //await this.fetchEmployees()
       await this.fetchAllAssignments()
       this.alertAssignAlert()
-//      this.
     },
+
     async updateEmployee() {
       await axios.put(`http://localhost:8080/employees/`, {
         'employeeID': this.currentEmployee.employeeID,
@@ -313,7 +321,7 @@ export default {
       })
     },
 
-    alertAssignAlert(){
+    alertAssignAlert() {
       this.$vs.notify({
         title: 'Deletion',
         text: 'Deletion of the Assignment was successful.',
@@ -330,9 +338,33 @@ export default {
 
     acceptDeletionAlert() {
       this.$vs.notify({
-        title: 'Deletion',
-        text: 'was successful.',
+        title: 'Deletion alert',
+        text: 'Deletion was successful.',
         color: 'green',
+      })
+    },
+
+    deniedDeletionAlert(message) {
+      this.$vs.notify({
+        title: 'Deletion alert',
+        text: message,
+        color: 'red',
+      })
+    },
+
+    failedAddAlert(message) {
+      this.$vs.notify({
+        title: 'Addition alert',
+        text: message,
+        color: 'red',
+      })
+    },
+
+    failedEditAlert(message) {
+      this.$vs.notify({
+        title: 'Editing alert',
+        text: message,
+        color: 'red',
       })
     },
 
@@ -356,12 +388,12 @@ export default {
       })
     },
 
-   async updateCurrentAssignment(id){
-     this.currentAssignmentID = id
-     await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
+    async updateCurrentAssignment(id) {
+      this.currentAssignmentID = id
+      await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
         this.currentAssignment = response.data
       })
-     this.deleteAssignmentPrompt = true;
+      this.deleteAssignmentPrompt = true;
     },
 
 
@@ -419,16 +451,28 @@ export default {
         'competences': this.inputValues.competencesField,//.
         'workingHoursPerWeek': this.inputValues.workingHoursField,
         'remainingWorkingHoursPerWeek': this.inputValues.workingHoursField,
+      }).then(() => {
+          this.acceptAlert()
+          this.fetchEmployees()
+          }).catch(error => {
+            if (error.response) {
+              this.failedAddAlert(error.message)
+            }
       })
-      this.acceptAlert()
-      await this.fetchEmployees()
     },
 
     deleteEmployee: async function () {
       this.activeDeletePrompt = false;
-      await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`)
-      await this.fetchEmployees()
-      this.acceptDeletionAlert()
+      await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`).then(
+          () => {
+            this.fetchEmployees()
+            this.acceptDeletionAlert()
+          }
+      ).catch((error) => {
+        if (error.response) {
+          this.deniedDeletionAlert(error.message)
+        }
+      })
     },
 
     async updateEditID(id) {
