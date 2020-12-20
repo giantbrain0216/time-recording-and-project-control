@@ -68,11 +68,9 @@
                 <div>
                   <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger"
                              icon="delete" type="filled">
-                    Delete
                   </vs-button>
                   <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
                   " color="warning" icon="edit" type="filled">
-                    Edit
                   </vs-button>
                   <vs-button class=" m-1" @click="updateeProjectID(project.projectNumber)" color="success" icon="add"
                              type="filled">

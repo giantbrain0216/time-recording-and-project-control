@@ -33,11 +33,9 @@
             <td>{{client.projectIDs}}</td>
             <td>
               <div>
-                <vs-button @click="deleteClient(client.clientID)" class="m-1" color="danger" type="filled">
-                  Delete
+                <vs-button @click="deleteClient(client.clientID)" icon="delete" class="m-1" color="danger" type="filled">
                 </vs-button>
-                <vs-button @click="updateEditID(client.clientID)" class="m-1" color="primary" type="filled">
-                  Edit
+                <vs-button @click="updateEditID(client.clientID)" icon="edit" class="m-1" color="warning" type="filled">
                 </vs-button>
               </div>
             </td>
