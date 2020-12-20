@@ -12,20 +12,36 @@
                 <h4 class="mb-1">{{Math.round(percentageProjectsNeedEmployees) + "%"}}</h4>
              <span>Projects need more Employees</span>
                 <vs-progress :percent="percentageProjectsNeedEmployees" color="danger">primary</vs-progress>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item" v-for="project in projectsNeedMoreEmployees" :key="project.id"><b-card class="text-danger">{{project.projectName}}</b-card></li>
+              </ul>
             </vs-card>
         </vs-col>
-        <vs-col vs-lg="3" vs-xs="12">
+        <vs-col vs-lg="2" vs-xs="12">
             <vs-card>
                 <h4 class="mb-1">{{Math.round(percentageOverloadedEmployees)+"%"}}</h4>
                 <span>Overloaded Employees</span>
                 <vs-progress :percent="percentageOverloadedEmployees" color="danger">primary</vs-progress>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item" v-for="employee in employeesOverloaded" :key="employee.employeeID"><b-card class="text-danger">{{employee.name}}</b-card></li>
+              </ul>
             </vs-card>
         </vs-col>
-      <vs-col vs-lg="3" vs-xs="12">
+      <vs-col vs-lg="2" vs-xs="12">
+        <vs-card>
+          <h4 class="mb-1">{{Math.round(percentageUnderloadedEmployees)+"%"}}</h4>
+          <span>Underloaded Employees</span>
+          <vs-progress :percent="percentageUnderloadedEmployees" color="warning">primary</vs-progress>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" v-for="employee in employeesUnderloaded" :key="employee.employeeID"><b-card class="text-warning">{{employee.name}}</b-card></li>
+          </ul>
+        </vs-card>
+      </vs-col>
+      <vs-col vs-lg="2" vs-xs="12">
         <vs-card>
           <h4 class="mb-1">{{Math.round(calculateCancelled())}}%</h4>
-          <span>Projects are cancelled</span>
-          <vs-progress :percent="calculateCancelled()" color="danger">primary</vs-progress>
+          <span>Projects are finished</span>
+          <vs-progress :percent="calculateCancelled()" color="success">primary</vs-progress>
         </vs-card>
       </vs-col>
     </vs-row>    
@@ -40,7 +56,11 @@ export default {
       projects: [],
       employees:[],
       percentageProjectsNeedEmployees:null,
+      projectsNeedMoreEmployees:[],
       percentageOverloadedEmployees:null,
+      employeesOverloaded:[],
+      percentageUnderloadedEmployees:null,
+      employeesUnderloaded:[]
     }
   },
 
@@ -146,6 +166,7 @@ export default {
           if ( await this.projectNeedsMoreEmployees(i)) {
             nrProjects += 1
             nrProjectsNeedEmployees += 1
+            this.projectsNeedMoreEmployees.push(this.projects[i])
           } else {
             nrProjects += 1
           }
@@ -211,15 +232,20 @@ export default {
     async calculatePercentageOfOverloadedEmployees(){
       var nrOfEmployees = this.employees.length
       var nrOfOverloadedEmployees = 0
+      var nrOfUnderloadedEmployees = 0
       for(var i = 0; i<this.employees.length;i++){
         var workedHours = await this.getWorkedHoursInLastMonth(this.employees[i].employeeID)
-        console.log(this.employees[i].name + " worked " + workedHours)
         var plannedWorkingHours = this.employees[i].workingHoursPerWeek
         if(workedHours > (plannedWorkingHours * 1.1)){
           nrOfOverloadedEmployees += 1;
+          this.employeesOverloaded.push(this.employees[i])
+        }else if(workedHours < (plannedWorkingHours * 0.8)){
+          nrOfUnderloadedEmployees += 1;
+          this.employeesUnderloaded.push(this.employees[i])
         }
       }
       this.percentageOverloadedEmployees = (nrOfOverloadedEmployees/nrOfEmployees) * 100
+      this.percentageUnderloadedEmployees = (nrOfUnderloadedEmployees/nrOfEmployees) * 100
 
 
 

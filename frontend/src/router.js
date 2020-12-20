@@ -18,12 +18,12 @@ export default new Router({
             children: [
                 {
                     path: '/',
-                    redirect: '/starterkit'
+                    redirect: '/home'
                 },
 
                 {
-                    path: '/starterkit',
-                    name: 'Starterkit',
+                    path: '/home',
+                    name: 'Home',
                     index: 1,
                     component: () => import('./views/StarterPage.vue')
                 },{

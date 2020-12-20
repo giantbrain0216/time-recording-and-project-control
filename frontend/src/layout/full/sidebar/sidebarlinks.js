@@ -1,7 +1,7 @@
 	export default [
 		{
-			url:"/starterkit",
-			name:"Starterkit",
+			url:"/home",
+			name:"Home",
 			icon:"home"
 		},
 		{
