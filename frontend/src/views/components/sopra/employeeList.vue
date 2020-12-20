@@ -266,14 +266,13 @@ export default {
 
   methods: {
 
+    /**
+     * Deletes assignment from the DB
+     */
     async deleteAssignment() {
-
       await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignmentID)
-
-
       //this.fetchAssignment(this.currentEmployee.employeeID)
       await this.fetchAssignment(this.currentEmployee.employeeID)
-
       await axios.put('http://localhost:8080/employees', {
         "employeeID": this.currentEmployee.employeeID,
         "name": this.currentEmployee.name,
@@ -290,6 +289,27 @@ export default {
       this.alertAssignAlert()
     },
 
+
+    /**
+     * Updated the Edit Prompt with the data of the employee to edit.
+     * Sets currentEmployee to the gotten employee
+     *
+     * @param id of employee to be edited
+     * @returns editInputFields with data of the employee with the given id
+     */
+    async updateEditID(id) {
+      await this.fetchEmployee(id);
+      this.editValues.nameField = this.currentEmployee.name
+      this.editValues.domicileField = this.currentEmployee.domicile
+      this.editValues.competencesField = this.currentEmployee.competences
+      this.editValues.workingHoursField = this.currentEmployee.workingHoursPerWeek
+      this.activeEditPromt = true;
+
+    },
+
+    /**
+     * Updated currentEmployee in the DB
+     */
     async updateEmployee() {
       await axios.put(`http://localhost:8080/employees/`, {
         'employeeID': this.currentEmployee.employeeID,
@@ -299,17 +319,31 @@ export default {
         'workingHoursPerWeek': this.editValues.workingHoursField,
         'remainingWorkingHoursPerWeek': parseInt(this.currentEmployee.remainingWorkingHoursPerWeek)
             + parseInt(this.editValues.workingHoursField) - parseInt(this.currentEmployee.workingHoursPerWeek),
+      }).then(() => {
+        this.fetchEmployee(this.currentEmployee.employeeID)
+        this.fetchEmployees()
+        this.acceptEditAlert()
+      }).catch((error) => {
+        if (error.response)
+          this.failedEditAlert(error.message)
       })
-     await this.fetchEmployee(this.currentEmployee.employeeID)
-      await this.fetchEmployees()
-      this.acceptEditAlert()
     },
 
+    /**
+     * Activates deletion prompt for a given Employee
+     *
+     * @param id of employee
+     */
     deletionPrompt: function (id) {
       this.fetchEmployee(id)
       this.activeDeletionPrompt = true
     },
 
+    /**
+     * Gets assignment of given employee
+     *
+     * @param employeeID id of employee
+     */
     async fetchAssignment(employeeID) {
       this.assignmentCurrentEmployee = []
         await axios.get('http://localhost:8080/assignmentsbyemployee/' + employeeID).then(response => {
@@ -322,6 +356,10 @@ export default {
         }
       }*/
     },
+
+    /**
+     * Notifies that updating employee succeeded
+     */
     acceptEditAlert() {
       this.$vs.notify({
         title: 'Successfully:',
@@ -330,8 +368,9 @@ export default {
       })
     },
 
-
-
+    /**
+     * Notifies that deletion of assignmeent was successful
+     */
     alertAssignAlert() {
       this.$vs.notify({
         title: 'Deletion',
@@ -339,6 +378,10 @@ export default {
         color: 'red',
       })
     },
+
+    /**
+     * Notifies that addition succeeded
+     */
     acceptAlert() {
       this.$vs.notify({
         title: 'Successfully:',
@@ -347,6 +390,9 @@ export default {
       })
     },
 
+    /**
+     * Notifies that deletion of employee succeeded
+     */
     acceptDeletionAlert() {
       this.$vs.notify({
         title: 'Deletion alert',
@@ -355,6 +401,9 @@ export default {
       })
     },
 
+    /**
+     * Notifies that deletion of employee failed
+     */
     deniedDeletionAlert(message) {
       this.$vs.notify({
         title: 'Deletion alert',
@@ -363,6 +412,9 @@ export default {
       })
     },
 
+    /**
+     * Notifies that addition of employee failed
+     */
     failedAddAlert(message) {
       this.$vs.notify({
         title: 'Addition alert',
@@ -371,6 +423,9 @@ export default {
       })
     },
 
+    /**
+     * Notifies that updating employee failed
+     */
     failedEditAlert(message) {
       this.$vs.notify({
         title: 'Editing alert',
@@ -379,6 +434,9 @@ export default {
       })
     },
 
+    /**
+     * Notifies that addition was closed and sets the inputValueFields to ''
+     */
     closeAdd() {
       this.inputValues.nameField = ''
       this.inputValues.domicileField = ''
@@ -391,6 +449,9 @@ export default {
       })
     },
 
+    /**
+     * Notifies that deletion prompt was closed
+     */
     closeDeletio() {
       this.$vs.notify({
         title: 'Closed',
@@ -399,6 +460,11 @@ export default {
       })
     },
 
+    /**
+     * Gets given assignment from the DB
+     *
+     * @param id of assignment to be got
+     */
     async updateCurrentAssignment(id) {
       this.currentAssignmentID = id
       await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
@@ -407,7 +473,9 @@ export default {
       this.deleteAssignmentPrompt = true;
     },
 
-
+    /**
+     * Sets inputField to '' and notifies that Edit was cancelled.
+     */
     closeEdit() {
       this.inputValues.nameField = ''
       this.inputValues.domicileField = ''
@@ -420,6 +488,11 @@ export default {
       })
     },
 
+    /**
+     * Gets employee with given id from the DB
+     *
+     * @param id of employee to get from DB
+     */
     fetchEmployee: async function (id) {
       await axios.get(`http://localhost:8080/employees/${id}`)
           .then(response => {
@@ -433,6 +506,9 @@ export default {
           })
     },
 
+    /**
+     * Gets the employees from the DB
+     */
     fetchEmployees: async function () {
       await axios.get(`http://localhost:8080/employees/`)
           .then(response => {
@@ -444,6 +520,10 @@ export default {
           })
     },
 
+    /**
+     * Gets the assignments from the DB
+     *
+     */
     fetchAllAssignments: async function () {
       await axios.get(`http://localhost:8080/assignments`)
           .then(response => {
@@ -455,6 +535,11 @@ export default {
           })
     },
 
+    /**
+     * Adds an employee to the DB
+     *
+     * @return updated employeeList
+     */
     addEmployee: async function () {
       await axios.post('http://localhost:8080/employees', {
         'name': this.inputValues.nameField,
@@ -472,6 +557,16 @@ export default {
       })
     },
 
+    /**
+     * Required:    Initialized Employee in Employee table in the DB.
+     *              Initialized Employee table in DB.
+     * Ensures:     DB doesn't contain Employee.
+     *              employees doesn't contain Employee.
+     *
+     * Deletes an Employee from DB and updates projects in the frontend.
+     *
+     * @returns     projects without deleted employee.
+     */
     deleteEmployee: async function () {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`).then(
@@ -486,16 +581,10 @@ export default {
       })
     },
 
-    async updateEditID(id) {
-      await this.fetchEmployee(id);
-      this.editValues.nameField = this.currentEmployee.name
-      this.editValues.domicileField = this.currentEmployee.domicile
-      this.editValues.competencesField = this.currentEmployee.competences
-      this.editValues.workingHoursField = this.currentEmployee.workingHoursPerWeek
-      this.activeEditPromt = true;
-
-    },
-
+    /**
+     * Adds assignment to employee with given id
+     * @param id of employee
+     */
     updateDetailedEmployee(id) {
       this.assignmentCurrentEmployee = []
       this.fetchEmployee(id)
@@ -505,7 +594,6 @@ export default {
         }
       }
       this.employeeSelected = true
-
     },
   }
 }
