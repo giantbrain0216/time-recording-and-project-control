@@ -47,7 +47,7 @@
             <small>   End Time</small>
           </div>
           <div class="m-3">
-            <vs-textarea counter="100" label="Beschreibung" :counter-danger.sync="counterDanger" v-model="textarea" />
+            <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger" v-model="textarea" />
           </div>
 
           <div @click="submitTimeRegistration" class="m-3"><vs-button color="success" type="relief" v-bind:disabled="!validInput(starttime,endtime)">Save Time Registration</vs-button></div>
