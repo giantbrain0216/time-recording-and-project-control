@@ -2,8 +2,8 @@
     <vs-row>
         <vs-col vs-lg="3" vs-xs="12">
             <vs-card>
-                <h4 class="mb-1">Worked {{getPerformedEffort()}} hours of {{getPlannedEffort()}} hours</h4>
-                <span>Total Sales</span>
+                <h4 class="mb-1">{{Math.round(getProgressOfAll())}}% Done</h4>
+                <span>Total Poject progress</span>
                 <vs-progress :percent="(getPerformedEffort()/getPlannedEffort())*100" color="primary">primary</vs-progress>
             </vs-card>
         </vs-col>
@@ -68,8 +68,10 @@ export default {
       this.projects.forEach((project) => performedEffort += parseInt(project.performedEffort))
       return performedEffort
     },
+
+    getProgressOfAll: function () {
+      return this.getPerformedEffort()/this.getPlannedEffort()*100
+    }
   }
-
-
 }
 </script>
