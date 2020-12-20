@@ -456,7 +456,7 @@ export default {
     },
 
     validForDelete: async function(client){
-      var projects = client.projectIDs.split("-")
+      var projects = client.projectIDs.split(" ")
       var bool = true
       for(var i = 0; i<projects.length;i++){
         await axios.get(`http://localhost:8080/projects/` + projects[i])

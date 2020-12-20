@@ -22,9 +22,9 @@
             </vs-dropdown>
           </div>
           <div class="d-flex align-items-center dropdownbtn-alignment m-3">
-            <vs-button class="btnx" type="filled" :disabled="currentEmployeeID == 0">{{this.currentProject}}</vs-button>
+            <vs-button class="btnx" type="filled" v-if="!currentEmployeeID == 0">{{this.currentProject}}</vs-button>
             <vs-dropdown>
-              <vs-button class="btn-drop" type="filled" icon="expand_more" :disabled="currentEmployeeID == 0"></vs-button>
+              <vs-button class="btn-drop" type="filled" icon="expand_more" v-if="!currentEmployeeID == 0"></vs-button>
               <!-- <a href="#">Hola mundo</a> -->
               <vs-dropdown-menu>
                 <vs-dropdown-item  @click="updateProject(project.projectNumber)" v-for="project in projects" :key="project.projectNumber">
