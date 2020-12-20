@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive">
+  <div >
     <vs-row vs-justify="center">
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
@@ -29,7 +29,7 @@
               </vs-dropdown>
             </div>
           </div>
-
+          <div class="table-responsive">
           <table class="table v-middle border">
             <thead>
             <tr class="">
@@ -85,14 +85,15 @@
             </tr>
             </tbody>
           </table>
+          </div>
         </vs-card>
       </vs-col>
       <vs-col v-if="projectSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
         <vs-card v-show="projectSelected" class="cardx">
           <div slot="header">
-            <h4>Details vom {{ currentProject.projectName }}</h4>
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off"
                        @click="projectSelected = false"></vs-button>
+            <h2>Details vom {{ currentProject.projectName }}</h2>
           </div>
           <div>
             <p><strong>ID of the Client: </strong>{{ currentProject.clientID }}</p>
@@ -269,14 +270,12 @@
               <td>
                 <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
                            type="filled">
-                  Delete
                 </vs-button>
               </td>
             </tr>
             </tbody>
           </table>
           <div>Effort to perform: {{ this.currentProject.plannedEffort - this.currentProject.performedEffort }}</div>
-
           <vs-alert
               :active="!validEmployeeAssign"
               color="danger"

@@ -104,7 +104,6 @@
                 <td>
                   <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
                              type="filled">
-                    Delete
                   </vs-button>
                 </td>
                 <!-- <td>

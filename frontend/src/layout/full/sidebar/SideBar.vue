@@ -2,12 +2,6 @@
 
    <div id="parentx">
     <vs-sidebar default-index="1" :parent="parent" :hiddenBackground="doNotClose" color="primary" class="sidebarx" spacer v-model="isSidebarActive" :click-not-close="doNotClose" >
-        <!--<div class="header-sidebar text-center" slot="header">
-            <vs-avatar size="70px" src="https://randomuser.me/api/portraits/men/85.jpg"/>
-            <h4>Steave Jobs<br/>
-              <small>varun@gmail.com</small>
-            </h4>
-        </div>-->
         <template v-for="(sidebarLink, index) in sidebarLinks" >
             <vs-sidebar-item :icon="sidebarLink.icon" :to="sidebarLink.url" :key="`sidebarLink-${index}`" :index="index">
               <span class="hide-in-minisidebar">{{ sidebarLink.name }}</span>
@@ -15,7 +9,8 @@
         </template>  
         
         <div class="footer-sidebar" slot="footer">
-            <vs-button icon="reply" color="danger" type="flat" href="https://www.wrappixel.com">Upgrade to Pro</vs-button>
+            <vs-button icon="reply" color="primary" type="flat" href="https://itestra.com/">Go to Itestra Website</vs-button>
+            <p style="font-size:9px">Copyright © 2020 Mohamed, Clirim, Radu</p>
         </div>
 
     </vs-sidebar>
