@@ -266,14 +266,12 @@
               <td>
                 <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
                            type="filled">
-                  Delete
                 </vs-button>
               </td>
             </tr>
             </tbody>
           </table>
           <div>Effort to perform: {{ this.currentProject.plannedEffort - this.currentProject.performedEffort }}</div>
-
           <vs-alert
               :active="!validEmployeeAssign"
               color="danger"
