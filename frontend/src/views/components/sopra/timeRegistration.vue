@@ -195,13 +195,21 @@ export default {
 
 
     fetchProjectsByEmployee: async function(id){
+      await axios.get(`http://localhost:8080/projects`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.projects = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
       var listOfProjectsIndexes = []
       var listOfProjects = []
       await axios.get(`http://localhost:8080/assignmentsbyemployee/` + id )
           .then(response => {
             // JSON responses are automatically parsed.
             for (let i = 0; i < response.data.length; i++) {
-              listOfProjects.push(response.data[i].projectID)
+              listOfProjectsIndexes.push(response.data[i].projectID)
             }
           })
           .catch(e => {
@@ -209,11 +217,13 @@ export default {
           })
 
       for(var i=0;i<this.projects.length;i++){
-        if(listOfProjectsIndexes.indexOf(this.projects[i].projectID) != -1){
+        if(listOfProjectsIndexes.indexOf(this.projects[i].projectNumber) != -1){
           listOfProjects.push(this.projects[i])
         }
       }
-      this.projects = listOfProjects
+        this.projects = listOfProjects
+
+
 
     },
 
@@ -265,6 +275,7 @@ export default {
             this.currentEmployee= "Employee"
             this.currentEmployeeID=0
             this.timeregistrations=[]
+            this.textarea=""
           }).catch((error) => {
             // handle this error here
             if (error.response){
