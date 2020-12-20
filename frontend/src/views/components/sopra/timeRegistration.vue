@@ -59,7 +59,7 @@
       <vs-card class="cardx">
         <div slot="header">
           <h4>
-            {{"Time Registrations for Employee with ID: " + currentEmployeeID}}
+            Time Registrations for Employee : <strong style="color: red">  {{this.currentEmployee }}</strong>
           </h4>
         </div>
         <div class="table-responsive">
@@ -67,9 +67,9 @@
           <thead>
           <tr class="">
             <th class="border-top-0">Project</th>
-            <th class="border-top-0">Registration ID</th>
             <th class="border-top-0">From</th>
             <th class="border-top-0">To</th>
+            <th class="border-top-0">Brief Description</th>
             <th class="border-top-0">Delete</th>
           </tr>
           </thead>
@@ -80,9 +80,9 @@
                 <div class="mr-2">{{projectNames[registration.projectID]}}</div>
               </div>
             </td>
-            <td>{{registration.id}}</td>
             <td><div class="d-flex align-items-center">{{registration.start}}</div></td>
             <td><div class="d-flex align-items-center">{{registration.end}}</div></td>
+            <td>{{registration.description}}</td>
             <td>
               <div>
                 <vs-button @click="activeDeletePrompt=true; currentRegistration=registration.id" class="m-1" color="danger" type="filled">
@@ -171,7 +171,8 @@ export default {
   },
 
   methods: {
-    fetchTimeRegistrations: async function(id){
+
+      fetchTimeRegistrations: async function(id){
       this.timeregistrations = []
       await axios.get(`http://localhost:8080/timeregistrations`)
           .then(response => {
@@ -223,7 +224,7 @@ export default {
       var endString = startdate + " " + endtime
 
       await axios.post(`http://localhost:8080/timeregistrations`,
-          {"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString}).then(() => {
+          {"employeeID":this.currentEmployeeID,"projectID":this.currentProjectID,"start":startString,"end":endString,"description":this.textarea}).then(() => {
          axios.get(`http://localhost:8080/projects/` + this.currentProjectID).then(response => {
           var startDate = new Date("1970-01-01 " + startime);
           var endDate = new Date("1970-01-01 " + endtime);
