@@ -52,7 +52,7 @@
                               v-if="calculateStatus(project.projectNumber)">running
                       </b-card>
                       <b-card style="font-size:10px;" class="text-secondary"
-                              v-else-if="!calculateStatus(project.projectNumber)">cancelled
+                              v-else-if="!calculateStatus(project.projectNumber)">finished
                       </b-card>
 
                     </a>

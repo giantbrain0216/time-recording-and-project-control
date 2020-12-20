@@ -236,10 +236,10 @@ export default {
       for(var i = 0; i<this.employees.length;i++){
         var workedHours = await this.getWorkedHoursInLastMonth(this.employees[i].employeeID)
         var plannedWorkingHours = this.employees[i].workingHoursPerWeek
-        if(workedHours > (plannedWorkingHours * 1.1)){
+        if(workedHours > (plannedWorkingHours * 4 * 1.1)){
           nrOfOverloadedEmployees += 1;
           this.employeesOverloaded.push(this.employees[i])
-        }else if(workedHours < (plannedWorkingHours * 0.8)){
+        }else if(workedHours < (plannedWorkingHours* 4 * 0.8)){
           nrOfUnderloadedEmployees += 1;
           this.employeesUnderloaded.push(this.employees[i])
         }
