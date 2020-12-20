@@ -34,7 +34,7 @@
             </vs-dropdown>
           </div>
           <div class="m-3"><input type="date" id="date" name="date"
-                                  :value="dateToday"
+                                  v-model="dateInput"
                                   min="2018-01-01" :max="dateToday"></div>
 
           <div class="m-3"><input type="time" id="starttime" name="starttime"
@@ -129,6 +129,7 @@ export default {
       currentEmployee: "Employee",
       currentEmployeeID:0,
       dateToday: "",
+      dateInput: "",
       starttime: "",
       endtime: "",
       timeregistrations:[],
@@ -167,6 +168,7 @@ export default {
     var yyyy = today.getFullYear();
 
     this.dateToday = yyyy + "-" + mm + '-' + dd;
+    this.dateInput = yyyy + "-" + mm + '-' + dd;
 
   },
 
@@ -267,7 +269,7 @@ export default {
           project.performedEffort = project.performedEffort + hours
           axios.put(`http://localhost:8080/projects/`,project).then(()=>{
             this.submitRegistrationAlert()
-            dateControl.value = this.dateToday
+            dateControl.value = this.dateInput
             this.starttime = ""
             this.endtime = ""
             this.currentProject= "Project"
