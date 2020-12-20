@@ -28,7 +28,7 @@ public class Project {
     @DatabaseField(columnName = "Project number", id = true)
     private Integer projectNumber;
 
-    @DatabaseField(columnName = "Project name")
+    @DatabaseField(columnName = "Project Name")
     @NotNull
     private String projectName;
 
@@ -36,19 +36,19 @@ public class Project {
     @NotNull
     private Integer clientID;
 
-    @DatabaseField(columnName = "planned Start")
+    @DatabaseField(columnName = "Planned Start")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date plannedStart;
 
-    @DatabaseField(columnName = "planned End")
+    @DatabaseField(columnName = "Planned End")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date plannedEnd;
 
-    @DatabaseField(columnName = "planned Effort")
+    @DatabaseField(columnName = "Planned Effort")
     private Integer plannedEffort;
 
 
-    @DatabaseField(columnName = "performed Effort")
+    @DatabaseField(columnName = "Performed Effort")
     private float performedEffort;
 
     @DatabaseField(columnName = "Needed Competences")

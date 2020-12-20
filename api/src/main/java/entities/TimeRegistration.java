@@ -32,7 +32,7 @@ public class TimeRegistration {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date end;
 
-    @DatabaseField(columnName = "Breif Description")
+    @DatabaseField(columnName = "Brief Description")
     @NotNull
     @Size(min = 1 , max = 100)
     private String description;

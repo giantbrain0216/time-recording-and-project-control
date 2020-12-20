@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * @version 19.12.2020
  */
 
-@DatabaseTable(tableName = "Assignment")
+@DatabaseTable(tableName = "Assignments")
 public class Assignment {
 
     @DatabaseField(columnName = "ID", id = true)

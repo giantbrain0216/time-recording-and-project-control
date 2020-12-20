@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
  *
  * @version 08.12.2020
  */
-@DatabaseTable(tableName = "clients")
+@DatabaseTable(tableName = "Clients")
 public class Client {
 
     @DatabaseField(columnName ="ID of Client",id=true)
