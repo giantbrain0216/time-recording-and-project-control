@@ -5,28 +5,30 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h2 style="color: cornflowerblue">Project list</h2>
-          </div>
-          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-            <div>Only see projects from:</div>
-            <vs-dropdown class="ml-1">
-              <a class="a-icon" href="#">
-                {{ this.selectedClientNameEdit }}
-                <vs-icon class="" icon="expand_more"></vs-icon>
-              </a>
-              <vs-dropdown-menu>
-                <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
-                  All Clients
-                </vs-dropdown-item>
-                <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)"
-                                  v-for="client in clients" :key="client.clientID">
-                  {{ client.name }}
-                </vs-dropdown-item>
-              </vs-dropdown-menu>
-            </vs-dropdown>
+            <h2 class="float-left" style="color: cornflowerblue">Project list    </h2>
+            <div class="float-right mb-1"><vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Project</vs-button></div>
+            <div class="d-flex align-items-center dropdownbtn-alignment m-2 ml-3 float-left">
+              <div>Only see projects from:</div>
+              <vs-dropdown class="ml-1">
+                <a class="a-icon" href="#">
+                  {{ this.selectedClientNameEdit }}
+                  <vs-icon class="" icon="expand_more"></vs-icon>
+                </a>
+                <vs-dropdown-menu>
+                  <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
+                    All Clients
+                  </vs-dropdown-item>
+                  <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)"
+                                    v-for="client in clients" :key="client.clientID">
+                    {{ client.name }}
+                  </vs-dropdown-item>
+                </vs-dropdown-menu>
+              </vs-dropdown>
 
 
+            </div>
           </div>
+
           <table class="table v-middle border">
             <thead>
             <tr class="">
@@ -124,7 +126,7 @@
       </vs-prompt>
 
 
-      <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Project</vs-button>
+
       <vs-prompt
           title="Add New Project"
           color="success"

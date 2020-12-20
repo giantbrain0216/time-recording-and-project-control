@@ -4,7 +4,8 @@
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h2 style="color: cornflowerblue">Client list</h2>
+            <h2 class="float-left" style="color: cornflowerblue">Client list</h2>
+            <div class="float-right mb-1"><vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button></div>
           </div>
         <table class="table v-middle border">
           <thead>
@@ -65,7 +66,7 @@
           </div>
         </vs-card>
       </vs-col>
-      <vs-button @click="activePrompt = true" color="primary" type="filled">Add Customer</vs-button>
+
       <vs-prompt
         title="Add Client"
         color="primary"

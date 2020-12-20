@@ -1,7 +1,7 @@
 <template>
   <div>
   <vs-row >
-    <vs-col vs-lg="4" vs-sm="6" vs-xs="12">
+    <vs-col vs-lg="4" vs-sm="12" vs-xs="12">
       <vs-card class="cardx">
         <div slot="header">
           <h4>
@@ -55,14 +55,14 @@
 
       </vs-card>
     </vs-col>
-    <vs-col  v-if="timeregistrations.length!==0" type="flex" vs-justify="center" vs-align="center" :vs-lg="8" vs-sm="6" vs-xs="12" code-toggler>
+    <vs-col  v-if="timeregistrations.length!==0" type="flex" vs-justify="center" vs-align="center" :vs-lg="8" vs-sm="12" vs-xs="12" code-toggler>
       <vs-card class="cardx">
         <div slot="header">
           <h4>
             {{"Time Registrations for Employee with ID: " + currentEmployeeID}}
           </h4>
         </div>
-        <div>
+        <div class="table-responsive">
         <table class="table v-middle border">
           <thead>
           <tr class="">
