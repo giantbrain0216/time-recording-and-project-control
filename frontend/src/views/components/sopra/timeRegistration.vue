@@ -228,7 +228,7 @@ export default {
          axios.get(`http://localhost:8080/projects/` + this.currentProjectID).then(response => {
           var startDate = new Date("1970-01-01 " + startime);
           var endDate = new Date("1970-01-01 " + endtime);
-          let hours = Math.round(Math.abs(endDate - startDate) / 36e5);
+          let hours = ((endDate - startDate) / 36e5);
           var project = response.data
           project.performedEffort = project.performedEffort + hours
           axios.put(`http://localhost:8080/projects/`,project).then(()=>{
