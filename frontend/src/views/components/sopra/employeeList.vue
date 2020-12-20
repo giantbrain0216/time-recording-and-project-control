@@ -90,18 +90,18 @@
             <table class="table v-middle border">
               <thead>
               <tr class="">
-                <th class="border-top-0">Assignment ID</th>
+               <!-- <th class="border-top-0">Assignment ID</th> -->
                 <!--<th class="border-top-0">ID</th>-->
-                <th class="border-top-0">Project ID</th>
+                <th class="border-top-0">Project</th>
                 <th class="border-top-0">Planned Hours</th>
                 <th class="border-top-0">Actions</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="assignment in assignmentCurrentEmployee" :key="assignment.id">
-                <td>{{ assignment.id }}</td>
+               <!-- <td>{{ assignment.id }}</td> -->
                 <!--<td>{{employee.employeeID}}</td>-->
-                <td>{{ assignment.projectID }}</td>
+                <td>{{ currentProjectName(assignment.projectID) }}</td>
                 <td>{{ assignment.plannedWorkingHours }}</td>
                 <td>
                   <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
@@ -222,6 +222,7 @@ export default {
     return {
       employees: [],
       assignments: [],
+      projects:[],
       assignmentCurrentEmployee: [],
       currentEmployee: {},
       employeeSelected: false,
@@ -249,6 +250,7 @@ export default {
   created() {
     this.fetchEmployees();
     this.fetchAllAssignments();
+    this.fetchAllProjects()
   },
 
   computed: {
@@ -265,6 +267,13 @@ export default {
   },
 
   methods: {
+
+    currentProjectName(id){
+      for (let i = 0; i < this.projects.length; i++) {
+        if (this.projects[i].projectNumber === id)
+          return this.projects[i].projectName
+      }
+    },
 
     /**
      * Deletes assignment from the DB
@@ -529,6 +538,17 @@ export default {
           .then(response => {
             // JSON responses are automatically parsed.
             this.assignments = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
+    },
+
+    fetchAllProjects: async function () {
+      await axios.get(`http://localhost:8080/projects`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.projects = response.data
           })
           .catch(e => {
             this.errors.push(e)

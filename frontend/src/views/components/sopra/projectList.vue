@@ -5,8 +5,10 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h2 class="float-left" style="color: cornflowerblue">Project list    </h2>
-            <div class="float-right mb-1"><vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Project</vs-button></div>
+            <h2 class="float-left" style="color: cornflowerblue">Project list </h2>
+            <div class="float-right mb-1">
+              <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Project</vs-button>
+            </div>
             <div class="d-flex align-items-center dropdownbtn-alignment m-2 ml-3 float-left">
               <div>Only see projects from:</div>
               <vs-dropdown class="ml-1">
@@ -123,7 +125,6 @@
           <h4>Are you sure to delete the project :</h4>  <h5>{{ currentProject.projectName }}</h5>
         </div>
       </vs-prompt>
-
 
 
       <vs-prompt
@@ -252,18 +253,18 @@
           <table class="table">
             <thead>
             <tr class="">
-              <th class="border-top-0">Assignment ID</th>
+              <!-- <th class="border-top-0">Assignment ID</th> -->
               <!--<th class="border-top-0">ID</th>-->
-              <th class="border-top-0">Employee ID</th>
+              <th class="border-top-0">Employee</th>
               <th class="border-top-0">Planned Hours</th>
               <th class="border-top-0">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="assignment in currentProjectAssignments" :key="assignment.id">
-              <td>{{ assignment.id }}</td>
+              <!--  <td>{{ assignment.id }}</td>-->
               <!--<td>{{employee.employeeID}}</td>-->
-              <td>{{ assignment.employeeID }}</td>
+              <td> {{ currentEmployeeName(assignment.employeeID) }}</td>
               <td>{{ assignment.plannedWorkingHours }}</td>
               <td>
                 <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
@@ -336,6 +337,7 @@ export default {
       deleteAssignmentPrompt: false,
       activeAssignPropmt: false,
       activeEditPromt: false,
+      currentEmployeeNamee: "Hi",
       activePrompt: false,
       activeDeletePrompt: false,
       inputValues: {
@@ -412,6 +414,12 @@ export default {
           this.enddate1 = dateControl1.value;
         }, */
 
+    currentEmployeeName(id) {
+      for (let i = 0; i < this.employees.length; i++) {
+        if (this.employees[i].employeeID === id)
+          return this.employees[i].name
+      }
+    },
     async deleteAssignment() {
 
       await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignmentID)
@@ -645,6 +653,7 @@ export default {
             this.errors.push(e)
           })
     },
+
 
     /**
      * Updates project in the DB
