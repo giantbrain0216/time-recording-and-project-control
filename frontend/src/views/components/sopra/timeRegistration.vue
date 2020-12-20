@@ -219,7 +219,7 @@ export default {
           })
 
       for(var i=0;i<this.projects.length;i++){
-        if(listOfProjectsIndexes.indexOf(this.projects[i].projectNumber) != -1){
+        if(listOfProjectsIndexes.indexOf(this.projects[i].projectNumber) !== -1){
           listOfProjects.push(this.projects[i])
         }
       }
@@ -232,7 +232,7 @@ export default {
     updateProject: function(id){
         this.currentProjectID = id;
       for(let i = 0; i<this.projects.length;i++){
-        if(this.projects[i].projectNumber == id){
+        if(this.projects[i].projectNumber === id){
           this.currentProject = this.projects[i].projectName
         }
       }
@@ -264,7 +264,7 @@ export default {
          axios.get(`http://localhost:8080/projects/` + this.currentProjectID).then(response => {
           var startDate = new Date("1970-01-01 " + startime);
           var endDate = new Date("1970-01-01 " + endtime);
-          let hours = Math.round(Math.abs(endDate - startDate) / 36e5);
+          let hours = ((endDate - startDate) / 36e5);
           var project = response.data
           project.performedEffort = project.performedEffort + hours
           axios.put(`http://localhost:8080/projects/`,project).then(()=>{
