@@ -103,7 +103,7 @@ In diesem Sprint wurden die bis zum [Meilenstein 2](sopra-ws20/team12%"M2") erle
 ## Tests/Testprotokolle/Nachweis der Testabdeckung
 
 **Die Testabdeckung für das Backend:**  
-- finden Sie [hier](coverage/index.html)  
+- Sie müssen den [Testreport](coverage/index.html) in dem Browser ausführen, dann sehen Sie die Testabdeckung. 
 All Klassen sind abgedeckt und 93% der methoden sind abgedeckt. Somit kann man behaupten,
 dass die Test alle nicht-trivialen Methoden abdecken und diese auch funktionieren.
 
