@@ -134,7 +134,7 @@
           @cancel="closeAddForm"
           @accept="addProject"
           @close="closeAddForm"
-          :is-valid="validProject"
+          :is-valid="validProject(start,end)"
           :active.sync="activePrompt"
       >
         <div class="con-exemple-prompt">
@@ -158,19 +158,19 @@
           </div>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
-                                                :value="dateToday"
-                                                min="2018-01-01" max="2030-12-31"></div>
+                                                v-model="start"
+                                                :min="dateToday" max="2030-12-31" required></div>
           <div class="mb-3">
             <small>Planned End</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
-                                              :value="dateToday"
-                                              min="2018-01-01" max="2030-12-31"></div>
+                                              v-model="end"
+                                              :min="start" max="2030-12-31" required></div>
           <vs-input type="number" label-placeholder="Planned Effort In Hours" class="mb-3"
                     v-model="inputValues.plannedEffortField"/>
           <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
           />
           <vs-input label-placeholder="competences" class="mb-3" v-model="inputValues.competencesField"/>
           <vs-alert
-              :active="!validProject"
+              :active="!validProject(start,end)"
               color="danger"
               icon="new_releases"
           >
@@ -187,7 +187,7 @@
           @cancel="closeEditForm"
           @accept="updateProject"
           @close="closeEditForm"
-          :is-valid="validProjectEdit"
+          :is-valid="validProjectEdit(this.startDatum,this.endDatum)"
           :active.sync="activeEditPromt"
       >
         <h5>Project Name : {{ currentProject.projectName }}</h5>
@@ -196,12 +196,12 @@
         <div class="con-exemple-prompt">
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
-                                                :value="startDatum"
-                                                min="2018-01-01" max="2030-12-31"></div>
+                                                v-model="startDatum"
+                                                :min="start" max="2030-12-31"></div>
           <div class="mb-3">
             <small>Planned End</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
-                                              :value="endDatum"
-                                              min="startDatum" max="2030-12-31">
+                                              v-model="endDatum"
+                                              :min="startDatum" max="2030-12-31">
           </div>
           <vs-input type="number" label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
@@ -317,8 +317,8 @@ export default {
       currentProjectAssignments: [],
       dateToday: "",
       startDatum: "",
-      startdate1: "",
-      enddate1: "",
+      start: "",
+      end: "",
       endDatum: "",
       assignHours: '',
       currentClient: {},
@@ -367,6 +367,8 @@ export default {
     var yyyy = today.getFullYear();
 
     this.dateToday = yyyy + "-" + mm + '-' + dd;
+    this.start = yyyy + "-" + mm + '-' + dd;
+    this.end = yyyy + "-" + mm + '-' + dd;
     this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllProjects();
@@ -382,35 +384,22 @@ export default {
           this.currentProject.plannedEffort - this.currentProject.performedEffort >= this.assignHours && this.selectedEmployeeName !== "Employee" && this.assignHours !== "" && this.assignHours > 0
     },
 
-    validProject() {
-      //this.getStartDate()
-      //this.getEndDate()
-      //   this.startdate1 = dateControl.value;
-      //var timeControl1 = document.querySelector('input[id="end"]');
-      //this.enddate1 = timeControl.value;
-      return (parseFloat(this.inputValues.plannedEffortField) > 0
-          && this.inputValues.competencesField.length > 0)
-
-    },
 
 
-    validProjectEdit() {
-      return true
-    }
   },
 
   methods: {
-    /*
-        getStartDate() {
-          var dateControl1 = document.querySelector('input[id="start"]');
-          this.startdate1 = dateControl1.value;
-        },
 
-        getEndDate(){
-          var dateControl1 = document.querySelector('input[id="end"]');
-          var dateControl1 = document.querySelector('input[id="end"]');
-          this.enddate1 = dateControl1.value;
-        }, */
+    validProjectEdit(starttime,endttime) {
+      return ( this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(starttime).getTime() <= new Date(endttime).getTime())
+          && this.editValues.competencesField.length >0 )
+    },
+
+    validProject(start,end) {
+      return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(end).getTime())
+          && this.inputValues.competencesField.length > 0)
+
+    },
 
     currentEmployeeName(id) {
       for (let i = 0; i < this.employees.length; i++) {
@@ -623,17 +612,13 @@ export default {
      * Adds project to the DB and updates the frontend project list.
      */
     addProject: async function () {
-      var dateControl = document.querySelector('input[id="start"]');
-      var startdate = dateControl.value;
-      var timeControl = document.querySelector('input[id="end"]');
-      var enddate = timeControl.value;
-      this.inputValues.plannedStartField = startdate + " " + "00:00"
-      this.inputValues.plannedEndField = enddate + " " + "00:00"
+      this.inputValues.plannedStartField = this.start + " " + "00:00"
+      this.inputValues.plannedEndField = this.end + " " + "00:00"
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
         "clientID": parseInt(this.selectedClientID),
-        "plannedStart": startdate + " " + "00:00",
-        "plannedEnd": enddate + " " + "00:00",
+        "plannedStart":  this.start + " " + "00:00",
+        "plannedEnd":  this.end + " " + "00:00" ,
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": 0,
         "competences": this.inputValues.competencesField,
@@ -647,7 +632,7 @@ export default {
         'email': this.currentClient.email,
         'telephoneNumber': this.currentClient.telephoneNumber,
         'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs + "-" + this.createdClientID //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+        'projectIDs': this.currentClient.projectIDs + "-" + this.createdClientID
       })
       this.acceptAlert();
       await this.fetchAllProjects()
