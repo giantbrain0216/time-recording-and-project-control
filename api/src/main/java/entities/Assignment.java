@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Class represents the allocation of projects to employees.
+ *
  * @version 19.12.2020
  */
 
@@ -17,20 +18,21 @@ public class Assignment {
     private Integer id;
 
     @DatabaseField(columnName = "ID of the Employee")
- //   @NotNull
+    @NotNull
     private Integer employeeID;
 
     @DatabaseField(columnName = "ID of the Project")
- //   @NotNull
+    @NotNull
     private Integer projectID;
 
     @DatabaseField(columnName = "Planned Working Hours")
-   // @NotNull
+    @NotNull
     private int plannedWorkingHours;
 
-    public Assignment(){}
+    public Assignment() {
+    }
 
-    public Assignment(Integer employeeID, Integer projectID, Integer workedHours){
+    public Assignment(Integer employeeID, Integer projectID, Integer workedHours) {
         this.projectID = projectID;
         this.employeeID = employeeID;
         this.plannedWorkingHours = workedHours;

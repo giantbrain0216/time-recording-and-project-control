@@ -49,7 +49,7 @@ public class Project {
 
 
     @DatabaseField(columnName = "performed Effort")
-    private Integer performedEffort;
+    private float performedEffort;
 
     @DatabaseField(columnName = "Needed Competences")
     private String competences;
@@ -111,11 +111,11 @@ public class Project {
         this.plannedEffort = plannedEffort;
     }
 
-    public int getPerformedEffort() {
+    public float getPerformedEffort() {
         return performedEffort;
     }
 
-    public void setPerformedEffort(Integer performedEffort) {
+    public void setPerformedEffort(float performedEffort) {
         this.performedEffort = performedEffort;
     }
 

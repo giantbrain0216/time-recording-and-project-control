@@ -4,13 +4,16 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import database.methods.AssignmentDatabase;
 import database.methods.ProjectDatabase;
+import database.methods.TimeRegistrationDatabase;
 import entities.Assignment;
 import entities.Project;
+import entities.TimeRegistration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -137,9 +140,4 @@ public class AssignmentController {
     public List<Assignment> getAssignmentsByProject(@PathVariable("id") Integer projectID) throws SQLException {
         return assignmentDatabase.getAssignmentsByProject(projectID);
     }
-
-
-
-
-
 }

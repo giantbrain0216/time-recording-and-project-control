@@ -5,6 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 
 @DatabaseTable(tableName = "Time Registration")
@@ -30,12 +31,19 @@ public class TimeRegistration {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private Date end;
+
+    @DatabaseField(columnName = "Breif Description")
+    @NotNull
+    @Size(min = 1 , max = 100)
+    private String description;
+
     public TimeRegistration(){}
-    public TimeRegistration(final int employeeID, final int projectID, final Date start, final Date end) {
+    public TimeRegistration(final int employeeID, final int projectID, final Date start, final Date end, final String description) {
         this.employeeID = employeeID;
         this.projectID = projectID;
         this.start = start;
         this.end = end;
+        this.description = description;
     }
 
 
@@ -77,5 +85,13 @@ public class TimeRegistration {
 
     public void setID(int id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

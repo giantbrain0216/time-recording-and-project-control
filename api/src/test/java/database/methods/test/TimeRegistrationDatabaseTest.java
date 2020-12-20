@@ -37,7 +37,7 @@ public class TimeRegistrationDatabaseTest {
     @Test
     public void addToDatabaseTest() throws SQLException {
         TimeRegistration timeRegistration = new TimeRegistration(1, 2,
-              new Date(2002-04-23), new Date(2002-04-23));
+              new Date(2002-04-23), new Date(2002-04-23),"I fixed one bug");
         timeRegistrationDatabase.addToDataBase(timeRegistration);
         Assert.assertTrue(timeRegistrationDatabase.getAllTimeRegistrations().stream().
                 anyMatch(timeRegistration1 -> timeRegistration1.getID()==(timeRegistration.getID())));
@@ -57,7 +57,7 @@ public class TimeRegistrationDatabaseTest {
     @Test
     public void deleteTimeRegistrationTest() throws SQLException {
         TimeRegistration timeRegistration = new TimeRegistration(1, 2,
-                new Date(2002-04-23), new Date(2002-04-23));
+                new Date(2002-04-23), new Date(2002-04-23),"I fixed one bug");
         timeRegistrationDatabase.addToDataBase(timeRegistration);
         Assert.assertTrue(timeRegistrationDatabase.getAllTimeRegistrations().stream().
                 anyMatch(timeRegistration1 -> timeRegistration1.getID()==(timeRegistration.getID())));
@@ -74,7 +74,7 @@ public class TimeRegistrationDatabaseTest {
     @Test
     public void modifyTimeRegistrationDataTest() throws SQLException {
         TimeRegistration timeRegistration = new TimeRegistration(1, 2,
-                new Date(2002-04-23), new Date(2002-04-23));
+                new Date(2002-04-23), new Date(2002-04-23),"I fixed one bug");
         timeRegistrationDatabase.addToDataBase(timeRegistration);
         TimeRegistration finalTimeRegistration = timeRegistration;
         Assert.assertTrue(timeRegistrationDatabase.getAllTimeRegistrations().stream().

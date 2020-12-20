@@ -80,12 +80,9 @@ public class ProjectDatabaseTest {
         Assert.assertTrue(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
 
         Assert.assertEquals("HTML",project.getCompetences());
-        Assert.assertEquals(0  , project.getPerformedEffort());
         project.addCompetence("ANGULAR");
-        project.setPerformedEffort(90);
         projectDatabase.modifyProjectData(project);
         Assert.assertEquals("HTML-ANGULAR",project.getCompetences());
-        Assert.assertEquals(90  , project.getPerformedEffort());
         projectDatabase.deleteFromDatabase(project.getProjectNumber());
         Assert.assertFalse(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
 
