@@ -1,19 +1,30 @@
-// main JS file for instantiating the application
+import Vue from 'vue'
+import Vuesax from 'vuesax'
 
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
-import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
 
-// BootstrapVue for UI components and icons
-Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons)
+import App from './App.vue'
 
-Vue.config.productionTip = false;
+import 'vuesax/dist/vuesax.css' //Vuesax styles
+import 'material-icons/iconfont/material-icons.css';
+// Vuex Store
+import store from './store/store'
+
+
+// Theme Configurations
+import 'prismjs'
+import 'prismjs/themes/prism.css'
+import VsPrism from './components/prism/VsPrism.vue';
+Vue.component(VsPrism.name, VsPrism);
+
+// Vue Router
+import router from './router'
+Vue.config.productionTip = false
+Vue.config.devtools = true
+Vue.use(Vuesax)
 
 new Vue({
+  store,
   router,
-  render: (h) => h(App)
-}).$mount("#app");
+  render: h => h(App),
+}).$mount('#app')
+import '@/assets/scss/style.scss'
