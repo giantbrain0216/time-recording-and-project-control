@@ -337,7 +337,6 @@ export default {
       deleteAssignmentPrompt: false,
       activeAssignPropmt: false,
       activeEditPromt: false,
-      currentEmployeeNamee: "Hi",
       activePrompt: false,
       activeDeletePrompt: false,
       inputValues: {
@@ -420,6 +419,9 @@ export default {
           return this.employees[i].name
       }
     },
+    /**
+     * Deletes the current assignment
+     */
     async deleteAssignment() {
 
       await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignmentID)
@@ -442,6 +444,9 @@ export default {
       this.alertAssignAlert()
     },
 
+    /**
+     * Notifies assignment succeeded
+     */
     alertAssignAlert() {
       this.$vs.notify({
         title: 'Deletion',
@@ -450,7 +455,9 @@ export default {
       })
     },
 
-
+    /**
+     * Activates deletion prompt for assignment
+     */
     async updateCurrentAssignment(id) {
       this.currentAssignmentID = id
       await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
@@ -460,6 +467,9 @@ export default {
       this.deleteAssignmentPrompt = true;
     },
 
+    /**
+     * Notifies that deletion succeeded
+     */
     closeDeletio() {
       this.$vs.notify({
         title: 'Closed',
@@ -467,6 +477,10 @@ export default {
         color: 'red'
       })
     },
+
+    /**
+     * Assigns employee to projects and updates the remaining work time of employee
+     */
     assignProject: async function () {
       await axios.put(`http://localhost:8080/employees/`, {
         "employeeID": this.currentEmployee.employeeID,
@@ -490,6 +504,10 @@ export default {
       await this.fetchAllEmployees()
       this.assignProjectAlert()
     },
+
+    /**
+     * Gets clients from DB
+     */
     fetchClients: async function () {
       await axios.get(`http://localhost:8080/clients`)
           .then(response => {
@@ -653,7 +671,6 @@ export default {
             this.errors.push(e)
           })
     },
-
 
     /**
      * Updates project in the DB
