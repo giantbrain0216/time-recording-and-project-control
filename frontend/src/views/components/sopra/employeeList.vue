@@ -41,10 +41,8 @@
               <td>
                 <div>
                   <vs-button @click="deletionPrompt(employee.employeeID)"  icon="delete" class="m-1" color="danger" type="filled">
-                    Delete
                   </vs-button>
                   <vs-button @click="updateEditID(employee.employeeID)" icon="edit" class="m-1" color="warning" type="filled">
-                    Edit
                   </vs-button>
                 </div>
               </td>
