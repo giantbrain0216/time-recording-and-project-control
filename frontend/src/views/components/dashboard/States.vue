@@ -154,7 +154,7 @@ export default {
           countRunning += 1
         }
       }
-      return countCancelled/countRunning*100
+      return countCancelled/(countRunning+countCancelled)*100
     },
   }
 }
