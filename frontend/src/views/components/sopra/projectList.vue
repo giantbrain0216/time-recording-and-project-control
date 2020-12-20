@@ -250,7 +250,32 @@
 
           </div>
           <div>Remaining Working Hours This Week: {{ this.currentEmployee.remainingWorkingHoursPerWeek }}</div>
-
+          <table class="table">
+            <thead>
+            <tr class="">
+              <th class="border-top-0">Assignment ID</th>
+              <!--<th class="border-top-0">ID</th>-->
+              <th class="border-top-0">Employee ID</th>
+              <th class="border-top-0">Planned Hours</th>
+              <th class="border-top-0">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="assignment in currentProjectAssignments" :key="assignment.id">
+              <td>{{ assignment.id }}</td>
+              <!--<td>{{employee.employeeID}}</td>-->
+              <td>{{ assignment.employeeID }}</td>
+              <td>{{ assignment.plannedWorkingHours }}</td>
+              <td>
+                <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
+                           type="filled">
+                  Delete
+                </vs-button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div>Effort to perform: {{ this.currentProject.plannedEffort - this.currentProject.performedEffort }}</div>
 
           <vs-alert
               :active="!validEmployeeAssign"
@@ -259,8 +284,21 @@
           >
             You cannot assign an employee more hours than his remaining ones !
           </vs-alert>
-
-
+        </div>
+      </vs-prompt>
+      <vs-prompt
+          title="Deletion"
+          color="red"
+          @close="closeDeletio"
+          @cancel="closeDeletio"
+          @accept="deleteAssignment"
+          :is-valid="true"
+          :active.sync="deleteAssignmentPrompt"
+      >
+        <div class="con-exemple-prompt">
+          <h6>Are you sure you want to delete the next Assignment <br>
+            Employee ID: {{ this.currentAssignment.employeeID }}, Project ID :{{ this.currentAssignment.projectID }},
+            Planned Working Hours : {{ this.currentAssignment.plannedWorkingHours }}</h6>
         </div>
       </vs-prompt>
     </vs-row>
@@ -277,6 +315,7 @@ export default {
       projects: [],
       clients: [],
       employees: [],
+      currentProjectAssignments: [],
       dateToday: "",
       startDatum: "",
       startdate1: "",
@@ -284,6 +323,8 @@ export default {
       endDatum: "",
       assignHours: '',
       currentClient: {},
+      currentAssignmentID: 0,
+      currentAssignment: {},
       currentProject: {},
       currentEmployee: {},
       editProjectID: 0,
@@ -293,6 +334,7 @@ export default {
       selectedEmployeeID: 0,
       selectedClientName: "Owner of the project",
       projectSelected: false,
+      deleteAssignmentPrompt: false,
       activeAssignPropmt: false,
       activeEditPromt: false,
       activePrompt: false,
@@ -337,7 +379,8 @@ export default {
   computed: {
 
     validEmployeeAssign() {
-      return this.currentEmployee.remainingWorkingHoursPerWeek >= this.assignHours && this.selectedEmployeeName !== "Employee" && this.assignHours !== "" && this.assignHours > 0
+      return this.currentEmployee.remainingWorkingHoursPerWeek >= this.assignHours &&
+          this.currentProject.plannedEffort - this.currentProject.performedEffort >= this.assignHours && this.selectedEmployeeName !== "Employee" && this.assignHours !== "" && this.assignHours > 0
     },
 
     validProject() {
@@ -350,6 +393,7 @@ export default {
           && this.inputValues.competencesField.length > 0)
 
     },
+
 
     validProjectEdit() {
       return true
@@ -369,6 +413,53 @@ export default {
           this.enddate1 = dateControl1.value;
         }, */
 
+    async deleteAssignment() {
+
+      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignmentID)
+
+
+      await this.fetchEmployee(this.currentAssignment.employeeID)
+      await this.fetchCurrentProjectAssignments(this.currentAssignment.projectID)
+      await axios.put('http://localhost:8080/employees', {
+        "employeeID": this.currentEmployee.employeeID,
+        "name": this.currentEmployee.name,
+        "domicile": this.currentEmployee.domicile,
+        "competences": this.currentEmployee.competences,//.
+        "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
+        "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
+            this.currentAssignment.plannedWorkingHours)
+      })
+      await this.fetchAllEmployees()
+      await this.fetchAllProjects()      //await this.fetchEmployees()
+     // await this.fetchAllAssignments()
+      this.alertAssignAlert()
+    },
+
+    alertAssignAlert() {
+      this.$vs.notify({
+        title: 'Deletion',
+        text: 'Deletion of the Assignment was successful.',
+        color: 'red',
+      })
+    },
+
+
+    async updateCurrentAssignment(id) {
+      this.currentAssignmentID = id
+      await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
+        this.currentAssignment = response.data
+      })
+      this.activeAssignPropmt = false
+      this.deleteAssignmentPrompt = true;
+    },
+
+    closeDeletio() {
+      this.$vs.notify({
+        title: 'Closed',
+        text: 'Deletion was cancelled.',
+        color: 'red'
+      })
+    },
     assignProject: async function () {
       await axios.put(`http://localhost:8080/employees/`, {
         "employeeID": this.currentEmployee.employeeID,
@@ -385,6 +476,9 @@ export default {
         "projectID": this.currentProject.projectNumber,
         "plannedWorkingHours": this.assignHours
       })
+      this.assignHours = 0
+      this.selectedEmployeeName = "Employee"
+      this.currentEmployee = {}
       await this.fetchAllProjects()
       await this.fetchAllEmployees()
       this.assignProjectAlert()
@@ -424,6 +518,7 @@ export default {
 
     closeAssignPrompt() {
       this.activeAssignPropmt = false;
+      // this.activeAssignPropmt = true;
       this.cancelAssignAlert()
       this.selectedEmployeeName = "Employee"
       this.currentEmployee = {}
@@ -538,9 +633,21 @@ export default {
     },
 
     updateeProjectID: async function (id) {
+      await this.fetchCurrentProjectAssignments(id)
       await this.fetchProject(id);
       this.activeAssignPropmt = true
 
+    },
+
+    async fetchCurrentProjectAssignments(id) {
+      await axios.get(`http://localhost:8080/assignmentbyproject/${id}`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.currentProjectAssignments = response.data
+          })
+          .catch(e => {
+            this.errors.push(e)
+          })
     },
     updateProjectID: async function (id) {
       await this.fetchProject(id);

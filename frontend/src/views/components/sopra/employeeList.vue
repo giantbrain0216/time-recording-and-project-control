@@ -283,6 +283,7 @@ export default {
         "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
             this.currentAssignment.plannedWorkingHours)
       })
+      await this.fetchEmployees()
       await this.fetchEmployee(this.currentEmployee.employeeID)
       //await this.fetchEmployees()
       await this.fetchAllAssignments()
@@ -311,12 +312,15 @@ export default {
 
     async fetchAssignment(employeeID) {
       this.assignmentCurrentEmployee = []
-      await this.fetchAllAssignments()
+        await axios.get('http://localhost:8080/assignmentsbyemployee/' + employeeID).then(response => {
+        this.assignmentCurrentEmployee = response.data
+      })
+      /*await this.fetchAllAssignments()
       for (let i = 0; i < this.assignments.length; i++) {
         if (this.assignments[i].employeeID === employeeID) {
           this.assignmentCurrentEmployee.push(this.assignments[i])
         }
-      }
+      }*/
     },
     acceptEditAlert() {
       this.$vs.notify({
@@ -325,6 +329,8 @@ export default {
         color: 'green'
       })
     },
+
+
 
     alertAssignAlert() {
       this.$vs.notify({
