@@ -250,7 +250,12 @@
 
 
           </div>
-          <div>Remaining Working Hours This Week: {{ this.currentEmployee.remainingWorkingHoursPerWeek }}</div>
+          <div class="ml-5">
+          <ul>
+            <li><h6>Remaining Working Hours This Week: <strong style="color: red" >{{ this.currentEmployee.remainingWorkingHoursPerWeek }}</strong></h6></li>
+            <li>
+              <h6 class="mt-2 mb-2" style="font-weight: bold">Effort to perform: <strong style="color: red" >{{ this.currentProject.plannedEffort - this.currentProject.performedEffort }}</strong></h6></li>
+          </ul> </div>
           <table class="table">
             <thead>
             <tr class="">
@@ -275,7 +280,7 @@
             </tr>
             </tbody>
           </table>
-          <div>Effort to perform: {{ this.currentProject.plannedEffort - this.currentProject.performedEffort }}</div>
+
           <vs-alert
               :active="!validEmployeeAssign"
               color="danger"
@@ -474,7 +479,7 @@ export default {
         "employeeID": this.currentEmployee.employeeID,
         "name": this.currentEmployee.name,
         "domicile": this.currentEmployee.domicile,
-        "competences": this.currentEmployee.competences,//.toUpperCase(),
+        "competences": this.currentEmployee.competences,
         "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
         "remainingWorkingHoursPerWeek": parseInt(this.currentEmployee.remainingWorkingHoursPerWeek) - parseInt(this.assignHours),
       })
@@ -632,10 +637,17 @@ export default {
         'email': this.currentClient.email,
         'telephoneNumber': this.currentClient.telephoneNumber,
         'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs + "-" + this.createdClientID
+        'projectIDs': this.currentClient.projectIDs + "\t" + this.createdClientID
       })
       this.acceptAlert();
       await this.fetchAllProjects()
+      this.inputValues.competencesField = ""
+      this.inputValues.plannedEndField = this.dateToday
+      this.inputValues.plannedStartField = this.dateToday
+      this.inputValues.plannedEffortField = ""
+      this.selectedClientName = "Owner of the project"
+      this.inputValues.projectName = ""
+
     },
 
     /**

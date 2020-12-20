@@ -572,6 +572,10 @@ export default {
               this.failedAddAlert(error.message)
             }
       })
+      this.inputValues.nameField = ""
+      this.inputValues.domicileField =""
+      this.inputValues.competencesField = ""
+      this.inputValues.workingHoursField = ""
     },
 
     /**
