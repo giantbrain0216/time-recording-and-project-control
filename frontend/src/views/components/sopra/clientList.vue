@@ -216,6 +216,12 @@ export default {
   },
 
   methods: {
+
+    /**
+     * Sets the editValues to the data of the current client
+     *
+     * @return client list with updated current client
+     */
     async updateClient(){
       await axios.put(`http://localhost:8080/clients/`,{
         'id':this.currentClient.clientID,
@@ -230,14 +236,19 @@ export default {
 
     },
 
-
-
+    /**
+     * Notifies that addition succeeded
+     */
     acceptAlert(){
       this.$vs.notify({
         title:'Notification:',
         text:'Employee was added.'
       })
     },
+
+    /**
+     * Notifies that addition was closed and sets the inputValues to ''
+     */
     closeAdd(){
       this.inputValues.nameField = '';
       this.inputValues.emailField = '';
@@ -251,6 +262,9 @@ export default {
 
     },
 
+    /**
+     * Notifies that editing was closed and sets the editValues to ''
+     */
     closeEdit(){
       this.editValues.nameField = '';
           this.editValues.emailField = '';
@@ -264,6 +278,12 @@ export default {
           })
     },
 
+    /**
+     * Gets client from DB
+     *
+     * @param id of client
+     * @return curreentClient with client data of DB
+     */
     fetchCustomer: async function(id){
       await axios.get(`http://localhost:8080/clients/${id}`)
           .then(response => {
@@ -277,6 +297,11 @@ export default {
           })
     },
 
+    /**
+     * Gets all employees from DB
+     *
+     * @return employees
+     */
     fetchEmployees: async function(){
       await axios.get(`http://localhost:8080/employees/`)
           .then(response => {
@@ -289,6 +314,11 @@ export default {
 
     },
 
+    /**
+     * Gets all clients from DB
+     *
+     * @return clients
+     */
     fetchCustomers: async function (){
       await axios.get(`http://localhost:8080/clients/`)
           .then(response => {
@@ -300,7 +330,11 @@ export default {
           })
     },
 
-    
+    /**
+     * Adds an client to DB
+     *
+     * @return updated clients
+     */
     addClient: async function() {
       await axios.post('http://localhost:8080/clients' , {
         'name': this.inputValues.nameField,
@@ -315,11 +349,22 @@ export default {
       this.selectedEmployee = 0
     },
 
+    /**
+     * Deletes selected client
+     *
+     * @param id of client
+     * @return updated clients
+     */
     deleteClient: async function(id){
       await axios.delete(`http://localhost:8080/clients/` + id)
       await this.fetchCustomers()
     },
 
+    /**
+     * Sets the editValues to values of current client and activates editing prompt
+     *
+     * @param id of client
+     */
     async updateEditID(id){
       await this.fetchCustomer(id);
       this.editValues.nameField = this.currentClient.name
@@ -336,11 +381,20 @@ export default {
 
     },
 
+    /**
+     * Sets clientSelected to true to show detailed view of client
+     * @param id of client
+     */
     updateDetailedClient(id){
       this.fetchCustomer(id)
       this.clientSelected = true
     },
 
+    /**
+     * Updated the contact person of client
+     * @param id of client
+     * @param name of employee
+     */
     updateSelectedEmployee(id, name){
       this.selectedEmployee = id;
       this.selectedEmployeeName = name;
