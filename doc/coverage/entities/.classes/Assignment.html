@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Assignment</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">entities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Assignment (entities)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Assignment</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90.9%
+  </span>
+  <span class="absValue">
+    (10/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95%
+  </span>
+  <span class="absValue">
+    (19/ 20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package entities;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.j256.ormlite.field.DatabaseField;
+<i>4</i>&nbsp;import com.j256.ormlite.table.DatabaseTable;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import javax.validation.constraints.NotNull;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * Class represents the allocation of projects to employees.
+<i>10</i>&nbsp; *
+<i>11</i>&nbsp; * @version 19.12.2020
+<i>12</i>&nbsp; */
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;@DatabaseTable(tableName = &quot;Assignments&quot;)
+<i>15</i>&nbsp;public class Assignment {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    @DatabaseField(columnName = &quot;ID&quot;, id = true)
+<i>18</i>&nbsp;    private Integer id;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    @DatabaseField(columnName = &quot;ID of the Employee&quot;)
+<i>21</i>&nbsp;    @NotNull
+<i>22</i>&nbsp;    private Integer employeeID;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    @DatabaseField(columnName = &quot;ID of the Project&quot;)
+<i>25</i>&nbsp;    @NotNull
+<i>26</i>&nbsp;    private Integer projectID;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    @DatabaseField(columnName = &quot;Planned Working Hours&quot;)
+<i>29</i>&nbsp;    @NotNull
+<i>30</i>&nbsp;    private int plannedWorkingHours;
+<i>31</i>&nbsp;
+<b class="fc"><i>32</i>&nbsp;    public Assignment() {</b>
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<b class="fc"><i>35</i>&nbsp;    public Assignment(Integer employeeID, Integer projectID, Integer workedHours) {</b>
+<b class="fc"><i>36</i>&nbsp;        this.projectID = projectID;</b>
+<b class="fc"><i>37</i>&nbsp;        this.employeeID = employeeID;</b>
+<b class="fc"><i>38</i>&nbsp;        this.plannedWorkingHours = workedHours;</b>
+<b class="fc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    public Integer getId() {
+<b class="fc"><i>43</i>&nbsp;        return id;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    public void setId(Integer id) {
+<b class="fc"><i>47</i>&nbsp;        this.id = id;</b>
+<b class="fc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    public Integer getEmployeeID() {
+<b class="fc"><i>51</i>&nbsp;        return employeeID;</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    public void setEmployeeID(Integer employeeID) {
+<b class="fc"><i>55</i>&nbsp;        this.employeeID = employeeID;</b>
+<b class="fc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    public Integer getProjectID() {
+<b class="fc"><i>59</i>&nbsp;        return projectID;</b>
+<i>60</i>&nbsp;    }
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    public void setProjectID(Integer projectID) {
+<b class="fc"><i>63</i>&nbsp;        this.projectID = projectID;</b>
+<b class="fc"><i>64</i>&nbsp;    }</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    public int getPlannedWorkingHours() {
+<b class="fc"><i>68</i>&nbsp;        return plannedWorkingHours;</b>
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public void setPlannedWorkingHours(int plannedWorkingHours) {
+<b class="fc"><i>72</i>&nbsp;        this.plannedWorkingHours = plannedWorkingHours;</b>
+<b class="fc"><i>73</i>&nbsp;    }</b>
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    @Override
+<i>76</i>&nbsp;    public String toString() {
+<b class="nc"><i>77</i>&nbsp;        return &quot;Assignment{&quot; +</b>
+<i>78</i>&nbsp;                &quot;id=&quot; + id +
+<i>79</i>&nbsp;                &quot;, employeeID=&quot; + employeeID +
+<i>80</i>&nbsp;                &quot;, projectID=&quot; + projectID +
+<i>81</i>&nbsp;                &quot;, plannedWorkingHours=&quot; + plannedWorkingHours +
+<i>82</i>&nbsp;                &#39;}&#39;;
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-20 20:13</div>
+</div>
+</body>
+</html>

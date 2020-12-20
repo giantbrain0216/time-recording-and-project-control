@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Application</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Application (controllers)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Application</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (4/ 6)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Application$$EnhancerBySpringCGLIB$$126aa72</td>
+  </tr>
+  <tr>
+    <td class="name">Application$$EnhancerBySpringCGLIB$$126aa72$$FastClassBySpringCGLIB$$31e43170</td>
+  </tr>
+  <tr>
+    <td class="name">Application$$FastClassBySpringCGLIB$$b5b6aa19</td>
+  </tr>
+  <tr>
+    <td class="name">Application$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (8/ 10)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.j256.ormlite.jdbc.JdbcConnectionSource;
+<i>4</i>&nbsp;import com.j256.ormlite.support.ConnectionSource;
+<i>5</i>&nbsp;import org.springframework.boot.SpringApplication;
+<i>6</i>&nbsp;import org.springframework.boot.autoconfigure.SpringBootApplication;
+<i>7</i>&nbsp;import org.springframework.context.annotation.Bean;
+<i>8</i>&nbsp;import org.springframework.web.servlet.config.annotation.CorsRegistry;
+<i>9</i>&nbsp;import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.sql.SQLException;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;@SpringBootApplication
+<i>14</i>&nbsp;public class Application {
+<i>15</i>&nbsp;    public ConnectionSource connectionSource;
+<i>16</i>&nbsp;
+<b class="fc"><i>17</i>&nbsp;    public Application() throws SQLException {</b>
+<b class="fc"><i>18</i>&nbsp;        connectionSource = new JdbcConnectionSource(&quot;jdbc:mariadb://bilbao.informatik&quot; +</b>
+<i>19</i>&nbsp;                &quot;.uni-stuttgart.de/team12&quot;, &quot;team12&quot;, &quot;e345c973d6f4d770&quot;);
+<b class="fc"><i>20</i>&nbsp;    }</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    public static void main(String[] args) {
+<b class="nc"><i>24</i>&nbsp;        SpringApplication.run(Application.class, args);</b>
+<b class="nc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    // enable cross-origin resource sharing (CORS)
+<i>28</i>&nbsp;    @Bean
+<i>29</i>&nbsp;    public WebMvcConfigurer corsConfigurer() {
+<b class="fc"><i>30</i>&nbsp;        return new WebMvcConfigurer() {</b>
+<i>31</i>&nbsp;            @Override
+<i>32</i>&nbsp;            public void addCorsMappings(CorsRegistry registry) {
+<i>33</i>&nbsp;                // allow CORS requests for all resources and HTTP methods from the frontend origin
+<b class="fc"><i>34</i>&nbsp;                registry.addMapping(&quot;/**&quot;)</b>
+<b class="fc"><i>35</i>&nbsp;                        .allowedMethods(&quot;OPTIONS&quot;, &quot;HEAD&quot;, &quot;GET&quot;, &quot;PUT&quot;, &quot;POST&quot;, &quot;DELETE&quot;);</b>
+<i>36</i>&nbsp;                //.allowedOrigins(&quot;http://localhost:8000&quot;);
+<b class="fc"><i>37</i>&nbsp;            }</b>
+<i>38</i>&nbsp;        };
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-20 20:13</div>
+</div>
+</body>
+</html>
