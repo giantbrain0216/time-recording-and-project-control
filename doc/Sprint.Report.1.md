@@ -1,6 +1,6 @@
 # Sprint Report 1
 
-In diesem Sprint wurden die bis zum [Meilenstein 2](SoPra WS20 / team12) erledigten User Stories abgearbeitet.
+In diesem Sprint wurden die bis zum [Meilenstein 2](sopra-ws20/team12%"M2") erledigten User Stories abgearbeitet.
 
 ## Verbesserte Dokumente
 
