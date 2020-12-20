@@ -4,8 +4,8 @@
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="clientSelected ? 6 : 12" vs-sm="6" vs-xs="12" code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h2 class="float-left" style="color: cornflowerblue">Client list</h2>
-            <div class="float-right mb-1"><vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Customer</vs-button></div>
+            <h2 class="float-left" style="color: cornflowerblue">Client List</h2>
+            <div class="float-right mb-1"><vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add New Client</vs-button></div>
           </div>
           <div class="table-responsive">
         <table class="table v-middle border">
@@ -80,7 +80,7 @@
           Please insert client data.
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.nameField" />
           <vs-input label-placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
-          <vs-input label-placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
+          <vs-input type="number" label-placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
           <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
             <div>Contact Person:      </div>
             <vs-dropdown class="ml-1">
@@ -216,7 +216,7 @@ export default {
                 && 50 > this.inputValues.emailField.length && this.inputValues.emailField.length > 4
                 && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length > 7
                 && re.test(this.inputValues.emailField)
-                && this.selectedEmployee != 0
+                && this.selectedEmployee !== 0 && this.inputValues.numberField > 0
                 )
       },
     validClientEdit(){

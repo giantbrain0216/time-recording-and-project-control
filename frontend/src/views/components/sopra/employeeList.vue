@@ -5,9 +5,9 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h2  class="float-left" style="color: cornflowerblue">Employee list</h2>
+            <h2  class="float-left" style="color: cornflowerblue">Employee List</h2>
             <div class="float-right mb-1">
-            <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Employee</vs-button>
+            <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add New Employee</vs-button>
             </div>
           </div>
           <div class="table-responsive">

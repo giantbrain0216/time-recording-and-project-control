@@ -5,9 +5,9 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h2 class="float-left" style="color: cornflowerblue">Project list </h2>
+            <h2 class="float-left" style="color: cornflowerblue">Project List </h2>
             <div class="float-right mb-1">
-              <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Project</vs-button>
+              <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add New Project</vs-button>
             </div>
             <div class="d-flex align-items-center dropdownbtn-alignment m-2 ml-3 float-left">
               <div>Only see projects from:</div>

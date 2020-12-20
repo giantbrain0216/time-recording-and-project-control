@@ -85,7 +85,7 @@
             <td>{{registration.description}}</td>
             <td>
               <div>
-                <vs-button @click="activeDeletePrompt=true; currentRegistration=registration.id" class="m-1" color="danger" type="filled">
+                <vs-button @click="activeDeletePrompt=true; currentRegistration=registration.id" class="m-1" color="danger" icon="delte" type="filled">
                   Delete
                 </vs-button>
               </div>
