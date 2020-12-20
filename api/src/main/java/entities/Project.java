@@ -22,7 +22,7 @@ import java.sql.SQLException;
  * @version 16.12.2020
  */
 
-@DatabaseTable(tableName = "projects")
+@DatabaseTable(tableName = "Projects")
 public class Project {
 
     @DatabaseField(columnName = "Project number", id = true)
