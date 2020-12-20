@@ -34,7 +34,7 @@
             <td>{{client.projectIDs}}</td>
             <td>
               <div>
-                <vs-button @click="deleteClient(client.clientID)" icon="delete" class="m-1" color="danger" type="filled">
+                <vs-button @click="updateDeleteClient(client)" icon="delete" class="m-1" color="danger" type="filled">
                 </vs-button>
                 <vs-button @click="updateEditID(client.clientID)" icon="edit" class="m-1" color="warning" type="filled">
                 </vs-button>
@@ -153,7 +153,21 @@
           </vs-alert>
         </div>
       </vs-prompt>
+
     </vs-row>
+    <vs-prompt
+        title="Delete Project"
+        color="danger"
+        @cancel='closeDeletePrompt("Client has not been deleted")'
+        @accept="deleteClient(currentClient.clientID)"
+        @close='closeDeletePrompt("Client has not been deleted")'
+        :is-valid="true"
+        :active.sync="activeDeletePrompt"
+    >
+      <div class="con-exemple-prompt">
+        <h4>Are you sure to delete the client :</h4>  <h5>{{ currentClient.name }}</h5>
+      </div>
+    </vs-prompt>
   </div>
 </template>
 
@@ -184,6 +198,7 @@ export default {
         projectsField:"",
 
       },
+      activeDeletePrompt:false,
     };
   },
 
@@ -356,7 +371,17 @@ export default {
      * @return updated clients
      */
     deleteClient: async function(id){
-      await axios.delete(`http://localhost:8080/clients/` + id)
+      await axios.delete(`http://localhost:8080/clients/` + id).then(() => {
+        this.deleteAlert()
+        this.activeDeletePrompt = false
+        this.currentClient = {}
+
+      }).catch((error) => {
+        if (error.response){
+          this.closeDeletePrompt( error.message);
+          this.currentClient = {}
+        }
+      })
       await this.fetchCustomers()
     },
 
@@ -398,6 +423,63 @@ export default {
     updateSelectedEmployee(id, name){
       this.selectedEmployee = id;
       this.selectedEmployeeName = name;
+    },
+
+    closeDeletePrompt: function (message) {
+      this.activeDeletePrompt = false;
+      this.closeDeleteAlert(message)
+
+    },
+
+    closeDeleteAlert(message) {
+      this.$vs.notify({
+        title: 'Cancelled:',
+        color: "rgb(187, 138, 200)", type: "gradient",
+        text: message
+      })
+    },
+
+    /**
+     * Notifies that deletion succeeded
+     */
+    deleteAlert() {
+      this.$vs.notify({
+        title: 'Confirmation:',
+        text: 'Project has been successfully deleted.'
+      })
+    },
+
+    validForDelete: async function(client){
+      var projects = client.projectIDs.split("-")
+      var bool = true
+      for(var i = 0; i<projects.length;i++){
+        await axios.get(`http://localhost:8080/projects/` + projects[i])
+            .then(response => {
+                  var today = new Date().getTime()
+                  var date = new Date(response.data.plannedEnd)
+                  date = date.getTime()
+                  if(today < date){
+                    bool = false
+
+                  }
+                })
+            }
+            return bool;
+    },
+
+    async updateDeleteClient(client){
+      var valid = await this.validForDelete(client)
+      if(valid){
+        this.currentClient = client
+        this.activeDeletePrompt = true
+      }else{
+        this.$vs.notify({
+          title: 'Warning:',
+          color: "rgb(219,9,29)", type: "gradient",
+          text: 'Client cannot be deleted because it still has open projects'
+        })
+      }
+
     }
 
   }
