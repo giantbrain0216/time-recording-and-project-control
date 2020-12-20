@@ -49,7 +49,7 @@ export default {
             // JSON responses are automatically parsed.
             for (let i = 0; i < response.data.length; i++) {
               if(response.data[i].employeeID === this.employeeID){
-                if(this.dateLabels.includes(response.data[i].start.slice(5,10))){
+                if(this.dateLabels.includes(response.data[i].start.slice(0,10))){
                   this.registrations.push(response.data[i])
                 }
 
@@ -66,13 +66,16 @@ export default {
       for(let i = 0;i<5;i++){
         let dd = String(today.getDate()-4+i).padStart(2, '0');
         let mm = String(today.getMonth() + 1).padStart(2, '0');
-        this.dateLabels[i] =  mm + "-" + dd
+        var yyyy = today.getFullYear();
+        this.dateLabels[i] =  yyyy + "-" +  mm + "-" + dd
       }
     },
     async getWorkedHours(){
       for(let i = 0; i < this.registrations.length;i++){
         for(let j= 0; j<this.dateLabels.length;j++){
-          if(this.registrations[i].start.slice(5,10).localeCompare(this.dateLabels[j]) === 0){
+          // eslint-disable-next-line no-console
+          console.log(this.registrations[i].start.slice(0,10))
+          if(this.registrations[i].start.slice(0,10).localeCompare(this.dateLabels[j]) === 0){
             let startDate = Date.parse(this.registrations[i].start);
             let endDate = Date.parse(this.registrations[i].end);
             let hours = Math.abs(endDate - startDate) / 36e5;
