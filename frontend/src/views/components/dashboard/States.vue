@@ -7,14 +7,14 @@
                 <vs-progress :percent="(getPerformedEffort()/getPlannedEffort())*100" color="primary">primary</vs-progress>
             </vs-card>
         </vs-col>
-        <!--vs-col vs-lg="3" vs-xs="12">
+        <vs-col vs-lg="3" vs-xs="12">
             <vs-card>
-                <h4 class="mb-1">-10%</h4>
-                <span>Monthly Sales</span>
-                <vs-progress :percent="10" color="danger">primary</vs-progress>
+                <h4 class="mb-1">{{Math.round(calculateStatus())}}%</h4>
+                <span>Projects are cancelled</span>
+                <vs-progress :percent="calculateStatus()" color="danger">primary</vs-progress>
             </vs-card>
         </vs-col>
-        <vs-col vs-lg="3" vs-xs="12">
+        <!--vs-col vs-lg="3" vs-xs="12">
             <vs-card>
                 <h4 class="mb-1">50%</h4>
                 <span>Yearly Sales</span>
@@ -33,6 +33,8 @@
 <script>
 import axios from "axios";
 
+let countRunning = 0
+let countCancelled = 0
 export default {
   name: "States",
   data: () => {
@@ -71,7 +73,24 @@ export default {
 
     getProgressOfAll: function () {
       return this.getPerformedEffort()/this.getPlannedEffort()*100
-    }
+    },
+
+    calculateStatus: function () {
+      let today = new Date()
+      for (let i = 0; i < this.projects.length; i++) {
+        let deadline = new Date(this.projects[i].plannedEnd)
+        if (today.getTime() > deadline.getTime()) {
+          // eslint-disable-next-line no-console
+          console.log("Returning false")
+          countRunning += 1
+        } else {
+          // eslint-disable-next-line no-console
+          console.log("Returning true")
+          countCancelled += 1
+        }
+      }
+      return countRunning / countCancelled * 100
+    },
   }
 }
 </script>
