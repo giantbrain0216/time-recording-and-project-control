@@ -44,9 +44,6 @@
                   <div class="">
                     <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
                        style="font-weight: bold; font-size: 15px; cursor:pointer">
-                      {{ project.projectName }}</a>
-                    <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
-                       style="font-weight: bold; font-size: 15px; cursor:pointer">
                       {{ project.projectName }}
                       <b-card style="font-size:10px;" class="text-success"
                               v-if="calculateStatus(project.projectNumber)">running
