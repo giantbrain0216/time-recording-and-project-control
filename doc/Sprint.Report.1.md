@@ -102,6 +102,26 @@ In diesem Sprint wurden die bis zum [Meilenstein 2](SoPra WS20 / team12) erledig
 
 ## Tests/Testprotokolle/Nachweis der Testabdeckung
 
-*TODO: Testprotokolle und Abdeckung hier einfügen/verlinken.*
+**Die Testabdeckung für das Backend:**  
+- finden Sie [hier](coverage/index.html)  
+All Klassen sind abgedeckt und 93% der methoden sind abgedeckt. Somit kann ma behaupten,
+dass die Test alle nicht-trivialen Methoden abdecken und diese auch funktionieren.
 
-*TODO: Begründungen, ob die fertigen Features für ihre Komplexität/Relevanz ausreichend getestet wurden (z.B. durch Unit Tests oder manuelle Tests)*
+
+
+
+*Testabdeckung für das Frontend*  
+- Im Frontend wurden alle Methoden manuell getesten. Es wurde für jedes implementierte Feature
+  mehrere Anwendungen getesten.  
+  - Objekte(Kunde, Mitarbeiter, Zeiterfassung, Projekte) hinzufügen:  
+    - Falsche Eingaben: Werden dank der Validierungen nicht akzeptiert und sind somit nicht möglich.  
+    - Richtige Eingaben: Objekt wird in der Datenbank gespeichert und im Frontend ausgegeben.
+  - Objekte bearbeiten(Mitarbeiter, Kunden, Projekte):  
+      - Falsche Eingaben: Werden dank der Validierungen nicht akzeptiert und sind somit nicht möglich.
+      - Richtige Eingaben: Änderung des Objekts wird in der Datenbank gespeichert und im Frontend ausgegeben.  
+  - Detailierte Ansicht der Objekte(Mitarbeiter, Kunden, Projekte):  
+      - Wird immer richtig Angezeigt wenn man auf den Namen des Objekts in der Objektliste klickt.  
+  - Mitarbeiter einem Projekt zuweiseen:  
+    - Die verfügbare Arbeitszeit des Mitarbeiters verringert sich und die Projektauslastung wird auch angepasst.  
+  - Zeiterfassung eines Mitarbeiteers:  
+    - Die aufgewandte Zeit des Mitarbeiters wird in seiner detailierten Ansicht angezeigt in Form einer Chart.
