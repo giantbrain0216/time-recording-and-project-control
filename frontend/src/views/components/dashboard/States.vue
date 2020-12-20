@@ -7,11 +7,11 @@
                 <vs-progress :percent="(getPerformedEffort()/getPlannedEffort())*100" color="primary">primary</vs-progress>
             </vs-card>
         </vs-col>
-        <vs-col vs-lg="3" vs-xs="12">
-            <vs-card>
-                <h4 class="mb-1">{{Math.round(calculatePercentageOfProjectsNeedMoreEmployees()*100) + "% need more employees"}}</h4>
-                <span>Projects Needing More Employees</span>
-                <vs-progress :percent="calculatePercentageOfProjectsNeedMoreEmployees() * 100" color="danger">primary</vs-progress>
+        <vs-col vs-lg="3" vs-xs="12" >
+            <vs-card v-if="percentageProjectsNeedEmployees !== null">
+                <h4 class="mb-1">{{Math.round(percentageProjectsNeedEmployees) + "% of the projects need more employees"}}</h4>
+<!--                <span>Projects Needing More Employees</span>-->
+                <vs-progress :percent="percentageProjectsNeedEmployees" color="danger">primary</vs-progress>
             </vs-card>
         </vs-col>
         <vs-col vs-lg="3" vs-xs="12">
@@ -38,11 +38,13 @@ export default {
   data: () => {
     return {
       projects: [],
+      percentageProjectsNeedEmployees:null,
     }
   },
 
-  created() {
-    this.fetchAllProjects()
+  async created() {
+    await this.fetchAllProjects()
+    this.calculatePercentageOfProjectsNeedMoreEmployees()
   },
 
   methods: {
@@ -86,23 +88,26 @@ export default {
 
     },
 
-    getAvailableWorkingPower:async function(projectIndexInList){
+    getAvailableWorkingPower: async function(projectIndexInList){
+      var summ = 0
+
       await axios.get(`http://localhost:8080/assignmentsbyproject/` + this.projects[projectIndexInList].projectNumber)
           .then(response => {
-            // JSON responses are automatically parsed.
-            var summ = 0;
             for(var i=0;i<response.data.length;i++){
               summ += response.data[i].plannedWorkingHours
             }
-            return summ
           })
           .catch(e => {
+
             this.errors.push(e)
           })
 
+     // console.log("SUMM " + summ)
+      return summ
+
     },
 
-    projectNeedsMoreEmployees: function(projectIndexInList){
+    projectNeedsMoreEmployees: async function(projectIndexInList){
       var project = this.projects[projectIndexInList]
       var remainingEffort = project.plannedEffort - project.performedEffort
       var remainingTime = this.getTimeUntilDeadline(projectIndexInList)
@@ -111,23 +116,29 @@ export default {
       }else{
         var effortPerWeek = remainingEffort/(remainingTime / 7)
       }
-      var availableWorkingPower = this.getAvailableWorkingPower(projectIndexInList)
-      return availableWorkingPower < effortPerWeek
+      var availableWorkingPower = 0
+      availableWorkingPower = await this.getAvailableWorkingPower(projectIndexInList)
+      return (availableWorkingPower < effortPerWeek)
 
     },
 
-    calculatePercentageOfProjectsNeedMoreEmployees(){
+    async calculatePercentageOfProjectsNeedMoreEmployees(){
       var nrProjects = 0;
       var nrProjectsNeedEmployees = 0;
-      for(var i =0;i<this.projects.length;i++){
-        if(this.projectNeedsMoreEmployees(i)){
-          nrProjects += 1
-          nrProjectsNeedEmployees +=1
-        }else{
-          nrProjects += 1
+      for(var i =0;i<this.projects.length;i++) {
+        // eslint-disable-next-line no-console
+        console.log(await this.projectNeedsMoreEmployees(i))
+        if (await this.projectNeedsMoreEmployees(i) !== -1) {
+
+          if ( await this.projectNeedsMoreEmployees(i)) {
+            nrProjects += 1
+            nrProjectsNeedEmployees += 1
+          } else {
+            nrProjects += 1
+          }
         }
       }
-      return (nrProjectsNeedEmployees/nrProjects)
+      this.percentageProjectsNeedEmployees = (nrProjectsNeedEmployees/nrProjects)*100
 
     }
   }
