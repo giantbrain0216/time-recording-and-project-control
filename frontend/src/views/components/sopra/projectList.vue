@@ -383,6 +383,9 @@ export default {
         "projectID": this.currentProject.projectNumber,
         "plannedWorkingHours": this.assignHours
       })
+      this.assignHours=0
+     this.selectedEmployeeName="Employee"
+      this.currentEmployee={}
       await this.fetchAllProjects()
       await this.fetchAllEmployees()
       this.assignProjectAlert()
