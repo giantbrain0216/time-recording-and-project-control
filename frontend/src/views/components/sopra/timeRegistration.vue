@@ -217,7 +217,7 @@ export default {
           })
 
       for(var i=0;i<this.projects.length;i++){
-        if(listOfProjectsIndexes.indexOf(this.projects[i].projectNumber) != -1){
+        if(listOfProjectsIndexes.indexOf(this.projects[i].projectNumber) !== -1){
           listOfProjects.push(this.projects[i])
         }
       }
@@ -230,7 +230,7 @@ export default {
     updateProject: function(id){
         this.currentProjectID = id;
       for(let i = 0; i<this.projects.length;i++){
-        if(this.projects[i].projectNumber == id){
+        if(this.projects[i].projectNumber === id){
           this.currentProject = this.projects[i].projectName
         }
       }
