@@ -21,13 +21,13 @@
                 <vs-progress :percent="50" color="success">primary</vs-progress>
             </vs-card>
         </vs-col>
-        <vs-col-- vs-lg="3" vs-xs="12">
-            <vs-card>
-                <h4 class="mb-1">{{ Math.round(calculateCancelled())}}%</h4>
-                <span>Projects are cancelled</span>
-                <vs-progress :percent="calculateCancelled()" color="warning">primary</vs-progress>
-            </vs-card>
-        </vs-col-->
+      <vs-col vs-lg="3" vs-xs="12">
+        <vs-card>
+          <h4 class="mb-1">{{Math.round(calculateCancelled())}}%</h4>
+          <span>Projects are cancelled</span>
+          <vs-progress :percent="calculateCancelled()" color="danger">primary</vs-progress>
+        </vs-card>
+      </vs-col>
     </vs-row>    
 </template>
 <script>
@@ -44,7 +44,7 @@ export default {
 
   async created() {
     await this.fetchAllProjects()
-    this.calculatePercentageOfProjectsNeedMoreEmployees()
+    await this.calculatePercentageOfProjectsNeedMoreEmployees()
   },
 
   methods: {
@@ -139,7 +139,6 @@ export default {
         }
       }
       this.percentageProjectsNeedEmployees = (nrProjectsNeedEmployees/nrProjects)*100
-
     },
 
     calculateCancelled: function () {
