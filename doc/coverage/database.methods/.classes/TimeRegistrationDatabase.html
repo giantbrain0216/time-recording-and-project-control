@@ -1,0 +1,224 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TimeRegistrationDatabase</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">database.methods</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TimeRegistrationDatabase (database.methods)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TimeRegistrationDatabase</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57.9%
+  </span>
+  <span class="absValue">
+    (22/ 38)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package database.methods;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.j256.ormlite.dao.Dao;
+<i>4</i>&nbsp;import com.j256.ormlite.dao.DaoManager;
+<i>5</i>&nbsp;import com.j256.ormlite.support.ConnectionSource;
+<i>6</i>&nbsp;import com.j256.ormlite.table.TableUtils;
+<i>7</i>&nbsp;import controllers.Application;
+<i>8</i>&nbsp;import entities.Project;
+<i>9</i>&nbsp;import entities.TimeRegistration;
+<i>10</i>&nbsp;import entities.Client;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;import java.sql.Date;
+<i>14</i>&nbsp;import java.sql.SQLException;
+<i>15</i>&nbsp;import java.util.ArrayList;
+<i>16</i>&nbsp;import java.util.Collections;
+<i>17</i>&nbsp;import java.util.Comparator;
+<i>18</i>&nbsp;import java.util.List;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;public class TimeRegistrationDatabase {
+<i>21</i>&nbsp;    private final Dao&lt;TimeRegistration, Integer&gt; timeRegistrationDAO;
+<i>22</i>&nbsp;
+<b class="fc"><i>23</i>&nbsp;    public TimeRegistrationDatabase(final ConnectionSource connectionSource) throws SQLException {</b>
+<b class="fc"><i>24</i>&nbsp;        timeRegistrationDAO = DaoManager.createDao(connectionSource, TimeRegistration.class);</b>
+<b class="fc"><i>25</i>&nbsp;        TableUtils.createTableIfNotExists(connectionSource, TimeRegistration.class);</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * Creates IDs in such a way that after deleting a TimeRegistratio, for example,
+<i>31</i>&nbsp;     * there are no gaps, but the ID whose TimeRegistratio was deleted is assigned
+<i>32</i>&nbsp;     * to another TimeRegistratio to be added.
+<i>33</i>&nbsp;     *
+<i>34</i>&nbsp;     * @return ID of the TimeRegistratio to be added.
+<i>35</i>&nbsp;     */
+<i>36</i>&nbsp;    private int createID() {
+<b class="fc"><i>37</i>&nbsp;        List&lt;TimeRegistration&gt; listOfTimeRegistration = this.getAllTimeRegistrations();</b>
+<i>38</i>&nbsp;        //  sort the list by ID
+<b class="fc"><i>39</i>&nbsp;        Collections.sort(listOfTimeRegistration, Comparator.comparing(TimeRegistration::getID));</b>
+<b class="fc"><i>40</i>&nbsp;        for (int i = 0; i &lt; listOfTimeRegistration.size(); i++) {</b>
+<b class="fc"><i>41</i>&nbsp;            if (listOfTimeRegistration.get(i).getID() != i + 1) {</b>
+<b class="nc"><i>42</i>&nbsp;                return i + 1;</b>
+<i>43</i>&nbsp;            }
+<i>44</i>&nbsp;        }
+<b class="fc"><i>45</i>&nbsp;        return listOfTimeRegistration.size() + 1;</b>
+<i>46</i>&nbsp;    }
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    /**
+<i>49</i>&nbsp;     * Adds the given time registration to the table in the database,
+<i>50</i>&nbsp;     * by storing all attributes in the respective cells.
+<i>51</i>&nbsp;     * Preconditions : in the table there is no elements with the same number
+<i>52</i>&nbsp;     * as the given project&#39;s
+<i>53</i>&nbsp;     * Post conditions : The time registration has been added to the database.
+<i>54</i>&nbsp;     *
+<i>55</i>&nbsp;     * @param timeRegistrationToAdd to be added to the database
+<i>56</i>&nbsp;     * @return ID of the time registration that has been added for testing purposes
+<i>57</i>&nbsp;     * @throws SQLException if the time registration cannot be added.
+<i>58</i>&nbsp;     */
+<i>59</i>&nbsp;    public int addToDataBase(final TimeRegistration timeRegistrationToAdd) throws SQLException {
+<b class="fc"><i>60</i>&nbsp;        int timeRegistrationToAddID = createID();</b>
+<b class="fc"><i>61</i>&nbsp;        timeRegistrationToAdd.setID(timeRegistrationToAddID);</b>
+<b class="fc"><i>62</i>&nbsp;        timeRegistrationDAO.create(timeRegistrationToAdd);</b>
+<b class="fc"><i>63</i>&nbsp;        return timeRegistrationToAddID;</b>
+<i>64</i>&nbsp;    }
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    /**
+<i>67</i>&nbsp;     * deletes an existing time registration from the table in the database.
+<i>68</i>&nbsp;     * An error message will be printed in case there is no time registration
+<i>69</i>&nbsp;     * with the given number.
+<i>70</i>&nbsp;     * No exceptions are thrown, but a message is displayed on the
+<i>71</i>&nbsp;     * console and the execution of the method is stopped.
+<i>72</i>&nbsp;     * Preconditions : The time registration exists in the database
+<i>73</i>&nbsp;     * Post conditions : The time registration does not in the database
+<i>74</i>&nbsp;     *
+<i>75</i>&nbsp;     * @param timeRegistrationID to be deleted from the database
+<i>76</i>&nbsp;     */
+<i>77</i>&nbsp;    public void deleteFromDatabase(Integer timeRegistrationID) {
+<i>78</i>&nbsp;        try {
+<b class="fc"><i>79</i>&nbsp;            timeRegistrationDAO.deleteById(timeRegistrationID);</b>
+<b class="nc"><i>80</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>81</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>82</i>&nbsp;            System.out.println(&quot;There is no time registration with the ID &quot; + timeRegistrationID);</b>
+<b class="fc"><i>83</i>&nbsp;        }</b>
+<b class="fc"><i>84</i>&nbsp;    }</b>
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    /**
+<i>87</i>&nbsp;     * modifies the data of an already existing project in the table in the
+<i>88</i>&nbsp;     * database.
+<i>89</i>&nbsp;     *
+<i>90</i>&nbsp;     * @param timeRegistrationWithNewData with the modified and updated data
+<i>91</i>&nbsp;     */
+<i>92</i>&nbsp;    public void modifyTimeRegistrationData(final TimeRegistration timeRegistrationWithNewData) {
+<b class="fc"><i>93</i>&nbsp;        if (timeRegistrationWithNewData == null) {</b>
+<b class="nc"><i>94</i>&nbsp;            throw new NullPointerException(&quot;Please enter a valid project&quot;);</b>
+<i>95</i>&nbsp;        }
+<i>96</i>&nbsp;        try {
+<b class="fc"><i>97</i>&nbsp;            timeRegistrationDAO.update(timeRegistrationWithNewData);</b>
+<b class="nc"><i>98</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>99</i>&nbsp;            System.out.println(&quot;there is no element in the database that matches the passed one. &quot;);</b>
+<b class="nc"><i>100</i>&nbsp;            e.printStackTrace();</b>
+<b class="fc"><i>101</i>&nbsp;        }</b>
+<b class="fc"><i>102</i>&nbsp;    }</b>
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * searches the database and then returns the time registration whose ID matches the given one
+<i>106</i>&nbsp;     * No exceptions are thrown, but a message is displayed on the
+<i>107</i>&nbsp;     * console and the execution of the method is stopped.
+<i>108</i>&nbsp;     *
+<i>109</i>&nbsp;     * @param timeRegistrationID of the employee to return
+<i>110</i>&nbsp;     * @return project whose number matches the given one
+<i>111</i>&nbsp;     */
+<i>112</i>&nbsp;    public TimeRegistration getTimeRegistration(Integer timeRegistrationID) {
+<i>113</i>&nbsp;        try {
+<b class="fc"><i>114</i>&nbsp;            return timeRegistrationDAO.queryForId(timeRegistrationID);</b>
+<b class="nc"><i>115</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>116</i>&nbsp;            System.out.println(&quot;there is no element in the database with an ID that matches the passed one. &quot;);</b>
+<b class="nc"><i>117</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>118</i>&nbsp;            return null;</b>
+<i>119</i>&nbsp;        }
+<i>120</i>&nbsp;    }
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;    /**
+<i>123</i>&nbsp;     * return all time registration stored in the database
+<i>124</i>&nbsp;     *
+<i>125</i>&nbsp;     * @return a list or an arraylist containing all employees. When the database
+<i>126</i>&nbsp;     * is empty, an empty arrayList will be returned.
+<i>127</i>&nbsp;     * &lt;p&gt;
+<i>128</i>&nbsp;     * ARRAY OR LIST ?
+<i>129</i>&nbsp;     * Hint : Query for all of the items in the object table. For medium sized or large tables, this may load a lot
+<i>130</i>&nbsp;     * of objects into memory so you should consider using the iterator() method instead.
+<i>131</i>&nbsp;     */
+<i>132</i>&nbsp;    public List&lt;TimeRegistration&gt; getAllTimeRegistrations() {
+<i>133</i>&nbsp;        try {
+<b class="fc"><i>134</i>&nbsp;            return timeRegistrationDAO.queryForAll();</b>
+<b class="nc"><i>135</i>&nbsp;        } catch (SQLException e) {</b>
+<b class="nc"><i>136</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>137</i>&nbsp;            System.out.println(&quot;there is no elements in the database. &quot;);</b>
+<b class="nc"><i>138</i>&nbsp;            return new ArrayList&lt;&gt;();</b>
+<i>139</i>&nbsp;        }
+<i>140</i>&nbsp;    }
+<i>141</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-20 20:13</div>
+</div>
+</body>
+</html>

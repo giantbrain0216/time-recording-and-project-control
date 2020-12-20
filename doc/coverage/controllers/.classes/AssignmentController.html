@@ -1,0 +1,226 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AssignmentController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AssignmentController (controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AssignmentController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (6/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    62.5%
+  </span>
+  <span class="absValue">
+    (15/ 24)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.j256.ormlite.jdbc.JdbcConnectionSource;
+<i>4</i>&nbsp;import com.j256.ormlite.support.ConnectionSource;
+<i>5</i>&nbsp;import database.methods.AssignmentDatabase;
+<i>6</i>&nbsp;import database.methods.ProjectDatabase;
+<i>7</i>&nbsp;import database.methods.TimeRegistrationDatabase;
+<i>8</i>&nbsp;import entities.Assignment;
+<i>9</i>&nbsp;import entities.Project;
+<i>10</i>&nbsp;import entities.TimeRegistration;
+<i>11</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>12</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>13</i>&nbsp;import org.springframework.web.server.ResponseStatusException;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;import javax.validation.Valid;
+<i>16</i>&nbsp;import java.sql.Date;
+<i>17</i>&nbsp;import java.sql.SQLException;
+<i>18</i>&nbsp;import java.util.List;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;@RestController
+<i>21</i>&nbsp;public class AssignmentController {
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    private AssignmentDatabase assignmentDatabase;
+<i>24</i>&nbsp;
+<b class="fc"><i>25</i>&nbsp;    public AssignmentController(){</b>
+<i>26</i>&nbsp;        try {
+<b class="fc"><i>27</i>&nbsp;            ConnectionSource connectionSource = new JdbcConnectionSource(&quot;jdbc:mariadb://bilbao.informatik&quot; +</b>
+<i>28</i>&nbsp;                    &quot;.uni-stuttgart.de/team12&quot;, &quot;team12&quot;, &quot;e345c973d6f4d770&quot;);
+<b class="fc"><i>29</i>&nbsp;            assignmentDatabase = new AssignmentDatabase(connectionSource);</b>
+<b class="nc"><i>30</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>31</i>&nbsp;            System.out.println(e);</b>
+<b class="fc"><i>32</i>&nbsp;        }</b>
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * REST METHOD GET FOR ALL PROJECTS
+<i>37</i>&nbsp;     *
+<i>38</i>&nbsp;     * @return List of all assignments
+<i>39</i>&nbsp;     */
+<i>40</i>&nbsp;    @GetMapping(&quot;/assignments&quot;)
+<i>41</i>&nbsp;    public List&lt;Assignment&gt; getAssignments() {
+<b class="fc"><i>42</i>&nbsp;        return assignmentDatabase.getAllAssignments();</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * REST METHOD GET FOR ONE Assignment
+<i>48</i>&nbsp;     *
+<i>49</i>&nbsp;     *  precondition: the given id exists in the database
+<i>50</i>&nbsp;     *  postcondition: correct assignment is returned
+<i>51</i>&nbsp;     *
+<i>52</i>&nbsp;     * @param assignmentID - The ID of the assignment
+<i>53</i>&nbsp;     * @return the assignment corresponding to the id
+<i>54</i>&nbsp;     */
+<i>55</i>&nbsp;    @GetMapping(&quot;/assignments/{id}&quot;)
+<i>56</i>&nbsp;    public Assignment getAssignment(@PathVariable(&quot;id&quot;) Integer assignmentID) throws SQLException {
+<b class="fc"><i>57</i>&nbsp;        Assignment assignment = assignmentDatabase.getAssignment(assignmentID);</b>
+<b class="fc"><i>58</i>&nbsp;        return assignment;</b>
+<i>59</i>&nbsp;    }
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /**
+<i>62</i>&nbsp;     * REST METHOD DELETE ASSIGNMENT
+<i>63</i>&nbsp;     *
+<i>64</i>&nbsp;     * precondition: the given id exists in the database
+<i>65</i>&nbsp;     * postcondition: assignment no longer exists in the database and the assignment is returned
+<i>66</i>&nbsp;     *
+<i>67</i>&nbsp;     * @param assignmentID - id of the assignment to be deleted
+<i>68</i>&nbsp;     * @return the deleted assignment
+<i>69</i>&nbsp;     */
+<i>70</i>&nbsp;    @DeleteMapping(&quot;/assignments/{id}&quot;)
+<i>71</i>&nbsp;    public Assignment deleteAssignment(@PathVariable(&quot;id&quot;) Integer assignmentID) throws SQLException {
+<b class="fc"><i>72</i>&nbsp;        Assignment assignment = assignmentDatabase.getAssignment(assignmentID);</b>
+<b class="fc"><i>73</i>&nbsp;        assignmentDatabase.deleteAssignment(assignmentID);</b>
+<b class="fc"><i>74</i>&nbsp;        return assignment;</b>
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;    /**
+<i>78</i>&nbsp;     * REST METHOD POST TO ADD ASSIGNMENT
+<i>79</i>&nbsp;     *
+<i>80</i>&nbsp;     * precondition: The request body corresponds to the Assignment Class
+<i>81</i>&nbsp;     * postcondition: The given assignment is added to the database
+<i>82</i>&nbsp;     *
+<i>83</i>&nbsp;     * @return
+<i>84</i>&nbsp;     */
+<i>85</i>&nbsp;    @PostMapping(&quot;/assignments&quot;)
+<i>86</i>&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+<i>87</i>&nbsp;    public int addAssignment(@Valid @RequestBody Assignment requestBody){
+<i>88</i>&nbsp;        try {
+<b class="fc"><i>89</i>&nbsp;            return assignmentDatabase.addAssignment(requestBody);</b>
+<b class="nc"><i>90</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>91</i>&nbsp;            System.out.println(e);</b>
+<b class="nc"><i>92</i>&nbsp;            return 0;</b>
+<i>93</i>&nbsp;        }
+<i>94</i>&nbsp;    }
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;    /**
+<i>97</i>&nbsp;     * REST METHOD UPDATE ASSIGNMENT
+<i>98</i>&nbsp;     *
+<i>99</i>&nbsp;     * precondition: The request body corresponds to the Assignment Class and the id exists in the database
+<i>100</i>&nbsp;     * postcondition: The correct assignment has been updated
+<i>101</i>&nbsp;     *
+<i>102</i>&nbsp;     * @return
+<i>103</i>&nbsp;     */
+<i>104</i>&nbsp;    @PutMapping(&quot;/assignments&quot;)
+<i>105</i>&nbsp;    public void updateAssignment(@Valid @RequestBody Assignment requestBody) {
+<i>106</i>&nbsp;        // requestBody.setProjectNumber(id);
+<i>107</i>&nbsp;        try {
+<b class="fc"><i>108</i>&nbsp;            assignmentDatabase.modifyAssignmentData(requestBody);</b>
+<b class="nc"><i>109</i>&nbsp;        } catch (SQLException throwables) {</b>
+<b class="nc"><i>110</i>&nbsp;            throw new ResponseStatusException(HttpStatus.PRECONDITION_FAILED,</b>
+<i>111</i>&nbsp;                    &quot;Precondition Failed ERROR CODE 412&quot;);
+<b class="fc"><i>112</i>&nbsp;        }</b>
+<i>113</i>&nbsp;
+<b class="fc"><i>114</i>&nbsp;    }</b>
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;    /**
+<i>117</i>&nbsp;     * REST METHOD GET FOR ASSIGNMENTS BY EMPLOYEE
+<i>118</i>&nbsp;     *
+<i>119</i>&nbsp;     *  precondition: the given id exists in the database of employees
+<i>120</i>&nbsp;     *  postcondition: correct list of assignments is returned
+<i>121</i>&nbsp;     *
+<i>122</i>&nbsp;     * @param employeeID - The ID of the employee
+<i>123</i>&nbsp;     * @return the assignments corresponding to the id
+<i>124</i>&nbsp;     */
+<i>125</i>&nbsp;    @GetMapping(&quot;/assignmentsbyemployee/{id}&quot;)
+<i>126</i>&nbsp;    public List&lt;Assignment&gt; getAssignmentByEmployee(@PathVariable(&quot;id&quot;) Integer employeeID) throws SQLException {
+<b class="nc"><i>127</i>&nbsp;        return assignmentDatabase.getAssignmentsByEmployee(employeeID);</b>
+<i>128</i>&nbsp;    }
+<i>129</i>&nbsp;
+<i>130</i>&nbsp;    /**
+<i>131</i>&nbsp;     * REST METHOD GET FOR ASSIGNMENTS BY PROJECT
+<i>132</i>&nbsp;     *
+<i>133</i>&nbsp;     *  precondition: the given id exists in the database of projects
+<i>134</i>&nbsp;     *  postcondition: correct list of assignments is returned
+<i>135</i>&nbsp;     *
+<i>136</i>&nbsp;     * @param projectID - The ID of the project
+<i>137</i>&nbsp;     * @return the assignments corresponding to the project id
+<i>138</i>&nbsp;     */
+<i>139</i>&nbsp;    @GetMapping(&quot;/assignmentsbyproject/{id}&quot;)
+<i>140</i>&nbsp;    public List&lt;Assignment&gt; getAssignmentsByProject(@PathVariable(&quot;id&quot;) Integer projectID) throws SQLException {
+<b class="nc"><i>141</i>&nbsp;        return assignmentDatabase.getAssignmentsByProject(projectID);</b>
+<i>142</i>&nbsp;    }
+<i>143</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-20 20:13</div>
+</div>
+</body>
+</html>

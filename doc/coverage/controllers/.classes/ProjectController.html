@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ProjectController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ProjectController (controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ProjectController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.7%
+  </span>
+  <span class="absValue">
+    (14/ 19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import com.j256.ormlite.jdbc.JdbcConnectionSource;
+<i>5</i>&nbsp;import com.j256.ormlite.support.ConnectionSource;
+<i>6</i>&nbsp;import database.methods.ProjectDatabase;
+<i>7</i>&nbsp;import entities.Project;
+<i>8</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>9</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import javax.validation.Valid;
+<i>12</i>&nbsp;import java.sql.SQLException;
+<i>13</i>&nbsp;import java.util.List;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;@RestController
+<i>16</i>&nbsp;public class ProjectController {
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    private ProjectDatabase projectDatabase;
+<i>19</i>&nbsp;
+<b class="fc"><i>20</i>&nbsp;    public ProjectController(){</b>
+<i>21</i>&nbsp;        try {
+<b class="fc"><i>22</i>&nbsp;            ConnectionSource connectionSource = new JdbcConnectionSource(&quot;jdbc:mariadb://bilbao.informatik&quot; +</b>
+<i>23</i>&nbsp;                    &quot;.uni-stuttgart.de/team12&quot;, &quot;team12&quot;, &quot;e345c973d6f4d770&quot;);
+<b class="fc"><i>24</i>&nbsp;            projectDatabase = new ProjectDatabase(connectionSource);</b>
+<b class="nc"><i>25</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>26</i>&nbsp;            System.out.println(e);</b>
+<b class="fc"><i>27</i>&nbsp;        }</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * REST METHOD GET FOR ALL PROJECTS
+<i>32</i>&nbsp;     *
+<i>33</i>&nbsp;     * @return List of all Projects
+<i>34</i>&nbsp;     */
+<i>35</i>&nbsp;    @GetMapping(&quot;/projects&quot;)
+<i>36</i>&nbsp;    public List&lt;Project&gt; getProjects() {
+<b class="fc"><i>37</i>&nbsp;        return projectDatabase.getAllProjects();</b>
+<i>38</i>&nbsp;    }
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    /**
+<i>41</i>&nbsp;     * REST METHOD GET FOR ONE PROJECT
+<i>42</i>&nbsp;     *
+<i>43</i>&nbsp;     *  precondition: the given id exists in the database
+<i>44</i>&nbsp;     *  postcondition: correct Project is returned
+<i>45</i>&nbsp;     *
+<i>46</i>&nbsp;     * @param employeeID - The ID of the project
+<i>47</i>&nbsp;     * @return the project corresponding to the id
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    @GetMapping(&quot;/projects/{id}&quot;)
+<i>50</i>&nbsp;    public Project getProject(@PathVariable(&quot;id&quot;) Integer employeeID) {
+<b class="fc"><i>51</i>&nbsp;        Project project = projectDatabase.getProject(employeeID);</b>
+<b class="fc"><i>52</i>&nbsp;        return project;</b>
+<i>53</i>&nbsp;    }
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    /**
+<i>56</i>&nbsp;     * REST METHOD DELETE PROJECT
+<i>57</i>&nbsp;     *
+<i>58</i>&nbsp;     * precondition: the given id exists in the database
+<i>59</i>&nbsp;     * postcondition: project no longer exists in the database and the project is returned
+<i>60</i>&nbsp;     *
+<i>61</i>&nbsp;     * @param projectID - id of the project to be deleted
+<i>62</i>&nbsp;     * @return
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    @DeleteMapping(&quot;/projects/{id}&quot;)
+<i>65</i>&nbsp;    public Project deleteProject(@PathVariable(&quot;id&quot;) Integer projectID) {
+<b class="fc"><i>66</i>&nbsp;        Project project = projectDatabase.getProject(projectID);</b>
+<b class="fc"><i>67</i>&nbsp;        projectDatabase.deleteFromDatabase(projectID);</b>
+<b class="fc"><i>68</i>&nbsp;        return project;</b>
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    /**
+<i>72</i>&nbsp;     * REST METHOD POST TO ADD PROJECT
+<i>73</i>&nbsp;     *
+<i>74</i>&nbsp;     * precondition: The request body corresponds to the Project Class
+<i>75</i>&nbsp;     * postcondition: The given project is added to the database
+<i>76</i>&nbsp;     *
+<i>77</i>&nbsp;     * @return
+<i>78</i>&nbsp;     */
+<i>79</i>&nbsp;    @PostMapping(&quot;/projects&quot;)
+<i>80</i>&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+<i>81</i>&nbsp;    public int addProject(@Valid @RequestBody Project requestBody){
+<i>82</i>&nbsp;        try {
+<b class="fc"><i>83</i>&nbsp;            return projectDatabase.addToDatabase(requestBody);</b>
+<b class="nc"><i>84</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>85</i>&nbsp;            System.out.println(e);</b>
+<b class="nc"><i>86</i>&nbsp;            return 0;</b>
+<i>87</i>&nbsp;        }
+<i>88</i>&nbsp;    }
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    /**
+<i>91</i>&nbsp;     * REST METHOD UPDATE PROJECT
+<i>92</i>&nbsp;     *
+<i>93</i>&nbsp;     * precondition: The request body corresponds to the Project Class and the id exists in the database
+<i>94</i>&nbsp;     * postcondition: The correct project has been updated
+<i>95</i>&nbsp;     *
+<i>96</i>&nbsp;     * @return
+<i>97</i>&nbsp;     */
+<i>98</i>&nbsp;    @PutMapping(&quot;/projects&quot;)
+<i>99</i>&nbsp;    public void updateProject(@Valid @RequestBody Project requestBody){
+<i>100</i>&nbsp;       // requestBody.setProjectNumber(id);
+<b class="fc"><i>101</i>&nbsp;        projectDatabase.modifyProjectData(requestBody);</b>
+<i>102</i>&nbsp;
+<b class="fc"><i>103</i>&nbsp;    }</b>
+<i>104</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-20 20:13</div>
+</div>
+</body>
+</html>
