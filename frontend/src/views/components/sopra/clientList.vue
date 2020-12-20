@@ -362,6 +362,12 @@ export default {
       await this.fetchCustomers()
       this.selectedEmployeeName = "Contact Person"
       this.selectedEmployee = 0
+      this.inputValues = {
+        nameField: '',
+        emailField: '',
+        numberField: '',
+      }
+
     },
 
     /**
