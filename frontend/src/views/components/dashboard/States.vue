@@ -138,12 +138,12 @@ export default {
       for (let i = 0; i < this.projects.length; i++) {
         let deadline = new Date(this.projects[i].plannedEnd)
         if (today.getTime() > deadline.getTime()) {
-          countRunning += 1
-        } else {
           countCancelled += 1
+        } else {
+          countRunning += 1
         }
       }
-      return countRunning/countCancelled*100
+      return countCancelled/countRunning*100
     },
   }
 }
