@@ -9,7 +9,7 @@
         </vs-col>
         <vs-col vs-lg="3" vs-xs="12">
             <vs-card>
-                <h4 class="mb-1">{{calculatePercentageOfProjectsNeedMoreEmployees}}</h4>
+                <h4 class="mb-1">{{Math.round(calculatePercentageOfProjectsNeedMoreEmployees()*100) + "% need more employees"}}</h4>
                 <span>Projects Needing More Employees</span>
                 <vs-progress :percent="calculatePercentageOfProjectsNeedMoreEmployees() * 100" color="danger">primary</vs-progress>
             </vs-card>
