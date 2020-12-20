@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: EmployeeController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: EmployeeController (controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EmployeeController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.7%
+  </span>
+  <span class="absValue">
+    (14/ 19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.j256.ormlite.jdbc.JdbcConnectionSource;
+<i>4</i>&nbsp;import com.j256.ormlite.support.ConnectionSource;
+<i>5</i>&nbsp;import database.methods.EmployeeDatabase;
+<i>6</i>&nbsp;import entities.Employee;
+<i>7</i>&nbsp;import org.json.JSONArray;
+<i>8</i>&nbsp;import org.json.JSONObject;
+<i>9</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>10</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import javax.validation.Valid;
+<i>13</i>&nbsp;import java.sql.SQLException;
+<i>14</i>&nbsp;import java.util.ArrayList;
+<i>15</i>&nbsp;import java.util.List;
+<i>16</i>&nbsp;import java.util.concurrent.atomic.AtomicLong;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;@RestController
+<i>19</i>&nbsp;public class EmployeeController {
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    private EmployeeDatabase employeeDatabase;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;    public EmployeeController(){</b>
+<i>25</i>&nbsp;        try {
+<b class="fc"><i>26</i>&nbsp;            ConnectionSource connectionSource = new JdbcConnectionSource(&quot;jdbc:mariadb://bilbao.informatik&quot; +</b>
+<i>27</i>&nbsp;                    &quot;.uni-stuttgart.de/team12&quot;, &quot;team12&quot;, &quot;e345c973d6f4d770&quot;);
+<b class="fc"><i>28</i>&nbsp;            employeeDatabase = new EmployeeDatabase(connectionSource);</b>
+<b class="nc"><i>29</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>30</i>&nbsp;            System.out.println(e);</b>
+<b class="fc"><i>31</i>&nbsp;        }</b>
+<b class="fc"><i>32</i>&nbsp;           }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    /**
+<i>35</i>&nbsp;     * REST METHOD GET FOR ALL EMPLOYEES
+<i>36</i>&nbsp;     *
+<i>37</i>&nbsp;     * @return List of all Employees
+<i>38</i>&nbsp;     */
+<i>39</i>&nbsp;    @GetMapping(&quot;/employees&quot;)
+<i>40</i>&nbsp;    public List&lt;Employee&gt; getEmployees() {
+<b class="fc"><i>41</i>&nbsp;        return employeeDatabase.getAllEmployees();</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /**
+<i>45</i>&nbsp;     * REST METHOD GET FOR ONE EMPLOYEES
+<i>46</i>&nbsp;     *
+<i>47</i>&nbsp;     *  precondition: the given id exists in the database
+<i>48</i>&nbsp;     *  postcondition: correct employee is returned
+<i>49</i>&nbsp;     *
+<i>50</i>&nbsp;     * @param employeeID - The ID of the employee
+<i>51</i>&nbsp;     * @return  Employee corresponding to the id
+<i>52</i>&nbsp;     */
+<i>53</i>&nbsp;    @GetMapping(&quot;/employees/{id}&quot;)
+<i>54</i>&nbsp;    public Employee getEmployee(@PathVariable(&quot;id&quot;) Integer employeeID) {
+<b class="fc"><i>55</i>&nbsp;        Employee employee = employeeDatabase.getEmployee(employeeID);</b>
+<b class="fc"><i>56</i>&nbsp;        return employee;</b>
+<i>57</i>&nbsp;    }
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    /**
+<i>60</i>&nbsp;     * REST METHOD DELETE EMPLOYEE
+<i>61</i>&nbsp;     *
+<i>62</i>&nbsp;     * precondition: the given id exists in the database
+<i>63</i>&nbsp;     * postcondition: employee no longer exists in the database and the employee is returned
+<i>64</i>&nbsp;     *
+<i>65</i>&nbsp;     * @param employeeID - id of the employee to be deleted
+<i>66</i>&nbsp;     * @return
+<i>67</i>&nbsp;     */
+<i>68</i>&nbsp;    @DeleteMapping(&quot;/employees/{id}&quot;)
+<i>69</i>&nbsp;    public Employee deleteEmployee(@PathVariable(&quot;id&quot;) Integer employeeID) {
+<b class="fc"><i>70</i>&nbsp;        Employee employee = employeeDatabase.getEmployee(employeeID);</b>
+<b class="fc"><i>71</i>&nbsp;        employeeDatabase.deleteFromDatabase(employeeID);</b>
+<b class="fc"><i>72</i>&nbsp;        return employee;</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    /**
+<i>76</i>&nbsp;     * REST METHOD POST EMPLOYEE TO ADD EMPLOYEE
+<i>77</i>&nbsp;     *
+<i>78</i>&nbsp;     * precondition: The request body corresponds to the Employee Class
+<i>79</i>&nbsp;     * postcondition: The given employee is added to the database
+<i>80</i>&nbsp;     *
+<i>81</i>&nbsp;     * @return
+<i>82</i>&nbsp;     */
+<i>83</i>&nbsp;    @PostMapping(&quot;/employees&quot;)
+<i>84</i>&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+<i>85</i>&nbsp;    public int addEmployee(@Valid @RequestBody Employee requestBody){
+<i>86</i>&nbsp;        try {
+<b class="fc"><i>87</i>&nbsp;            return employeeDatabase.addToDatabase(requestBody);</b>
+<b class="nc"><i>88</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>89</i>&nbsp;            System.out.println(e);</b>
+<b class="nc"><i>90</i>&nbsp;            return 0;</b>
+<i>91</i>&nbsp;        }
+<i>92</i>&nbsp;    }
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    /**
+<i>95</i>&nbsp;     * REST METHOD UPDATE EMPLOYEE
+<i>96</i>&nbsp;     *
+<i>97</i>&nbsp;     * precondition: The request body corresponds to the Employee Class and the id exists in the database
+<i>98</i>&nbsp;     * postcondition: The correct employee has been updated
+<i>99</i>&nbsp;     *
+<i>100</i>&nbsp;     * @return
+<i>101</i>&nbsp;     */
+<i>102</i>&nbsp;    @PutMapping(&quot;/employees&quot;)
+<i>103</i>&nbsp;    public void updateEmployee(@Valid @RequestBody Employee requestBody){
+<b class="fc"><i>104</i>&nbsp;            employeeDatabase.modifyEmployeeData(requestBody);</b>
+<i>105</i>&nbsp;
+<b class="fc"><i>106</i>&nbsp;    }</b>
+<i>107</i>&nbsp;}
+<i>108</i>&nbsp;
+<i>109</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-20 20:13</div>
+</div>
+</body>
+</html>

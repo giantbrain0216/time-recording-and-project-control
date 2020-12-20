@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ClientController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">controllers</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ClientController (controllers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.7%
+  </span>
+  <span class="absValue">
+    (14/ 19)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package controllers;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.j256.ormlite.jdbc.JdbcConnectionSource;
+<i>4</i>&nbsp;import com.j256.ormlite.support.ConnectionSource;
+<i>5</i>&nbsp;import database.methods.ClientDatabase;
+<i>6</i>&nbsp;import entities.Client;
+<i>7</i>&nbsp;import entities.Project;
+<i>8</i>&nbsp;import org.springframework.http.HttpStatus;
+<i>9</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import javax.validation.Valid;
+<i>12</i>&nbsp;import java.sql.SQLException;
+<i>13</i>&nbsp;import java.util.List;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;@RestController
+<i>16</i>&nbsp;public class ClientController {
+<i>17</i>&nbsp;    private ClientDatabase clientDatabase;
+<i>18</i>&nbsp;
+<b class="fc"><i>19</i>&nbsp;    public ClientController(){</b>
+<i>20</i>&nbsp;        try {
+<b class="fc"><i>21</i>&nbsp;            ConnectionSource connectionSource = new JdbcConnectionSource(&quot;jdbc:mariadb://bilbao.informatik&quot; +</b>
+<i>22</i>&nbsp;                    &quot;.uni-stuttgart.de/team12&quot;, &quot;team12&quot;, &quot;e345c973d6f4d770&quot;);
+<b class="fc"><i>23</i>&nbsp;            clientDatabase = new ClientDatabase(connectionSource);</b>
+<b class="nc"><i>24</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>25</i>&nbsp;            System.out.println(e);</b>
+<b class="fc"><i>26</i>&nbsp;        }</b>
+<b class="fc"><i>27</i>&nbsp;    }</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * REST METHOD GET FOR ALL Clients
+<i>31</i>&nbsp;     *
+<i>32</i>&nbsp;     * @return List of all Clients
+<i>33</i>&nbsp;     */
+<i>34</i>&nbsp;    @GetMapping(&quot;/clients&quot;)
+<i>35</i>&nbsp;    public List&lt;Client&gt; getClients() {
+<b class="fc"><i>36</i>&nbsp;        return clientDatabase.getAllClients();</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * REST METHOD GET FOR ONE CLIENT
+<i>41</i>&nbsp;     *
+<i>42</i>&nbsp;     *  precondition: the given id exists in the database
+<i>43</i>&nbsp;     *  postcondition: correct Client returned
+<i>44</i>&nbsp;     *
+<i>45</i>&nbsp;     * @param clientID - The ID of the client
+<i>46</i>&nbsp;     * @return Client corresponding to the id
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;    @GetMapping(&quot;/clients/{id}&quot;)
+<i>49</i>&nbsp;    public Client getClient(@PathVariable(&quot;id&quot;) Integer clientID) {
+<b class="fc"><i>50</i>&nbsp;        Client client = clientDatabase.getClient(clientID);</b>
+<b class="fc"><i>51</i>&nbsp;        return client;</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * REST METHOD DELETE CLIENT
+<i>56</i>&nbsp;     *
+<i>57</i>&nbsp;     * precondition: the given id exists in the database
+<i>58</i>&nbsp;     * postcondition: client no longer exists in the database and the client is returned
+<i>59</i>&nbsp;     *
+<i>60</i>&nbsp;     * @param clientID - id of the employee to be deleted
+<i>61</i>&nbsp;     * @return
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    @DeleteMapping(&quot;/clients/{id}&quot;)
+<i>64</i>&nbsp;    public Client deleteClient(@PathVariable(&quot;id&quot;) Integer clientID) {
+<b class="fc"><i>65</i>&nbsp;        Client client = clientDatabase.getClient(clientID);</b>
+<b class="fc"><i>66</i>&nbsp;        clientDatabase.deleteFromDatabase(clientID);</b>
+<b class="fc"><i>67</i>&nbsp;        return client;</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * REST METHOD POST TO ADD CLIENT
+<i>72</i>&nbsp;     *
+<i>73</i>&nbsp;     * precondition: The request body corresponds to the Client Class
+<i>74</i>&nbsp;     * postcondition: The given client is added to the database
+<i>75</i>&nbsp;     *
+<i>76</i>&nbsp;     * @return
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    @PostMapping(&quot;/clients&quot;)
+<i>79</i>&nbsp;    @ResponseStatus(HttpStatus.CREATED)
+<i>80</i>&nbsp;    public int addClient(@Valid @RequestBody Client requestBody){
+<i>81</i>&nbsp;        try {
+<b class="fc"><i>82</i>&nbsp;            return clientDatabase.addToDatabase(requestBody);</b>
+<b class="nc"><i>83</i>&nbsp;        }catch(SQLException e){</b>
+<b class="nc"><i>84</i>&nbsp;            System.out.println(e);</b>
+<b class="nc"><i>85</i>&nbsp;            return 0;</b>
+<i>86</i>&nbsp;        }
+<i>87</i>&nbsp;    }
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    /**
+<i>90</i>&nbsp;     * REST METHOD UPDATE CLIENT
+<i>91</i>&nbsp;     *
+<i>92</i>&nbsp;     * precondition: The request body corresponds to the Client Class and the id exists in the database
+<i>93</i>&nbsp;     * postcondition: The correct client has been updated
+<i>94</i>&nbsp;     *
+<i>95</i>&nbsp;     * @return
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    @PutMapping(&quot;/clients&quot;)
+<i>98</i>&nbsp;    public void updateProject( @Valid @RequestBody Client requestBody){
+<b class="fc"><i>99</i>&nbsp;        clientDatabase.modifyClientData(requestBody);</b>
+<i>100</i>&nbsp;
+<b class="fc"><i>101</i>&nbsp;    }</b>
+<i>102</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-12-20 20:13</div>
+</div>
+</body>
+</html>
