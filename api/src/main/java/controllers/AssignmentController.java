@@ -133,7 +133,7 @@ public class AssignmentController {
      * @param projectID - The ID of the project
      * @return the assignments corresponding to the project id
      */
-    @GetMapping("/assignmentbyproject/{id}")
+    @GetMapping("/assignmentsbyproject/{id}")
     public List<Assignment> getAssignmentsByProject(@PathVariable("id") Integer projectID) throws SQLException {
         return assignmentDatabase.getAssignmentsByProject(projectID);
     }
