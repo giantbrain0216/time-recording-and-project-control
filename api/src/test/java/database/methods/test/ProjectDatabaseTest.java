@@ -44,6 +44,8 @@ public class ProjectDatabaseTest {
         projectDatabase.addToDatabase(project);
         Assert.assertTrue(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
         projectDatabase.deleteFromDatabase(project.getProjectNumber());
+        Assert.assertFalse(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
+
 
 
     }
@@ -75,6 +77,8 @@ public class ProjectDatabaseTest {
         Project project = new Project("Project Test",21, new Date(11 - 11 - 2020),
                 new Date(2020 - 11 - 11), 268,  "HTML");
         projectDatabase.addToDatabase(project);
+        Assert.assertTrue(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
+
         Assert.assertEquals("HTML",project.getCompetences());
         Assert.assertEquals(0  , project.getPerformedEffort());
         project.addCompetence("ANGULAR");
@@ -83,6 +87,7 @@ public class ProjectDatabaseTest {
         Assert.assertEquals("HTML-ANGULAR",project.getCompetences());
         Assert.assertEquals(90  , project.getPerformedEffort());
         projectDatabase.deleteFromDatabase(project.getProjectNumber());
+        Assert.assertFalse(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
 
     }
 }
