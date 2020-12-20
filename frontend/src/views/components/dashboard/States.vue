@@ -9,9 +9,9 @@
         </vs-col>
         <vs-col vs-lg="3" vs-xs="12">
             <vs-card>
-                <h4 class="mb-1">{{Math.round(calculateStatus())}}%</h4>
+                <h4 class="mb-1">{{Math.round(calculateCancelledProjects())}}%</h4>
                 <span>Projects are cancelled</span>
-                <vs-progress :percent="calculateStatus()" color="danger">primary</vs-progress>
+                <vs-progress :percent="calculateCancelledProjects()" color="danger">primary</vs-progress>
             </vs-card>
         </vs-col>
         <!--vs-col vs-lg="3" vs-xs="12">
@@ -75,7 +75,7 @@ export default {
       return this.getPerformedEffort()/this.getPlannedEffort()*100
     },
 
-    calculateStatus: function () {
+    calculateCancelledProjects: function () {
       let today = new Date()
       for (let i = 0; i < this.projects.length; i++) {
         let deadline = new Date(this.projects[i].plannedEnd)
