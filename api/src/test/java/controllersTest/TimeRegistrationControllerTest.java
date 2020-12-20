@@ -28,7 +28,7 @@ public class TimeRegistrationControllerTest {
 
         String requestBody = " {\"employeeID\":1,\"projectID\": 1, \"start\": " +
                 "\"2002-04-23 18:25:00\" ,"+
-                " \"end\": \"2002-08-23 19:25:00\"} ";
+                " \"end\": \"2002-08-23 19:25:00\", \"description\": \"Mock\"} ";
 
         try {
             MvcResult result =
@@ -118,7 +118,7 @@ public class TimeRegistrationControllerTest {
         int id = createMockObject();
         String requestBody = " {\"id\":"+id+",\"employeeID\":1,\"projectID\": 1, \"start\": " +
                 "\"1999-04-23 18:25:00\" ,"+
-                " \"end\": \"1999-08-23 19:25:00\"} ";
+                " \"end\": \"1999-08-23 19:25:00\", \"description\": \"Mock\"} ";
         this.mockMvc.perform(put("/timeregistrations").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/timeregistrations")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("1999-04-23 18:25")));
