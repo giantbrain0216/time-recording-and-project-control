@@ -26,7 +26,7 @@ public class Assignment {
 
     @DatabaseField(columnName = "Planned Working Hours")
    // @NotNull
-    private Integer plannedWorkingHours;
+    private int plannedWorkingHours;
 
     public Assignment(){}
 
@@ -62,11 +62,11 @@ public class Assignment {
     }
 
 
-    public Integer getPlannedWorkingHours() {
+    public int getPlannedWorkingHours() {
         return plannedWorkingHours;
     }
 
-    public void setPlannedWorkingHours(Integer plannedWorkingHours) {
+    public void setPlannedWorkingHours(int plannedWorkingHours) {
         this.plannedWorkingHours = plannedWorkingHours;
     }
 

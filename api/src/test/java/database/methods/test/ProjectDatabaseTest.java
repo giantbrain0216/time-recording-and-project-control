@@ -2,6 +2,7 @@ package database.methods.test;
 
 import controllers.Application;
 import database.methods.ProjectDatabase;
+import entities.Assignment;
 import entities.Employee;
 import entities.Project;
 import org.junit.Assert;
@@ -15,9 +16,8 @@ import static org.junit.Assert.assertEquals;
 
 
 /**
- * Note: after each test or test method, the database is reset, i.e.
- * the changes to the database during the tests are abolished so that
- * the tests always run successfully.
+ * The objects created for testing are removed from the database immediately after the test.
+ * Class that tests all functionalities of the class {@link ProjectDatabase}
  */
 public class ProjectDatabaseTest {
     Application application;

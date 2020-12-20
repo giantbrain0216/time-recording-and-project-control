@@ -4,6 +4,7 @@ package database.methods.test;
 import controllers.Application;
 import database.methods.TimeRegistrationDatabase;
 
+import entities.Assignment;
 import entities.TimeRegistration;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,7 +12,10 @@ import org.junit.Test;
 
 import java.sql.Date;
 import java.sql.SQLException;
-
+/**
+ * The objects created for testing are removed from the database immediately after the test.
+ * Class that tests all functionalities of the class {@link TimeRegistrationDatabase}
+ */
 public class TimeRegistrationDatabaseTest {
     Application application;
     TimeRegistrationDatabase timeRegistrationDatabase;

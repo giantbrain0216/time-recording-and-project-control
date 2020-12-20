@@ -2,6 +2,7 @@ package database.methods.test;
 
 import controllers.Application;
 import database.methods.ClientDatabase;
+import entities.Assignment;
 import entities.Client;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,9 +13,8 @@ import java.sql.SQLException;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Note: after each test or test method, the database is reset, i.e.
- * the changes to the database during the tests are abolished so that
- * the tests always run successfully.
+ * The objects created for testing are removed from the database immediately after the test.
+ * Class that tests all functionalities of the class {@link ClientDatabase}
  */
 public class ClientDatabaseTest {
     Application application;
