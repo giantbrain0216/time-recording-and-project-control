@@ -1,12 +1,16 @@
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 4 : 12" vs-sm="6" vs-xs="12"
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 4 : 12" vs-sm="12" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h2 style="color: cornflowerblue">Employee list</h2>
+            <h2  class="float-left" style="color: cornflowerblue">Employee list</h2>
+            <div class="float-right mb-1">
+            <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Employee</vs-button>
+            </div>
           </div>
+          <div class="table-responsive">
           <table class="table v-middle border">
             <thead>
             <tr class="">
@@ -47,9 +51,10 @@
             </tr>
             </tbody>
           </table>
+          </div>
         </vs-card>
       </vs-col>
-      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
+      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="12" vs-lg="4" vs-xs="12">
         <vs-card v-show="employeeSelected" class="cardx">
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off"
@@ -74,14 +79,14 @@
           </div>
         </vs-card>
       </vs-col>
-      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="4" vs-xs="12">
+      <vs-col v-if="employeeSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="12" vs-lg="4" vs-xs="12">
         <vs-card class="cardx">
           <div slot="header">
             <h2 style="text-align: center">
               Assignments of <strong style="color: red;">{{ currentEmployee.name }} </strong>
             </h2>
           </div>
-          <div>
+          <div class="table-responsive">
             <table class="table v-middle border">
               <thead>
               <tr class="">
@@ -120,7 +125,7 @@
           </div>
         </vs-card>
       </vs-col>
-      <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add Employee</vs-button>
+
       <vs-prompt
           title="Add Employee"
           color="primary"
