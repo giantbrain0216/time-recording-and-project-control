@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.List;
+import static properties.Properties.*;
 
 @RestController
 public class TimeRegistrationController {
@@ -21,8 +22,8 @@ public class TimeRegistrationController {
 
     public TimeRegistrationController(){
         try {
-            ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://bilbao.informatik" +
-                    ".uni-stuttgart.de/team12", "team12", "e345c973d6f4d770");
+            ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://" + LINK, USERNAME,
+                    PASSWORD);
             timeregistrationDatabase = new TimeRegistrationDatabase(connectionSource);
         }catch(SQLException e){
             System.out.println(e);
