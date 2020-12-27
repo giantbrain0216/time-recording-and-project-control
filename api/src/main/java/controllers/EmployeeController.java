@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import static properties.Properties.*;
 
 @RestController
 public class EmployeeController {
@@ -23,8 +24,8 @@ public class EmployeeController {
 
     public EmployeeController(){
         try {
-            ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://bilbao.informatik" +
-                    ".uni-stuttgart.de/team12", "team12", "e345c973d6f4d770");
+            ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://" + LINK, USERNAME,
+                    PASSWORD);
             employeeDatabase = new EmployeeDatabase(connectionSource);
         }catch(SQLException e){
             System.out.println(e);

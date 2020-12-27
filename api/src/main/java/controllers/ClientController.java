@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.List;
+import static properties.Properties.*;
 
 @RestController
 public class ClientController {
@@ -18,8 +19,8 @@ public class ClientController {
 
     public ClientController(){
         try {
-            ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://bilbao.informatik" +
-                    ".uni-stuttgart.de/team12", "team12", "e345c973d6f4d770");
+            ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://" + LINK, USERNAME,
+                    PASSWORD);
             clientDatabase = new ClientDatabase(connectionSource);
         }catch(SQLException e){
             System.out.println(e);
