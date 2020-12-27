@@ -329,7 +329,7 @@ export default {
         'contactPersonID': this.selectedEmployeeID,
         'projectIDs': ""
       }).then(() => {
-        this.notify("Notification:","Employee was added.","rgb(37,165,28)")
+        this.notify("Notification:","Employee was added.","success")
       }).catch((error) => {
         if(error.response){
           this.notify("Add Client Error", error.message,"danger")
