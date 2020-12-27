@@ -45,7 +45,7 @@
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="">
-                      <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
+                      <a @click="fetchProject(project.projectNumber);prompts.activeProjectDetailWindow = true" class="m-b-0"
                          style="font-weight: bold; font-size: 15px; cursor:pointer">
                         {{ project.projectName }}
                         <b-card style="font-size:10px;" class="text-success"
@@ -72,11 +72,11 @@
                                icon="delete" type="filled">
                       Delete
                     </vs-button>
-                    <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
+                    <vs-button @click="updateProjectIDBeforeEdit(project.projectNumber)" class=" m-1
                   " color="warning" icon="edit" type="filled">
                       Edit
                     </vs-button>
-                    <vs-button class=" m-1" @click="updateeProjectID(project.projectNumber)" color="success" icon="add"
+                    <vs-button class=" m-1" @click="fetchCurrentProjectAssignments(project.projectNumber);fetchProject(project.projectNumber);prompts.activeAssignPrompt = true" color="success" icon="add"
                                type="filled">
                       Assign
                     </vs-button>
@@ -131,9 +131,9 @@
       <vs-prompt
           title="Add New Project"
           color="success"
-          @cancel="closeAddForm"
+          @cancel='resetAllValues;notify("Closed","Add was closed successfully","warning")'
           @accept="addProject"
-          @close="closeAddForm"
+          @close='resetAllValues;notify("Closed","Add was closed successfully","warning")'
           :is-valid="validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
           :active.sync="prompts.activeAddPrompt"
       >
@@ -184,9 +184,9 @@
       <vs-prompt
           title="Edit Project"
           color="danger"
-          @cancel="closeEditForm"
+          @cancel='resetAllValues;notify("Closed","Edit was cancelled successfully.","warning")'
           @accept="updateProject"
-          @close="closeEditForm"
+          @close='resetAllValues;notify("Closed","Edit was cancelled successfully.","warning")'
           :is-valid="validProjectTimes(editValues.plannedStartField,editValues.plannedEndField,true)"
           :active.sync="prompts.activeEditPrompt"
       >
@@ -326,7 +326,6 @@ export default {
       currentProjectAssignments: [],
       dateToday: "",
       assignHours: '',
-      //used for updating list of projects of the client
       currentClient: {name:"Owner of the project"},
       currentAssignment: {},
       currentProject: {},
@@ -352,7 +351,8 @@ export default {
         plannedEffortField: "",
         performedEffortField: "",
         competencesField: ""
-      }
+      },
+      selectedClientNameEdit:""
     };
   },
 
@@ -386,6 +386,7 @@ export default {
   },
 
   methods: {
+    /**Checks for add and edit prompt if time input is correct*/
     validProjectTimes(start,finish,editPrompt){
       if(editPrompt == true){
         return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(start).getTime() <= new Date(finish).getTime())
@@ -396,38 +397,50 @@ export default {
 
     },
 
-
+    /**Gets the name of project with given id*/
     getEmployeeName(id) {
       for (let i = 0; i < this.employees.length; i++) {
         if (this.employees[i].employeeID === id)
           return this.employees[i].name
       }
     },
+
     /**
      * Deletes the current assignment
      */
     async deleteAssignment() {
 
-      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignment.id)
+      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignment.id).then(async () => {
+        await this.fetchEmployee(this.currentAssignment.employeeID)
+        await this.fetchCurrentProjectAssignments(this.currentAssignment.projectID)
+        await axios.put('http://localhost:8080/employees', {
+          "employeeID": this.currentEmployee.employeeID,
+          "name": this.currentEmployee.name,
+          "domicile": this.currentEmployee.domicile,
+          "competences": this.currentEmployee.competences,//.
+          "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
+          "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
+              this.currentAssignment.plannedWorkingHours)
+        }).then(async () => {
+              //await this.fetchEmployees()
+          // await this.fetchAllAssignments()
 
-
-      await this.fetchEmployee(this.currentAssignment.employeeID)
-      await this.fetchCurrentProjectAssignments(this.currentAssignment.projectID)
-      await axios.put('http://localhost:8080/employees', {
-        "employeeID": this.currentEmployee.employeeID,
-        "name": this.currentEmployee.name,
-        "domicile": this.currentEmployee.domicile,
-        "competences": this.currentEmployee.competences,//.
-        "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
-        "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
-            this.currentAssignment.plannedWorkingHours)
+          this.notify("Deletion", "Deletion of the Assignment was successful.","danger")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Delete Assignment Error", error.message,"danger")
+          }
+        })
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Delete Assignment Error", error.message,"danger")
+        }
       })
+      this.resetAllValues()
       await this.fetchAllEmployees()
-      await this.fetchAllProjects()      //await this.fetchEmployees()
-      // await this.fetchAllAssignments()
-      this.notify("Deletion", "Deletion of the Assignment was successful.","danger")
-    },
+      await this.fetchAllProjects()
 
+    },
 
     /**
      * Activates deletion prompt for assignment
@@ -435,6 +448,10 @@ export default {
     async showDeletePromptAssignmentAndSetCurrentAssignment(id) {
       await axios.get('http://localhost:8080/assignments/' + id).then(response => {
         this.currentAssignment = response.data
+      }).catch((error) => {
+        if(error.response){
+          this.notify("Assignment Database Error", error.message,"danger")
+        }
       })
       this.prompts.activeAssignPrompt = false
       this.prompts.deleteAssignmentPrompt = true;
@@ -451,20 +468,30 @@ export default {
         "competences": this.currentEmployee.competences,
         "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
         "remainingWorkingHoursPerWeek": parseInt(this.currentEmployee.remainingWorkingHoursPerWeek) - parseInt(this.assignHours),
+      }).then(async () => {
+        await axios.post(`http://localhost:8080/assignments/`, {
+          "employeeID": this.currentEmployee.employeeID,
+          "projectID": this.currentProject.projectNumber,
+          "plannedWorkingHours": this.assignHours
+        }).then(async () => {
+          this.notify("Confirmation","Assignment has been successfully performed.","success")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Add Assignment Error", error.message,"danger")
+          }
+        })
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Add Assignment Error", error.message,"danger")
+        }
       })
-      //await this.fetchEmployee(this.currentEmployee.employeeID)
 
-      await axios.post(`http://localhost:8080/assignments/`, {
-        "employeeID": this.currentEmployee.employeeID,
-        "projectID": this.currentProject.projectNumber,
-        "plannedWorkingHours": this.assignHours
-      })
-      this.assignHours = 0
-      this.selectedEmployeeForAssignment = {name:"Employee"}
-      this.currentEmployee = {}
+
+
+      this.resetAllValues();
       await this.fetchAllProjects()
       await this.fetchAllEmployees()
-      this.assignProjectAlert()
+
     },
 
     /**
@@ -476,8 +503,12 @@ export default {
             // JSON responses are automatically parsed.
             this.clients = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Clients Database Error", error.message,"danger")
+            }else{
+              this.notify("Clients Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -492,8 +523,10 @@ export default {
             // JSON responses are automatically parsed.
             this.currentEmployee = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Employee Database Error", error.message,"danger")
+            }
           })
       // this.projectSelected = true
 
@@ -513,16 +546,10 @@ export default {
 
     },
 
-    updateProjectDetails(id) {
-      this.fetchProject(id)
-      this.prompts.activeProjectDetailWindow = true
-    },
-
     /**
      * Adds project to the DB and updates the frontend project list.
      */
     addProject: async function () {
-      var createdProjectID = "";
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
         "clientID": parseInt(this.currentClient.clientID),
@@ -531,18 +558,31 @@ export default {
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": 0,
         "competences": this.inputValues.competencesField,
-      }).then((result) => {
-        createdProjectID = result.data;
+      }).then(async (result) => {
+
+        await axios.put(`http://localhost:8080/clients/`, {
+          'id': this.currentClient.clientID,
+          'name': this.currentClient.name,
+          'email': this.currentClient.email,
+          'telephoneNumber': this.currentClient.telephoneNumber,
+          'contactPersonID': this.currentClient.contactPersonID,
+          'projectIDs': this.currentClient.projectIDs + "\t" + result.data
+        }).then(() => {
+          this.notify("Confirmation","Project has been successfully deleted.","success")
+
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Error", error.message, "danger");
+          }
+        })
+
+
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Error", error.message, "danger");
+        }
       })
-      await axios.put(`http://localhost:8080/clients/`, {
-        'id': this.currentClient.clientID,
-        'name': this.currentClient.name,
-        'email': this.currentClient.email,
-        'telephoneNumber': this.currentClient.telephoneNumber,
-        'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs + "\t" + createdProjectID
-      })
-      this.acceptAlert();
+
       await this.fetchAllProjects()
       this.resetAllValues()
 
@@ -561,8 +601,10 @@ export default {
             console.log(response.data)
             this.currentClient = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Client Database Error", error.message,"danger")
+            }
           })
     },
 
@@ -579,20 +621,15 @@ export default {
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
         "performedEffort": this.currentProject.performedEffort,
         "competences": this.editValues.competencesField,
+      }).then(() => {
+        this.notify("Confirmation","Project has been successfully edited.","success")
+
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Edit Error",error.message,"danger")
+        }
       })
-      this.editAlert()
       await this.fetchAllProjects();
-    },
-
-    /**
-     * Gets project assignments and project for editing.
-     * Activates assignment prompt.
-     */
-    updateeProjectID: async function (id) {
-      await this.fetchCurrentProjectAssignments(id)
-      await this.fetchProject(id);
-      this.prompts.activeAssignPrompt = true
-
     },
 
     /**
@@ -606,15 +643,17 @@ export default {
             // JSON responses are automatically parsed.
             this.currentProjectAssignments = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Assignments Database Error", error.message,"danger")
+            }
           })
     },
 
     /**
      * Sets update prompt with the currentProject data
      */
-    updateProjectID: async function (id) {
+    updateProjectIDBeforeEdit: async function (id) {
       await this.fetchProject(id);
       this.prompts.activeEditPrompt = true
       this.editValues.clientIDField = this.currentProject.clientID
@@ -630,17 +669,32 @@ export default {
      */
     deleteProject: async function () {
       this.prompts.activeDeletePrompt = false;
-      await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber);
-      await this.fetchCustomer(this.currentProject.clientID)
-      await axios.put(`http://localhost:8080/clients/`, {
-        'id': this.currentClient.clientID,
-        'name': this.currentClient.name,
-        'email': this.currentClient.email,
-        'telephoneNumber': this.currentClient.telephoneNumber,
-        'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(), "") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+      //deletes the project
+      await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber).then(async () => {
+
+        await this.fetchCustomer(this.currentProject.clientID)
+        //if the deletion was successfull, the project is removed from the client
+        await axios.put(`http://localhost:8080/clients/`, {
+          'id': this.currentClient.clientID,
+          'name': this.currentClient.name,
+          'email': this.currentClient.email,
+          'telephoneNumber': this.currentClient.telephoneNumber,
+          'contactPersonID': this.currentClient.contactPersonID,
+          'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(), "") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+        }).then( async () => {
+          this.notify("Confirmation","Project has been succesfully deleted.","success")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Delete Error", error.message,"danger")
+          }
+        })
+
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Delete Error", error.message,"danger")
+        }
       })
-      this.deleteAlert()
+      await this.resetAllValues()
       await this.fetchAllProjects();
     },
 
@@ -653,8 +707,12 @@ export default {
             // JSON responses are automatically parsed.
             this.projects = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }else{
+              this.notify("Projects Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -667,97 +725,15 @@ export default {
             // JSON responses are automatically parsed.
             this.employees = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Employees Database Error", error.message,"danger")
+            }else{
+              this.notify("Employees Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
-    /**
-     * Notifies that addition succeeded
-     */
-    acceptAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        text: 'Project has been successfully added.'
-      })
-    },
-
-    /**
-     * Notifies that deletion succeeded
-     */
-    deleteAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        text: 'Project has been successfully deleted.'
-      })
-    },
-
-    /**
-     * Notifies that assignment was closed
-     */
-    cancelAssignAlert() {
-      this.$vs.notify({
-        title: 'Cancel:',
-        color: "warning", type: "flat",
-        text: 'Assignment has been cancelled.'
-      })
-    },
-
-    /**
-     * Notifies that assignment succeeded
-     */
-    assignProjectAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        color: "success", type: "flat",
-        text: 'Assignment has been successfully performed.'
-      })
-    },
-
-    /**
-     * Notifies that updating project succeeded
-     */
-    editAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        color: "success", type: "flat",
-        text: 'Project has been successfully edited.'
-      })
-    },
-
-
-    /**
-     * Notifies that addition prompt was closed and sets the inputValues to ''
-     */
-    closeAddForm() {
-      this.inputValues.clientIDField = "";
-      this.inputValues.projectName = "";
-      this.inputValues.plannedStartField = this.dateToday;
-      this.inputValues.plannedEndField = this.dateToday;
-      this.inputValues.plannedEffortField = "";
-      this.inputValues.competencesField = "";
-      this.$vs.notify({
-        title: 'Closed',
-        color: "warning",
-        text: 'Add was cancelled successfully.'
-      })
-    },
-
-    /**
-     * Notifies that updating prompt for project war closed ans sets the editValues to ''
-     */
-    closeEditForm() {
-      this.editValues.clientIDField = "";
-      this.editValues.plannedStartField = "";
-      this.editValues.plannedEndField = "";
-      this.editValues.plannedEffortField = "";
-      this.editValues.performedEffortField = "";
-      this.editValues.competencesField = "";
-      this.$vs.notify({
-        title: 'Closed',
-        text: 'Edit was cancelled successfully.'
-      })
-    },
 
     /**
      * Gets a specific project from DB
@@ -770,8 +746,10 @@ export default {
             // JSON responses are automatically parsed.
             this.currentProject = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }
           })
     },
 
@@ -791,8 +769,10 @@ export default {
             }
             this.projects = array
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }
           })
 
     },
@@ -834,8 +814,8 @@ export default {
     resetAllValues: function(){
       this.inputValues.projectName = ''
       this.inputValues.clientIDField = ''
-      this.inputValues.plannedStartField = ''
-      this.inputValues.plannedEndField = ''
+      this.inputValues.plannedStartField = this.dateToday;
+      this.inputValues.plannedEndField = this.dateToday;
       this.inputValues.plannedEffortField = ''
       this.inputValues.competencesField = ''
       this.currentClient = {name:"Owner of the project"}
@@ -848,6 +828,7 @@ export default {
       this.editValues.plannedEffortField = ''
       this.editValues.competencesField = ''
       this.editValues.performedEffortField = ''
+      this.assignHours = 0
     }
 
 }

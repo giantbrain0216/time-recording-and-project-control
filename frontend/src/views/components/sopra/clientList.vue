@@ -244,6 +244,12 @@ export default {
         'telephoneNumber': this.editValues.numberField,
         'contactPersonID': this.selectedEmployeeID,
         'projectIDs': this.editValues.projectsField
+      }).then(() =>{
+        this.notify("Success","Client was successfully updated", "success")
+      }).catch((error) => {
+        if(error.response){
+          this.notify("Client Edit Error", error.message,"danger")
+        }
       })
       await this.fetchCustomers()
 
@@ -261,11 +267,11 @@ export default {
           .then(response => {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
-            console.log(response.data)
             this.currentClient = response.data
-          })
-          .catch(e => {
-            this.errors.push(e)
+          }).catch((error) => {
+            if(error.response){
+              this.notify("Client Database Error", error.message,"danger")
+            }
           })
     },
 
@@ -280,8 +286,12 @@ export default {
             // JSON responses are automatically parsed.
             this.employees = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Employees Database Error", error.message,"danger")
+            }else{
+              this.notify("Employees Database Error", "Connection to Database Error","danger")
+            }
           })
 
     },
@@ -297,8 +307,12 @@ export default {
             // JSON responses are automatically parsed.
             this.clients = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Clients Database Error", error.message,"danger")
+            }else{
+              this.notify("Clients Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -314,8 +328,14 @@ export default {
         'telephoneNumber': this.inputValues.numberField,
         'contactPersonID': this.selectedEmployeeID,
         'projectIDs': ""
+      }).then(() => {
+        this.notify("Notification:","Employee was added.","rgb(37,165,28)")
+      }).catch((error) => {
+        if(error.response){
+          this.notify("Add Client Error", error.message,"danger")
+        }
       })
-      this.notify("Notification:","Employee was added.","rgb(37,165,28)")
+
       await this.fetchCustomers()
       this.resetAllValues()
 
@@ -330,17 +350,16 @@ export default {
     deleteClient: async function(id){
       await axios.delete(`http://localhost:8080/clients/` + id).then(() => {
         this.notify("Confirmation","Client has been successfully deleted.","danger")
-        this.prompts.activeDeletePrompt = false
-        this.currentClient = {}
 
       }).catch((error) => {
         if (error.response){
-          this.prompts.activeDeletePrompt = false
           this.notify("Error", error.message, "danger");
-          this.currentClient = {}
+
         }
       })
+      this.prompts.activeDeletePrompt = false
       await this.fetchCustomers()
+      this.currentClient = {}
     },
 
     /**

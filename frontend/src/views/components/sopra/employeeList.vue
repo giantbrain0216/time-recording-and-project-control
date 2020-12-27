@@ -277,9 +277,9 @@ export default {
      * Deletes assignment from the DB
      */
     async deleteAssignment() {
-      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignment.id).then(() => {
+      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignment.id).then(async () => {
         this.fetchAssignmentsByEmployee(this.currentEmployee.employeeID)
-        axios.put('http://localhost:8080/employees', {
+        await axios.put('http://localhost:8080/employees', {
           "employeeID": this.currentEmployee.employeeID,
           "name": this.currentEmployee.name,
           "domicile": this.currentEmployee.domicile,
@@ -287,17 +287,25 @@ export default {
           "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
           "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
               this.currentAssignment.plannedWorkingHours)
+        }).then(() => {
+          this.notify("Success","Assignment was successfully deleted.","success")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Delete Assignment Error",error.message,"danger")
+          }
         })
-        this.fetchEmployees()
-        this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
-        //await this.fetchEmployees()
-        this.fetchAllAssignments()
-        this.notify("Success","Assignment was successfully deleted.","success")
+
+
       }).catch((error) => {
         if (error.response){
           this.notify("Delete Error",error.message,"danger")
         }
       })
+
+      await this.fetchEmployees()
+      await this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
+      await this.fetchAllAssignments()
+
       //this.fetchAssignment(this.currentEmployee.employeeID)
 
     },
@@ -332,13 +340,14 @@ export default {
         'remainingWorkingHoursPerWeek': parseInt(this.currentEmployee.remainingWorkingHoursPerWeek)
             + parseInt(this.editValues.workingHoursField) - parseInt(this.currentEmployee.workingHoursPerWeek),
       }).then(() => {
-        this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
-        this.fetchEmployees()
         this.notify("Success","Successfully modified employee.","success")
       }).catch((error) => {
         if (error.response)
           this.notify("Editing error",error.message,"danger")
       })
+
+      await this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
+      await this.fetchEmployees()
     },
 
     /**
@@ -350,7 +359,11 @@ export default {
       this.assignmentsCurrentEmployee = []
         await axios.get('http://localhost:8080/assignmentsbyemployee/' + employeeID).then(response => {
         this.assignmentsCurrentEmployee = response.data
-      })
+      }).catch((error) => {
+          if (error.response){
+            this.notify("Assignments Database Error",error.message,"danger")
+          }
+        })
     },
 
     /**
@@ -363,11 +376,11 @@ export default {
           .then(response => {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
-            console.log(response.data)
             this.currentEmployee = response.data
-          })
-          .catch(e => {
-            this.errors.push(e)
+          }).catch((error) => {
+            if (error.response){
+              this.notify("Employees Database Error",error.message,"danger")
+            }
           })
     },
 
@@ -380,8 +393,12 @@ export default {
             // JSON responses are automatically parsed.
             this.employees = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Employees Database Error", error.message,"danger")
+            }else{
+              this.notify("Employees Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -395,8 +412,12 @@ export default {
             // JSON responses are automatically parsed.
             this.assignments = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Assignments Database Error", error.message,"danger")
+            }else{
+              this.notify("Assignments Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -406,8 +427,12 @@ export default {
             // JSON responses are automatically parsed.
             this.projects = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }else{
+              this.notify("Projects Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -425,13 +450,14 @@ export default {
         'remainingWorkingHoursPerWeek': this.inputValues.workingHoursField,
       }).then(() => {
           this.notify("Success", "Successfully added Employee.","success")
-          this.fetchEmployees()
+
           }).catch(error => {
             if (error.response) {
-              this.notify(' Addition Error',error.message,"danger")
+              this.notify('Add Employee Error',error.message,"danger")
 
             }
       })
+      await this.fetchEmployees()
       this.resetAllValues()
     },
 
@@ -449,7 +475,7 @@ export default {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`).then(
           () => {
-            this.fetchEmployees()
+
             this.notify('Success','Deletion was successful.',"success")
           }
       ).catch((error) => {
@@ -457,6 +483,7 @@ export default {
           this.notify("Delete Error",error.message,"danger")
         }
       })
+      await this.fetchEmployees()
     },
 
     /**
