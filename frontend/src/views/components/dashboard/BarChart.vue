@@ -71,7 +71,7 @@ export default {
       }
     },
     async getWorkedHours(){
-      for(let i = 0; i < this.registrations.length;i++){
+      for(let i  = 0; i < this.registrations.length;i++){
         for(let j= 0; j<this.dateLabels.length;j++){
           // eslint-disable-next-line no-console
           console.log(this.registrations[i].start.slice(0,10))
