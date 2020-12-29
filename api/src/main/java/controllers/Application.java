@@ -10,13 +10,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.sql.SQLException;
 
+import static properties.Properties.*;
+
 @SpringBootApplication
 public class Application {
     public ConnectionSource connectionSource;
 
     public Application() throws SQLException {
-        connectionSource = new JdbcConnectionSource("jdbc:mariadb://bilbao.informatik" +
-                ".uni-stuttgart.de/team12", "team12", "e345c973d6f4d770");
+        /*connectionSource = new JdbcConnectionSource("jdbc:mariadb://bilbao.informatik" +
+                ".uni-stuttgart.de/team12", "team12", "e345c973d6f4d770");*/
+        connectionSource = new JdbcConnectionSource("jdbc:mariadb://" + LINK, USERNAME ,PASSWORD);
     }
 
 

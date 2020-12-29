@@ -1,13 +1,13 @@
 <template>
   <div>
     <vs-row vs-justify="center">
-      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="projectSelected ? 6 : 12" vs-sm="6" vs-xs="12"
+      <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="prompts.activeProjectDetailWindow ? 6 : 12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
             <h2 class="float-left" style="color: cornflowerblue">Project List </h2>
             <div class="float-right mb-1">
-              <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add New Project</vs-button>
+              <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="add" type="filled">Add New Project</vs-button>
             </div>
             <div class="d-flex align-items-center dropdownbtn-alignment m-2 ml-3 float-left">
               <div>Only see projects from:</div>
@@ -17,10 +17,10 @@
                   <vs-icon class="" icon="expand_more"></vs-icon>
                 </a>
                 <vs-dropdown-menu>
-                  <vs-dropdown-item @click='updateSelectedClientEdit(0,"All Clients")'>
+                  <vs-dropdown-item @click='updateClientForFiltering(0,"All Clients")'>
                     All Clients
                   </vs-dropdown-item>
-                  <vs-dropdown-item @click="updateSelectedClientEdit(client.clientID,client.name)"
+                  <vs-dropdown-item @click="updateClientForFiltering(client.clientID,client.name)"
                                     v-for="client in clients" :key="client.clientID"
                   >
                     {{ client.name }}
@@ -45,7 +45,7 @@
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="">
-                      <a @click="updateProjectDetails(project.projectNumber)" class="m-b-0"
+                      <a @click="fetchProject(project.projectNumber);prompts.activeProjectDetailWindow = true" class="m-b-0"
                          style="font-weight: bold; font-size: 15px; cursor:pointer">
                         {{ project.projectName }}
                         <b-card style="font-size:10px;" class="text-success"
@@ -68,15 +68,15 @@
                   <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
                 <td>
                   <div>
-                    <vs-button @click="showDeletePrompt(project.projectNumber) " class="m-1 fa fa-trash" color="danger"
+                    <vs-button @click="fetchProject(project.projectNumber);prompts.activeDeletePrompt=true " class="m-1 fa fa-trash" color="danger"
                                icon="delete" type="filled">
                       Delete
                     </vs-button>
-                    <vs-button @click="updateProjectID(project.projectNumber)" class=" m-1
+                    <vs-button @click="updateProjectIDBeforeEdit(project.projectNumber)" class=" m-1
                   " color="warning" icon="edit" type="filled">
                       Edit
                     </vs-button>
-                    <vs-button class=" m-1" @click="updateeProjectID(project.projectNumber)" color="success" icon="add"
+                    <vs-button class=" m-1" @click="fetchCurrentProjectAssignments(project.projectNumber);fetchProject(project.projectNumber);prompts.activeAssignPrompt = true" color="success" icon="add"
                                type="filled">
                       Assign
                     </vs-button>
@@ -88,11 +88,11 @@
           </div>
         </vs-card>
       </vs-col>
-      <vs-col v-if="projectSelected" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
-        <vs-card v-show="projectSelected" class="cardx">
+      <vs-col v-if="prompts.activeProjectDetailWindow" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
+        <vs-card v-show="prompts.activeProjectDetailWindow" class="cardx">
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off"
-                       @click="projectSelected = false"></vs-button>
+                       @click="prompts.activeProjectDetailWindow = false"></vs-button>
             <h2>Details vom {{ currentProject.projectName }}</h2>
           </div>
           <div>
@@ -116,11 +116,11 @@
       <vs-prompt
           title="Delete Project"
           color="danger"
-          @cancel="closeDeletePrompt"
+          @cancel='prompts.activeDeletePrompt = false;notify("Cancelled","Project has not been deleted.","danger")'
           @accept="deleteProject"
-          @close="closeDeletePrompt"
+          @close='prompts.activeDeletePrompt = false;notify("Cancelled","Project has not been deleted.","danger")'
           :is-valid="true"
-          :active.sync="activeDeletePrompt"
+          :active.sync="prompts.activeDeletePrompt"
       >
         <div class="con-exemple-prompt">
           <h4>Are you sure to delete the project :</h4>  <h5>{{ currentProject.projectName }}</h5>
@@ -131,11 +131,11 @@
       <vs-prompt
           title="Add New Project"
           color="success"
-          @cancel="closeAddForm"
+          @cancel='resetAllValues;notify("Closed","Add was closed successfully","warning")'
           @accept="addProject"
-          @close="closeAddForm"
-          :is-valid="validProject(start,end)"
-          :active.sync="activePrompt"
+          @close='resetAllValues;notify("Closed","Add was closed successfully","warning")'
+          :is-valid="validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
+          :active.sync="prompts.activeAddPrompt"
       >
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
@@ -143,12 +143,12 @@
             <div> Client:</div>
             <vs-dropdown class="ml-1">
               <a class="a-icon" href="#">
-                {{ this.selectedClientName }}
+                {{ this.currentClient.name }}
                 <vs-icon class="" icon="expand_more"></vs-icon>
               </a>
               <vs-dropdown-menu>
                 <vs-dropdown-item v-for="client in clients" :key="client.clientID"
-                                  @click="updateSelectedClient(client.clientID,client.name)">
+                                  @click="currentClient = client">
                   {{ client.name }}
                 </vs-dropdown-item>
               </vs-dropdown-menu>
@@ -158,19 +158,19 @@
           </div>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
-                                                v-model="start"
+                                                v-model="inputValues.plannedStartField"
                                                 :min="dateToday" max="2030-12-31" required></div>
           <div class="mb-3">
             <small>Planned End</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
-                                              v-model="end"
-                                              :min="start" max="2030-12-31" required></div>
+                                              v-model="inputValues.plannedEndField"
+                                              :min="inputValues.plannedStartField" max="2030-12-31" required></div>
           <vs-input type="number" label-placeholder="Planned Effort In Hours" class="mb-3"
                     v-model="inputValues.plannedEffortField"/>
           <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
           />
           <vs-input label-placeholder="competences" class="mb-3" v-model="inputValues.competencesField"/>
           <vs-alert
-              :active="!validProject(start,end)"
+              :active="!validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
               color="danger"
               icon="new_releases"
           >
@@ -184,11 +184,11 @@
       <vs-prompt
           title="Edit Project"
           color="danger"
-          @cancel="closeEditForm"
+          @cancel='resetAllValues;notify("Closed","Edit was cancelled successfully.","warning")'
           @accept="updateProject"
-          @close="closeEditForm"
-          :is-valid="validProjectEdit(this.startDatum,this.endDatum)"
-          :active.sync="activeEditPromt"
+          @close='resetAllValues;notify("Closed","Edit was cancelled successfully.","warning")'
+          :is-valid="validProjectTimes(editValues.plannedStartField,editValues.plannedEndField,true)"
+          :active.sync="prompts.activeEditPrompt"
       >
         <h5>Project Name : {{ currentProject.projectName }}</h5>
         <h6 class="mb-2 mt-2">ID of the Client : {{ currentProject.clientID }}</h6>
@@ -196,12 +196,12 @@
         <div class="con-exemple-prompt">
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
-                                                v-model="startDatum"
-                                                :min="start" max="2030-12-31"></div>
+                                                v-model="editValues.plannedStartField"
+                                                :min="editValues.plannedStartField" max="2030-12-31"></div>
           <div class="mb-3">
             <small>Planned End</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
-                                              v-model="endDatum"
-                                              :min="startDatum" max="2030-12-31">
+                                              v-model="editValues.plannedEndField"
+                                              :min="editValues.plannedStartField" max="2030-12-31">
           </div>
           <vs-input type="number" label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
                     v-model="editValues.plannedEffortField"/>
@@ -211,7 +211,7 @@
           <vs-input label="Competences" :placeholder="currentProject.competences" class="mb-3"
                     v-model="editValues.competencesField"/>
           <vs-alert
-              :active="!validProjectEdit"
+              :active="!validProjectTimes(editValues.plannedStartField,editValues.plannedEndField,true)"
               color="warning"
               icon="new_releases"
           >
@@ -223,11 +223,11 @@
       <vs-prompt
           title="Assign Employee"
           color="success"
-          @cancel="closeAssignPrompt"
+          @cancel='prompts.activeAssignPrompt = false;notify("Cancel","Assignment has been cancelled.","warning");resetAllValues()'
           @accept="assignProject"
-          @close="closeAssignPrompt"
+          @close='prompts.activeAssignPrompt = false;notify("Cancel","Assignment has been cancelled.","warning");resetAllValues()'
           :is-valid="validEmployeeAssign"
-          :active.sync="activeAssignPropmt"
+          :active.sync="prompts.activeAssignPrompt"
       >
         <h5>Project Name: <strong style="color: red"> {{ this.currentProject.projectName }}</strong></h5>
         <hr>
@@ -236,12 +236,12 @@
             <div> Employee:</div>
             <vs-dropdown class="ml-1">
               <a class="a-icon" href="#">
-                {{ this.selectedEmployeeName }}
+                {{ this.currentEmployee.name }}
                 <vs-icon class="" icon="expand_more"></vs-icon>
               </a>
               <vs-dropdown-menu>
                 <vs-dropdown-item v-for="employee in employees" :key="employee.employeeID"
-                                  @click="updateSelectedEmployee(employee.employeeID,employee.name)">
+                                  @click="currentEmployee = employee">
                   {{ employee.name }}
                 </vs-dropdown-item>
               </vs-dropdown-menu>
@@ -274,10 +274,10 @@
             <tr v-for="assignment in currentProjectAssignments" :key="assignment.id">
               <!--  <td>{{ assignment.id }}</td>-->
               <!--<td>{{employee.employeeID}}</td>-->
-              <td> {{ currentEmployeeName(assignment.employeeID) }}</td>
+              <td> {{ getEmployeeName(assignment.employeeID) }}</td>
               <td>{{ assignment.plannedWorkingHours }}</td>
               <td>
-                <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
+                <vs-button icon="delete" @click="showDeletePromptAssignmentAndSetCurrentAssignment(assignment.id)" class="m-1" color="danger"
                            type="filled">
                 </vs-button>
               </td>
@@ -296,12 +296,12 @@
       </vs-prompt>
       <vs-prompt
           title="Deletion"
-          color="red"
-          @close="closeDeletio"
-          @cancel="closeDeletio"
+          color="danger"
+          @close='notify("Closed","Deletion was cancelled.","danger")'
+          @cancel='notify("Closed","Deletion was cancelled.","danger")'
           @accept="deleteAssignment"
           :is-valid="true"
-          :active.sync="deleteAssignmentPrompt"
+          :active.sync="prompts.deleteAssignmentPrompt"
       >
         <div class="con-exemple-prompt">
           <h6>Are you sure you want to delete the next Assignment <br>
@@ -325,35 +325,23 @@ export default {
       employees: [],
       currentProjectAssignments: [],
       dateToday: "",
-      startDatum: "",
-      start: "",
-      end: "",
-      endDatum: "",
       assignHours: '',
-      currentClient: {},
-      currentAssignmentID: 0,
+      currentClient: {name:"Owner of the project"},
       currentAssignment: {},
       currentProject: {},
-      currentEmployee: {},
-      editProjectID: 0,
-      createdClientID: 0,
-      selectedClientID: 0,
-      selectedEmployeeName: "Employee",
-      selectedEmployeeID: 0,
-      selectedClientName: "Owner of the project",
-      projectSelected: false,
-      deleteAssignmentPrompt: false,
-      activeAssignPropmt: false,
-      activeEditPromt: false,
-      activePrompt: false,
-      activeDeletePrompt: false,
+      currentEmployee: {name:"Employee"},
+      prompts:{activeProjectDetailWindow: false,
+        deleteAssignmentPrompt: false,
+        activeAssignPrompt: false,
+        activeEditPrompt: false,
+        activeAddPrompt: false,
+        activeDeletePrompt: false,},
       inputValues: {
         projectName: "",
         clientIDField: "",
         plannedStartField: "",
         plannedEndField: "",
         plannedEffortField: "",
-        performedEffortField: "",
         competencesField: ""
       },
       editValues: {
@@ -363,21 +351,22 @@ export default {
         plannedEffortField: "",
         performedEffortField: "",
         competencesField: ""
-      }
+      },
+      selectedClientNameEdit:""
     };
   },
 
   created() {
-
-
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
 
     this.dateToday = yyyy + "-" + mm + '-' + dd;
-    this.start = yyyy + "-" + mm + '-' + dd;
-    this.end = yyyy + "-" + mm + '-' + dd;
+    this.inputValues.plannedStartField = this.dateToday
+    this.inputValues.plannedEndField = this.dateToday
+    this.editValues.plannedStartField = this.dateToday
+    this.editValues.plannedEndField = this.dateToday
     this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllProjects();
@@ -390,88 +379,82 @@ export default {
 
     validEmployeeAssign() {
       return this.currentEmployee.remainingWorkingHoursPerWeek >= this.assignHours &&
-          this.currentProject.plannedEffort - this.currentProject.performedEffort >= this.assignHours && this.selectedEmployeeName !== "Employee" && this.assignHours !== "" && this.assignHours > 0
+          this.currentProject.plannedEffort - this.currentProject.performedEffort >= this.assignHours && this.currentEmployee.name !== "Employee" && this.assignHours !== "" && this.assignHours > 0
     },
 
 
   },
 
   methods: {
+    /**Checks for add and edit prompt if time input is correct*/
+    validProjectTimes(start,finish,editPrompt){
+      if(editPrompt == true){
+        return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(start).getTime() <= new Date(finish).getTime())
+            && this.editValues.competencesField.length > 0)
+      }else{
+        return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(finish).getTime())
+            && this.inputValues.competencesField.length > 0) }
 
-    validProjectEdit(starttime, endttime) {
-      return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(starttime).getTime() <= new Date(endttime).getTime())
-          && this.editValues.competencesField.length > 0)
     },
 
-    validProject(start, end) {
-      return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(end).getTime())
-          && this.inputValues.competencesField.length > 0)
-
-    },
-
-    currentEmployeeName(id) {
+    /**Gets the name of project with given id*/
+    getEmployeeName(id) {
       for (let i = 0; i < this.employees.length; i++) {
         if (this.employees[i].employeeID === id)
           return this.employees[i].name
       }
     },
+
     /**
      * Deletes the current assignment
      */
     async deleteAssignment() {
 
-      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignmentID)
+      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignment.id).then(async () => {
+        await this.fetchEmployee(this.currentAssignment.employeeID)
+        await this.fetchCurrentProjectAssignments(this.currentAssignment.projectID)
+        await axios.put('http://localhost:8080/employees', {
+          "employeeID": this.currentEmployee.employeeID,
+          "name": this.currentEmployee.name,
+          "domicile": this.currentEmployee.domicile,
+          "competences": this.currentEmployee.competences,//.
+          "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
+          "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
+              this.currentAssignment.plannedWorkingHours)
+        }).then(async () => {
+              //await this.fetchEmployees()
+          // await this.fetchAllAssignments()
 
-
-      await this.fetchEmployee(this.currentAssignment.employeeID)
-      await this.fetchCurrentProjectAssignments(this.currentAssignment.projectID)
-      await axios.put('http://localhost:8080/employees', {
-        "employeeID": this.currentEmployee.employeeID,
-        "name": this.currentEmployee.name,
-        "domicile": this.currentEmployee.domicile,
-        "competences": this.currentEmployee.competences,//.
-        "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
-        "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
-            this.currentAssignment.plannedWorkingHours)
+          this.notify("Deletion", "Deletion of the Assignment was successful.","danger")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Delete Assignment Error", error.message,"danger")
+          }
+        })
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Delete Assignment Error", error.message,"danger")
+        }
       })
+      this.resetAllValues()
       await this.fetchAllEmployees()
-      await this.fetchAllProjects()      //await this.fetchEmployees()
-      // await this.fetchAllAssignments()
-      this.alertAssignAlert()
-    },
+      await this.fetchAllProjects()
 
-    /**
-     * Notifies assignment succeeded
-     */
-    alertAssignAlert() {
-      this.$vs.notify({
-        title: 'Deletion',
-        text: 'Deletion of the Assignment was successful.',
-        color: 'red',
-      })
     },
 
     /**
      * Activates deletion prompt for assignment
      */
-    async updateCurrentAssignment(id) {
-      this.currentAssignmentID = id
-      await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
+    async showDeletePromptAssignmentAndSetCurrentAssignment(id) {
+      await axios.get('http://localhost:8080/assignments/' + id).then(response => {
         this.currentAssignment = response.data
+      }).catch((error) => {
+        if(error.response){
+          this.notify("Assignment Database Error", error.message,"danger")
+        }
       })
-      this.activeAssignPropmt = false
-      this.deleteAssignmentPrompt = true;
-    },
-
-    /**
-     * Notifies that deletion succeeded
-     */
-    closeDeletio() {
-      this.$vs.notify({
-        title: 'Closed',
-        text: 'Deletion was cancelled.',
-        color: 'red'
-      })
+      this.prompts.activeAssignPrompt = false
+      this.prompts.deleteAssignmentPrompt = true;
     },
 
     /**
@@ -485,20 +468,30 @@ export default {
         "competences": this.currentEmployee.competences,
         "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
         "remainingWorkingHoursPerWeek": parseInt(this.currentEmployee.remainingWorkingHoursPerWeek) - parseInt(this.assignHours),
+      }).then(async () => {
+        await axios.post(`http://localhost:8080/assignments/`, {
+          "employeeID": this.currentEmployee.employeeID,
+          "projectID": this.currentProject.projectNumber,
+          "plannedWorkingHours": this.assignHours
+        }).then(async () => {
+          this.notify("Confirmation","Assignment has been successfully performed.","success")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Add Assignment Error", error.message,"danger")
+          }
+        })
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Add Assignment Error", error.message,"danger")
+        }
       })
-      await this.fetchEmployee(this.currentEmployee.employeeID)
 
-      await axios.post(`http://localhost:8080/assignments/`, {
-        "employeeID": this.currentEmployee.employeeID,
-        "projectID": this.currentProject.projectNumber,
-        "plannedWorkingHours": this.assignHours
-      })
-      this.assignHours = 0
-      this.selectedEmployeeName = "Employee"
-      this.currentEmployee = {}
+
+
+      this.resetAllValues();
       await this.fetchAllProjects()
       await this.fetchAllEmployees()
-      this.assignProjectAlert()
+
     },
 
     /**
@@ -510,29 +503,13 @@ export default {
             // JSON responses are automatically parsed.
             this.clients = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Clients Database Error", error.message,"danger")
+            }else{
+              this.notify("Clients Database Error", "Connection to Database Error","danger")
+            }
           })
-    },
-
-    /**
-     * Sets selectedClientID and selectedClientName
-     *
-     * @param id of client
-     * @param name of client
-     */
-    updateSelectedClient(id, name) {
-      this.selectedClientID = id;
-      this.selectedClientName = name;
-    },
-
-    /**
-     * Sets the selectedEmployeeId and selectedEmployeeName
-     */
-    updateSelectedEmployee(id, name) {
-      this.selectedEmployeeID = id;
-      this.selectedEmployeeName = name;
-      this.fetchEmployee(id)
     },
 
     /**
@@ -546,28 +523,19 @@ export default {
             // JSON responses are automatically parsed.
             this.currentEmployee = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Employee Database Error", error.message,"danger")
+            }
           })
       // this.projectSelected = true
 
     },
 
     /**
-     * Closes assignment prompt
-     */
-    closeAssignPrompt() {
-      this.activeAssignPropmt = false;
-      // this.activeAssignPropmt = true;
-      this.cancelAssignAlert()
-      this.selectedEmployeeName = "Employee"
-      this.currentEmployee = {}
-    },
-
-    /**
      *
      */
-    updateSelectedClientEdit(id, name) {
+    updateClientForFiltering(id, name) {
       this.selectedClientNameEdit = name;
       if (id == 0) {
         this.fetchAllProjects();
@@ -579,77 +547,44 @@ export default {
     },
 
     /**
-     * Activates deletion prompt
-     */
-    showDeletePrompt: function (id) {
-      this.fetchProject(id)
-      this.activeDeletePrompt = true
-    },
-
-    /**
-     * Gets planned start without time as String
-     */
-    plannedStart: function () {
-      var startdate = this.currentProject.plannedStart;
-      this.startDatum = startdate.substring(0, 10)
-    },
-
-    /**
-     * Gets the end date of project without time and as String
-     */
-    plannedEnd: function () {
-      var enddate = this.currentProject.plannedEnd;
-      this.endDatum = enddate.substring(0, 10)
-    },
-
-    /**
-     * Closes deletion prompt
-     */
-    closeDeletePrompt: function () {
-      this.activeDeletePrompt = false;
-      this.closeDeleteAlert()
-
-    },
-
-    updateProjectDetails(id) {
-      this.fetchProject(id)
-      this.projectSelected = true
-    },
-
-    /**
      * Adds project to the DB and updates the frontend project list.
      */
     addProject: async function () {
-      this.inputValues.plannedStartField = this.start + " " + "00:00"
-      this.inputValues.plannedEndField = this.end + " " + "00:00"
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
-        "clientID": parseInt(this.selectedClientID),
-        "plannedStart": this.start + " " + "00:00",
-        "plannedEnd": this.end + " " + "00:00",
+        "clientID": parseInt(this.currentClient.clientID),
+        "plannedStart": this.inputValues.plannedStartField + " " + "00:00",
+        "plannedEnd": this.inputValues.plannedEndField + " " + "00:00",
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": 0,
         "competences": this.inputValues.competencesField,
-      }).then((result) => {
-        this.createdClientID = result.data;
+      }).then(async (result) => {
+
+        await axios.put(`http://localhost:8080/clients/`, {
+          'id': this.currentClient.clientID,
+          'name': this.currentClient.name,
+          'email': this.currentClient.email,
+          'telephoneNumber': this.currentClient.telephoneNumber,
+          'contactPersonID': this.currentClient.contactPersonID,
+          'projectIDs': this.currentClient.projectIDs + "\t" + result.data
+        }).then(() => {
+          this.notify("Confirmation","Project has been successfully deleted.","success")
+
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Error", error.message, "danger");
+          }
+        })
+
+
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Error", error.message, "danger");
+        }
       })
-      await this.fetchCustomer(this.selectedClientID)
-      await axios.put(`http://localhost:8080/clients/`, {
-        'id': this.currentClient.clientID,
-        'name': this.currentClient.name,
-        'email': this.currentClient.email,
-        'telephoneNumber': this.currentClient.telephoneNumber,
-        'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs + "\t" + this.createdClientID
-      })
-      this.acceptAlert();
+
       await this.fetchAllProjects()
-      this.inputValues.competencesField = ""
-      this.inputValues.plannedEndField = this.dateToday
-      this.inputValues.plannedStartField = this.dateToday
-      this.inputValues.plannedEffortField = ""
-      this.selectedClientName = "Owner of the project"
-      this.inputValues.projectName = ""
+      this.resetAllValues()
 
     },
 
@@ -666,8 +601,10 @@ export default {
             console.log(response.data)
             this.currentClient = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Client Database Error", error.message,"danger")
+            }
           })
     },
 
@@ -675,35 +612,24 @@ export default {
      * Updates project in the DB
      */
     updateProject: async function () {
-      var dateControlEdit = document.querySelector('input[id="startedit"]');
-      var startdateedit = dateControlEdit.value;
-      var timeControlEdit = document.querySelector('input[id="endedit"]');
-      var enddateedit = timeControlEdit.value;
-      this.editValues.plannedStartField = startdateedit + " " + "00:00";
-      this.editValues.plannedEndField = enddateedit + " " + "00:00";
       await axios.put(`http://localhost:8080/projects`, {
-        "projectNumber": this.editProjectID,
+        "projectNumber": this.currentProject.projectNumber,
         "projectName": this.currentProject.projectName,
         "clientID": this.currentProject.clientID,
-        "plannedStart": startdateedit + " " + "00:00",
-        "plannedEnd": enddateedit + " " + "00:00",
+        "plannedStart": this.editValues.plannedStartField + " " + "00:00",
+        "plannedEnd": this.editValues.plannedEndField + " " + "00:00",
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
         "performedEffort": this.currentProject.performedEffort,
         "competences": this.editValues.competencesField,
+      }).then(() => {
+        this.notify("Confirmation","Project has been successfully edited.","success")
+
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Edit Error",error.message,"danger")
+        }
       })
-      this.editAlert()
       await this.fetchAllProjects();
-    },
-
-    /**
-     * Gets project assignments and project for editing.
-     * Activates assignment prompt.
-     */
-    updateeProjectID: async function (id) {
-      await this.fetchCurrentProjectAssignments(id)
-      await this.fetchProject(id);
-      this.activeAssignPropmt = true
-
     },
 
     /**
@@ -717,44 +643,58 @@ export default {
             // JSON responses are automatically parsed.
             this.currentProjectAssignments = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Assignments Database Error", error.message,"danger")
+            }
           })
     },
 
     /**
      * Sets update prompt with the currentProject data
      */
-    updateProjectID: async function (id) {
+    updateProjectIDBeforeEdit: async function (id) {
       await this.fetchProject(id);
-      this.activeEditPromt = true
-      this.editProjectID = id;
+      this.prompts.activeEditPrompt = true
       this.editValues.clientIDField = this.currentProject.clientID
       this.editValues.competencesField = this.currentProject.competences
       this.editValues.performedEffortField = this.currentProject.performedEffort
-      this.editValues.plannedEndField = this.currentProject.plannedEnd
-      this.editValues.plannedStartField = this.currentProject.plannedStart
+      this.editValues.plannedEndField = this.currentProject.plannedEnd.substring(0,10)
+      this.editValues.plannedStartField = this.currentProject.plannedStart.substring(0,10)
       this.editValues.plannedEffortField = this.currentProject.plannedEffort
-      this.plannedStart()
-      this.plannedEnd()
     },
 
     /**
      * Deletes the currentProject from DB
      */
     deleteProject: async function () {
-      this.activeDeletePrompt = false;
-      await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber);
-      await this.fetchCustomer(this.currentProject.clientID)
-      await axios.put(`http://localhost:8080/clients/`, {
-        'id': this.currentClient.clientID,
-        'name': this.currentClient.name,
-        'email': this.currentClient.email,
-        'telephoneNumber': this.currentClient.telephoneNumber,
-        'contactPersonID': this.currentClient.contactPersonID,
-        'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(), "") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+      this.prompts.activeDeletePrompt = false;
+      //deletes the project
+      await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber).then(async () => {
+
+        await this.fetchCustomer(this.currentProject.clientID)
+        //if the deletion was successfull, the project is removed from the client
+        await axios.put(`http://localhost:8080/clients/`, {
+          'id': this.currentClient.clientID,
+          'name': this.currentClient.name,
+          'email': this.currentClient.email,
+          'telephoneNumber': this.currentClient.telephoneNumber,
+          'contactPersonID': this.currentClient.contactPersonID,
+          'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(), "") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
+        }).then( async () => {
+          this.notify("Confirmation","Project has been succesfully deleted.","success")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Delete Error", error.message,"danger")
+          }
+        })
+
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Delete Error", error.message,"danger")
+        }
       })
-      this.deleteAlert()
+      await this.resetAllValues()
       await this.fetchAllProjects();
     },
 
@@ -767,8 +707,12 @@ export default {
             // JSON responses are automatically parsed.
             this.projects = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }else{
+              this.notify("Projects Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -781,108 +725,15 @@ export default {
             // JSON responses are automatically parsed.
             this.employees = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Employees Database Error", error.message,"danger")
+            }else{
+              this.notify("Employees Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
-    /**
-     * Notifies that addition succeeded
-     */
-    acceptAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        text: 'Project has been successfully added.'
-      })
-    },
-
-    /**
-     * Notifies that deletion succeeded
-     */
-    deleteAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        text: 'Project has been successfully deleted.'
-      })
-    },
-
-    /**
-     * Notifies that assignment was closed
-     */
-    cancelAssignAlert() {
-      this.$vs.notify({
-        title: 'Cancel:',
-        color: "warning", type: "flat",
-        text: 'Assignment has been cancelled.'
-      })
-    },
-
-    /**
-     * Notifies that assignment succeeded
-     */
-    assignProjectAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        color: "success", type: "flat",
-        text: 'Assignment has been successfully performed.'
-      })
-    },
-
-    /**
-     * Notifies that updating project succeeded
-     */
-    editAlert() {
-      this.$vs.notify({
-        title: 'Confirmation:',
-        color: "success", type: "flat",
-        text: 'Project has been successfully edited.'
-      })
-    },
-
-    /**
-     * Notifies that deletion was closed
-     */
-    closeDeleteAlert() {
-      this.$vs.notify({
-        title: 'Cancelled:',
-        color: "rgb(187, 138, 200)", type: "gradient",
-        text: 'Project has not been deleted.'
-      })
-    },
-
-    /**
-     * Notifies that addition prompt was closed and sets the inputValues to ''
-     */
-    closeAddForm() {
-      this.inputValues.clientIDField = "";
-      this.inputValues.projectName = "";
-      this.inputValues.plannedStartField = "";
-      this.inputValues.plannedEndField = "";
-      this.inputValues.plannedEffortField = "";
-      this.inputValues.performedEffortField = "";
-      this.inputValues.competencesField = "";
-      this.$vs.notify({
-        title: 'Closed',
-        color: "warning",
-        text: 'Add was cancelled successfully.'
-      })
-    },
-
-    /**
-     * Notifies that updating prompt for project war closed ans sets the editValues to ''
-     */
-    closeEditForm() {
-      this.editValues.clientIDField = "";
-      this.editValues.plannedStartField = "";
-      this.editValues.plannedEndField = "";
-      this.editValues.plannedEffortField = "";
-      this.editValues.performedEffortField = "";
-      this.editValues.competencesField = "";
-      this.$vs.notify({
-        title: 'Closed',
-        text: 'Edit was cancelled successfully.'
-      })
-    },
 
     /**
      * Gets a specific project from DB
@@ -895,8 +746,10 @@ export default {
             // JSON responses are automatically parsed.
             this.currentProject = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }
           })
     },
 
@@ -916,8 +769,10 @@ export default {
             }
             this.projects = array
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }
           })
 
     },
@@ -945,7 +800,38 @@ export default {
         }
       }
     },
-  }
+
+    /** Shows prompt with title, message and selected color*/
+    notify: function(title, message,color){
+      this.$vs.notify({
+        title: title,
+        text: message,
+        color:color, type: "gradient",
+      })
+    },
+
+    /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
+    resetAllValues: function(){
+      this.inputValues.projectName = ''
+      this.inputValues.clientIDField = ''
+      this.inputValues.plannedStartField = this.dateToday;
+      this.inputValues.plannedEndField = this.dateToday;
+      this.inputValues.plannedEffortField = ''
+      this.inputValues.competencesField = ''
+      this.currentClient = {name:"Owner of the project"}
+      this.currentEmployee= {name:"Employee"}
+      //this.selectedEmployeeForAssignment= {name:"Employee"}
+      this.assignHours = ''
+      this.editValues.clientIDField = ''
+      this.editValues.plannedStartField = ''
+      this.editValues.plannedEndField = ''
+      this.editValues.plannedEffortField = ''
+      this.editValues.competencesField = ''
+      this.editValues.performedEffortField = ''
+      this.assignHours = 0
+    }
+
+}
 }
 </script>
 

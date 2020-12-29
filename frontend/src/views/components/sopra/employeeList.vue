@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive">
+  <div>
     <vs-row vs-justify="center">
       <vs-col type="flex" vs-justify="center" vs-align="center" :vs-lg="employeeSelected ? 4 : 12" vs-sm="12" vs-xs="12"
               code-toggler>
@@ -7,13 +7,14 @@
           <div slot="header">
             <h2  class="float-left" style="color: cornflowerblue">Employee List</h2>
             <div class="float-right mb-1">
-            <vs-button @click="activePrompt = true" color="primary" icon="add" type="filled">Add New Employee</vs-button>
+            <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="add" type="filled">Add New Employee</vs-button>
             </div>
           </div>
           <div class="table-responsive">
           <table class="table v-middle border">
             <thead>
             <tr class="">
+              <th class="border-top-0" style="color: cornflowerblue">ID</th>
               <th class="border-top-0" style="color: cornflowerblue">Name</th>
               <th class="border-top-0" style="color: cornflowerblue">Competences</th>
               <th class="border-top-0" style="color: cornflowerblue">Remaining Working Hours Per Week</th>
@@ -22,11 +23,12 @@
             </thead>
             <tbody>
             <tr v-for="employee in employees" :key="employee.employeeID">
+              <td>{{employee.employeeID}}</td>
               <td>
                 <div class="d-flex align-items-center">
                   <a @click="updateDetailedEmployee(employee.employeeID)">
                     <div class="mr-2">
-                      <vs-avatar color="primary" :text="employee.employeeID"/>
+                      <vs-avatar color="primary" :text="employee.name"/>
                     </div>
                   </a>
                   <div class="">
@@ -40,7 +42,7 @@
               <td>{{ employee.remainingWorkingHoursPerWeek }}</td>
               <td>
                 <div>
-                  <vs-button @click="deletionPrompt(employee.employeeID)"  icon="delete" class="m-1" color="danger" type="filled">
+                  <vs-button @click="fetchEmployeeUpdateCurrentEmployee(employee.employeeID);prompts.activeDeletePrompt = true"  icon="delete" class="m-1" color="danger" type="filled">
                   </vs-button>
                   <vs-button @click="updateEditID(employee.employeeID)" icon="edit" class="m-1" color="warning" type="filled">
                   </vs-button>
@@ -96,13 +98,13 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="assignment in assignmentCurrentEmployee" :key="assignment.id">
+              <tr v-for="assignment in assignmentsCurrentEmployee" :key="assignment.id">
                <!-- <td>{{ assignment.id }}</td> -->
                 <!--<td>{{employee.employeeID}}</td>-->
                 <td>{{ currentProjectName(assignment.projectID) }}</td>
                 <td>{{ assignment.plannedWorkingHours }}</td>
                 <td>
-                  <vs-button icon="delete" @click="updateCurrentAssignment(assignment.id)" class="m-1" color="danger"
+                  <vs-button icon="delete" @click="currentAssignment=assignment;prompts.activeDeleteAssignmentPrompt=true" class="m-1" color="danger"
                              type="filled">
                   </vs-button>
                 </td>
@@ -126,11 +128,11 @@
       <vs-prompt
           title="Add Employee"
           color="primary"
-          @cancel="closeAdd"
+          @cancel='resetAllValues();notify("Closed","Adding was cancelled.","warning")'
           @accept="addEmployee"
-          @close="closeAdd"
+          @close='resetAllValues();notify("Closed","Adding was cancelled.","warning")'
           :is-valid="validEmployee"
-          :active.sync="activePrompt"
+          :active.sync="prompts.activeAddPrompt"
       >
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-4" v-model="inputValues.nameField"/>
@@ -150,11 +152,11 @@
       <vs-prompt
           title="Edit Employee"
           color="warning"
-          @cancel="closeEdit"
+          @cancel='resetAllValues;notify("Edit Closed","Edit was cancelled.","warning")'
           @accept="updateEmployee"
-          @close="closeEdit"
+          @close='resetAllValues;notify("Edit Closed","Edit was cancelled.","warning")'
           :is-valid="validEmployeeEdit"
-          :active.sync="activeEditPromt"
+          :active.sync="prompts.activeEditPrompt"
       >
         <div class="con-exemple-prompt">
           <h5>Please Modify Employee Data of <strong class="edit-employeee">{{ editValues.nameField }}</strong></h5>
@@ -179,11 +181,11 @@
       <vs-prompt
           title="Deletion"
           color="red"
-          @close="closeDeletio"
-          @cancel="closeDeletio"
+          @close='notify("Closed","Deletion was cancelled.","warning")'
+          @cancel='notify("Closed","Deletion was cancelled.","warning")'
           @accept="deleteEmployee"
           :is-valid="true"
-          :active.sync="activeDeletionPrompt"
+          :active.sync="prompts.activeDeletePrompt"
       >
         <div class="con-exemple-prompt">
           Are you sure you want to delete <br>
@@ -193,11 +195,11 @@
       <vs-prompt
           title="Deletion"
           color="red"
-          @close="closeDeletio"
-          @cancel="closeDeletio"
+          @close='notify("Closed","Deletion was cancelled.","warning")'
+          @cancel='notify("Closed","Deletion was cancelled.","warning")'
           @accept="deleteAssignment"
           :is-valid="true"
-          :active.sync="deleteAssignmentPrompt"
+          :active.sync="prompts.activeDeleteAssignmentPrompt"
       >
         <div class="con-exemple-prompt">
           <h6>Are you sure you want to delete the next Assignment <br>
@@ -220,15 +222,10 @@ export default {
       employees: [],
       assignments: [],
       projects:[],
-      assignmentCurrentEmployee: [],
+      assignmentsCurrentEmployee: [],
       currentEmployee: {},
       employeeSelected: false,
-      activePrompt: false,
-      deleteAssignmentPrompt: false,
-      currentAssignmentID: 0,
       currentAssignment: {},
-      activeEditPromt: false,
-      activeDeletionPrompt: false,
       inputValues: {
         nameField: '',
         domicileField: '',
@@ -241,6 +238,7 @@ export default {
         competencesField: '',
         workingHoursField: ''
       },
+      prompts:{activeAddPrompt:false,activeDeletePrompt:false,activeEditPrompt:false, activeDeleteAssignmentPrompt:false}
     }
   },
 
@@ -251,11 +249,13 @@ export default {
   },
 
   computed: {
+    /**Checks if the input is valid for the add prompt */
     validEmployee() {
       return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 26
           && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
       )
     },
+    /**Checks if the input is valid for the edit prompt */
     validEmployeeEdit() {
       return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 26
           && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 26
@@ -265,6 +265,7 @@ export default {
 
   methods: {
 
+    /**Returns name of project with given id*/
     currentProjectName(id){
       for (let i = 0; i < this.projects.length; i++) {
         if (this.projects[i].projectNumber === id)
@@ -276,25 +277,38 @@ export default {
      * Deletes assignment from the DB
      */
     async deleteAssignment() {
-      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignmentID)
-      //this.fetchAssignment(this.currentEmployee.employeeID)
-      await this.fetchAssignment(this.currentEmployee.employeeID)
-      await axios.put('http://localhost:8080/employees', {
-        "employeeID": this.currentEmployee.employeeID,
-        "name": this.currentEmployee.name,
-        "domicile": this.currentEmployee.domicile,
-        "competences": this.currentEmployee.competences,//.
-        "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
-        "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
-            this.currentAssignment.plannedWorkingHours)
-      })
-      await this.fetchEmployees()
-      await this.fetchEmployee(this.currentEmployee.employeeID)
-      //await this.fetchEmployees()
-      await this.fetchAllAssignments()
-      this.alertAssignAlert()
-    },
+      await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignment.id).then(async () => {
+        this.fetchAssignmentsByEmployee(this.currentEmployee.employeeID)
+        await axios.put('http://localhost:8080/employees', {
+          "employeeID": this.currentEmployee.employeeID,
+          "name": this.currentEmployee.name,
+          "domicile": this.currentEmployee.domicile,
+          "competences": this.currentEmployee.competences,//.
+          "workingHoursPerWeek": this.currentEmployee.workingHoursPerWeek,
+          "remainingWorkingHoursPerWeek": (this.currentEmployee.remainingWorkingHoursPerWeek +
+              this.currentAssignment.plannedWorkingHours)
+        }).then(() => {
+          this.notify("Success","Assignment was successfully deleted.","success")
+        }).catch((error) => {
+          if (error.response){
+            this.notify("Delete Assignment Error",error.message,"danger")
+          }
+        })
 
+
+      }).catch((error) => {
+        if (error.response){
+          this.notify("Delete Error",error.message,"danger")
+        }
+      })
+
+      await this.fetchEmployees()
+      await this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
+      await this.fetchAllAssignments()
+
+      //this.fetchAssignment(this.currentEmployee.employeeID)
+
+    },
 
     /**
      * Updated the Edit Prompt with the data of the employee to edit.
@@ -304,12 +318,12 @@ export default {
      * @returns editInputFields with data of the employee with the given id
      */
     async updateEditID(id) {
-      await this.fetchEmployee(id);
+      await this.fetchEmployeeUpdateCurrentEmployee(id);
       this.editValues.nameField = this.currentEmployee.name
       this.editValues.domicileField = this.currentEmployee.domicile
       this.editValues.competencesField = this.currentEmployee.competences
       this.editValues.workingHoursField = this.currentEmployee.workingHoursPerWeek
-      this.activeEditPromt = true;
+      this.prompts.activeEditPrompt = true;
 
     },
 
@@ -326,23 +340,14 @@ export default {
         'remainingWorkingHoursPerWeek': parseInt(this.currentEmployee.remainingWorkingHoursPerWeek)
             + parseInt(this.editValues.workingHoursField) - parseInt(this.currentEmployee.workingHoursPerWeek),
       }).then(() => {
-        this.fetchEmployee(this.currentEmployee.employeeID)
-        this.fetchEmployees()
-        this.acceptEditAlert()
+        this.notify("Success","Successfully modified employee.","success")
       }).catch((error) => {
         if (error.response)
-          this.failedEditAlert(error.message)
+          this.notify("Editing error",error.message,"danger")
       })
-    },
 
-    /**
-     * Activates deletion prompt for a given Employee
-     *
-     * @param id of employee
-     */
-    deletionPrompt: function (id) {
-      this.fetchEmployee(id)
-      this.activeDeletionPrompt = true
+      await this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
+      await this.fetchEmployees()
     },
 
     /**
@@ -350,148 +355,15 @@ export default {
      *
      * @param employeeID id of employee
      */
-    async fetchAssignment(employeeID) {
-      this.assignmentCurrentEmployee = []
+    async fetchAssignmentsByEmployee(employeeID) {
+      this.assignmentsCurrentEmployee = []
         await axios.get('http://localhost:8080/assignmentsbyemployee/' + employeeID).then(response => {
-        this.assignmentCurrentEmployee = response.data
-      })
-      /*await this.fetchAllAssignments()
-      for (let i = 0; i < this.assignments.length; i++) {
-        if (this.assignments[i].employeeID === employeeID) {
-          this.assignmentCurrentEmployee.push(this.assignments[i])
-        }
-      }*/
-    },
-
-    /**
-     * Notifies that updating employee succeeded
-     */
-    acceptEditAlert() {
-      this.$vs.notify({
-        title: 'Successfully:',
-        text: 'modified Employee.',
-        color: 'green'
-      })
-    },
-
-    /**
-     * Notifies that deletion of assignmeent was successful
-     */
-    alertAssignAlert() {
-      this.$vs.notify({
-        title: 'Deletion',
-        text: 'Deletion of the Assignment was successful.',
-        color: 'red',
-      })
-    },
-
-    /**
-     * Notifies that addition succeeded
-     */
-    acceptAlert() {
-      this.$vs.notify({
-        title: 'Successfully:',
-        text: 'added Employee.',
-        color: 'green'
-      })
-    },
-
-    /**
-     * Notifies that deletion of employee succeeded
-     */
-    acceptDeletionAlert() {
-      this.$vs.notify({
-        title: 'Deletion alert',
-        text: 'Deletion was successful.',
-        color: 'green',
-      })
-    },
-
-    /**
-     * Notifies that deletion of employee failed
-     */
-    deniedDeletionAlert(message) {
-      this.$vs.notify({
-        title: 'Deletion alert',
-        text: message,
-        color: 'red',
-      })
-    },
-
-    /**
-     * Notifies that addition of employee failed
-     */
-    failedAddAlert(message) {
-      this.$vs.notify({
-        title: 'Addition alert',
-        text: message,
-        color: 'red',
-      })
-    },
-
-    /**
-     * Notifies that updating employee failed
-     */
-    failedEditAlert(message) {
-      this.$vs.notify({
-        title: 'Editing alert',
-        text: message,
-        color: 'red',
-      })
-    },
-
-    /**
-     * Notifies that addition was closed and sets the inputValueFields to ''
-     */
-    closeAdd() {
-      this.inputValues.nameField = ''
-      this.inputValues.domicileField = ''
-      this.inputValues.competencesField = ''
-      this.inputValues.workingHoursField = ''
-      this.$vs.notify({
-        title: 'Closed',
-        text: 'Adding was cancelled.',
-        color: 'red'
-      })
-    },
-
-    /**
-     * Notifies that deletion prompt was closed
-     */
-    closeDeletio() {
-      this.$vs.notify({
-        title: 'Closed',
-        text: 'Deletion was cancelled.',
-        color: 'red'
-      })
-    },
-
-    /**
-     * Gets given assignment from the DB
-     *
-     * @param id of assignment to be got
-     */
-    async updateCurrentAssignment(id) {
-      this.currentAssignmentID = id
-      await axios.get('http://localhost:8080/assignments/' + this.currentAssignmentID).then(response => {
-        this.currentAssignment = response.data
-      })
-      this.deleteAssignmentPrompt = true;
-    },
-
-    /**
-     * Sets inputField to '' and notifies that Edit was cancelled.
-     */
-    closeEdit() {
-      this.inputValues.nameField = ''
-      this.inputValues.domicileField = ''
-      this.inputValues.competencesField = ''
-      this.inputValues.workingHoursField = ''
-      this.$vs.notify({
-        title: 'Closed',
-        text: 'Edit was cancelled.',
-        color: 'red'
-      })
+        this.assignmentsCurrentEmployee = response.data
+      }).catch((error) => {
+          if (error.response){
+            this.notify("Assignments Database Error",error.message,"danger")
+          }
+        })
     },
 
     /**
@@ -499,16 +371,16 @@ export default {
      *
      * @param id of employee to get from DB
      */
-    fetchEmployee: async function (id) {
+    fetchEmployeeUpdateCurrentEmployee: async function (id) {
       await axios.get(`http://localhost:8080/employees/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
-            console.log(response.data)
             this.currentEmployee = response.data
-          })
-          .catch(e => {
-            this.errors.push(e)
+          }).catch((error) => {
+            if (error.response){
+              this.notify("Employees Database Error",error.message,"danger")
+            }
           })
     },
 
@@ -521,8 +393,12 @@ export default {
             // JSON responses are automatically parsed.
             this.employees = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Employees Database Error", error.message,"danger")
+            }else{
+              this.notify("Employees Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -536,8 +412,12 @@ export default {
             // JSON responses are automatically parsed.
             this.assignments = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Assignments Database Error", error.message,"danger")
+            }else{
+              this.notify("Assignments Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -547,8 +427,12 @@ export default {
             // JSON responses are automatically parsed.
             this.projects = response.data
           })
-          .catch(e => {
-            this.errors.push(e)
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }else{
+              this.notify("Projects Database Error", "Connection to Database Error","danger")
+            }
           })
     },
 
@@ -565,17 +449,16 @@ export default {
         'workingHoursPerWeek': this.inputValues.workingHoursField,
         'remainingWorkingHoursPerWeek': this.inputValues.workingHoursField,
       }).then(() => {
-          this.acceptAlert()
-          this.fetchEmployees()
+          this.notify("Success", "Successfully added Employee.","success")
+
           }).catch(error => {
             if (error.response) {
-              this.failedAddAlert(error.message)
+              this.notify('Add Employee Error',error.message,"danger")
+
             }
       })
-      this.inputValues.nameField = ""
-      this.inputValues.domicileField =""
-      this.inputValues.competencesField = ""
-      this.inputValues.workingHoursField = ""
+      await this.fetchEmployees()
+      this.resetAllValues()
     },
 
     /**
@@ -592,14 +475,15 @@ export default {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`).then(
           () => {
-            this.fetchEmployees()
-            this.acceptDeletionAlert()
+
+            this.notify('Success','Deletion was successful.',"success")
           }
       ).catch((error) => {
         if (error.response) {
-          this.deniedDeletionAlert(error.message)
+          this.notify("Delete Error",error.message,"danger")
         }
       })
+      await this.fetchEmployees()
     },
 
     /**
@@ -607,15 +491,38 @@ export default {
      * @param id of employee
      */
     updateDetailedEmployee(id) {
-      this.assignmentCurrentEmployee = []
-      this.fetchEmployee(id)
+      this.assignmentsCurrentEmployee = []
+      this.fetchEmployeeUpdateCurrentEmployee(id)
       for (var i = 0; i < this.assignments.length; i++) {
         if (this.assignments[i].employeeID === id) {
-          this.assignmentCurrentEmployee.push(this.assignments[i])
+          this.assignmentsCurrentEmployee.push(this.assignments[i])
         }
       }
       this.employeeSelected = true
     },
+
+    /** Shows prompt with title, message and selected color*/
+    notify: function(title, message,color){
+      this.$vs.notify({
+        title: title,
+        text: message,
+        color:color, type: "gradient",
+      })
+    },
+
+    /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
+    resetAllValues: function(){
+      this.inputValues.nameField = '';
+      this.inputValues.domicileField = ''
+      this.inputValues.competencesField = ''
+      this.inputValues.workingHoursField = ''
+      this.editValues.nameField = ''
+      this.editValues.domicileField = ''
+      this.editValues.competencesField = ''
+      this.editValues.workingHoursField = ''
+      this.currentEmployee = {}
+
+    }
   }
 }
 </script>
