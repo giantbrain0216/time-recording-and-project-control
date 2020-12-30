@@ -26,13 +26,13 @@ export default new Router({
                     name: 'Home',
                     index: 1,
                     component: () => import('./views/StarterPage.vue')
-                },{
-                    path: '/clientList',
-                    name: 'Client List',
-                    index: 2,
-                    component: () => import('./views/components/sopra/clientList.vue')
                 },
-
+                {
+                    path: '/SearchResults',
+                    name: 'Search Results',
+                    index: 2,
+                    component: () => import('./views/components/sopra/SearchResults')
+                },
                 {
                     path:'/projectList',
                     name: 'Project list',
@@ -52,6 +52,13 @@ export default new Router({
                     index: 5,
                     component: () => import('./views/components/sopra/timeRegistration')
                 },
+                {
+                    path: '/clientList',
+                    name: 'Client List',
+                    index: 6,
+                    component: () => import('./views/components/sopra/clientList.vue')
+                },
+
 
             ]
 		},

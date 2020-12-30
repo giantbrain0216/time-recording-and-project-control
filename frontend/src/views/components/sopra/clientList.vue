@@ -35,9 +35,9 @@
             <td>
               <div>
                 <vs-button @click="checkDeletePermission(client)" icon="delete" class="m-1" color="danger" type="filled">
-                </vs-button>
+                Delete</vs-button>
                 <vs-button @click="updateEditID(client.clientID)" icon="edit" class="m-1" color="warning" type="filled">
-                </vs-button>
+                Edit</vs-button>
               </div>
             </td>
           </tr>

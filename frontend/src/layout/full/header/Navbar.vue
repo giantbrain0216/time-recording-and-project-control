@@ -18,9 +18,8 @@
         <div class="hiddenDesktop cursor-pointer" @click.stop="activeSidebar"><vs-icon icon="menu"></vs-icon></div>
       </div>
 
-      <vs-input style="color: #2b2b2b;font-size: 17px" class="inputx" />
-      <vs-button class="m-1 fa fa-trash" color=""
-                 icon="search" type="filled"></vs-button>
+
+
 
 
 
@@ -53,7 +52,8 @@ export default {
   },
   data:()=>({
     indexActive: 0,
-    showToggle: false
+    showToggle: false,
+    searchKey: ""
     
   }),
 

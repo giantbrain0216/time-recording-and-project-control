@@ -5,10 +5,11 @@
 			icon:"home"
 		},
 		{
-			url: "/clientlist",
-			name: "Client List",
-			icon:"people"  /*error_outline*/
+			url:"/SearchResults",
+			name:"Search",
+			icon:"search"
 		},
+
 		{
 			url :"/projectList",
 			name:"Project list",
@@ -23,6 +24,11 @@
 			url:"/timeRegistration",
 			name:"Time Registration",
 			icon:"watch_later"
+		},
+		{
+			url: "/clientlist",
+			name: "Client List",
+			icon:"people"  /*error_outline*/
 		},
 
 ]
