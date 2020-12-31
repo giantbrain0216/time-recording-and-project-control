@@ -21,14 +21,14 @@
 			icon: "folder_shared"
 		},
 		{
-			url:"/timeRegistration",
-			name:"Time Registration",
-			icon:"watch_later"
-		},
-		{
 			url: "/clientlist",
 			name: "Client List",
 			icon:"people"  /*error_outline*/
+		},
+		{
+			url:"/timeRegistration",
+			name:"Time Registration",
+			icon:"watch_later"
 		},
 
 ]

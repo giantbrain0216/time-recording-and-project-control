@@ -47,17 +47,18 @@ export default new Router({
                     component: () => import('./views/components/sopra/employeeList')
                 },
                 {
-                    path: '/timeregistration',
-                    name: 'Time Registration',
-                    index: 5,
-                    component: () => import('./views/components/sopra/timeRegistration')
-                },
-                {
                     path: '/clientList',
                     name: 'Client List',
-                    index: 6,
+                    index: 5,
                     component: () => import('./views/components/sopra/clientList.vue')
                 },
+                {
+                    path: '/timeregistration',
+                    name: 'Time Registration',
+                    index: 6,
+                    component: () => import('./views/components/sopra/timeRegistration')
+                },
+
 
 
             ]

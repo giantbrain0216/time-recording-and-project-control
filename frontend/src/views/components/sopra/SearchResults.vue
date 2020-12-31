@@ -3,14 +3,14 @@
 
     <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12">
 
-      <vs-input style="width: 350px" class="inputx" @keyup.esc="reset()"
-                @keyup.enter="buttonClicked=true; addSearchedClients();addSearchedEmployees();addSearchedProjects()"
+      <vs-input style="width: 350px;" class="inputx" @keyup.esc="reset()"
+                @keyup.enter="buttonClicked=true; search()"
                 placeholder="Search Employee, Project or Client..."
                 v-model="searchKey"/>
       <vs-button class="m-1 fa fa-trash" color="blue "
-                 @click="buttonClicked=true; addSearchedClients();addSearchedEmployees();addSearchedProjects()"
+                 @click="buttonClicked=true; search()"
                  icon="search" type="filled"></vs-button>
-      <vs-button class="m-1 fa fa-trash" color="warning"
+      <vs-button class="m-1 fa fa-trash" color="danger"
                  @click="reset()"
                  icon="close" type="filled"></vs-button>
     </vs-row>
@@ -136,6 +136,8 @@
 
 <script>
 import axios from "axios";
+import { debounce } from "lodash";
+
 
 export default {
   name: "SearchResults",
@@ -152,6 +154,14 @@ export default {
       searchKey: "",
       buttonClicked: false
     };
+  },
+  watch: {
+    searchKey: debounce(function () {
+      // buttonClicked is used to show the results of the search. Even though the button is not clicked
+      // it means that the search key is not empty. May be it should be refactored !!
+      this.buttonClicked = true;
+      this.search();
+    }, 1500),
   },
   methods: {
     /**
@@ -192,12 +202,13 @@ export default {
      */
     addSearchedProjects: function () {
       this.projectsSearched = []
+      if (this.searchKey.length!==0){
       for (let i = 0; i < this.allProjects.length; i++) {
         if (this.allProjects[i].projectName.toLowerCase().includes(this.searchKey.toLowerCase())) {
           if (!this.projectsSearched.includes(this.allProjects[i]))
             this.projectsSearched.push(this.allProjects[i])
         }
-      }
+      }}
     },
 
     /**
@@ -205,12 +216,13 @@ export default {
      */
     addSearchedClients: function () {
       this.clientsSearched = []
+      if (this.searchKey.length!==0){
       for (let i = 0; i < this.allClients.length; i++) {
         if (this.allClients[i].name.toLowerCase().includes(this.searchKey.toLowerCase())) {
           if (!this.clientsSearched.includes(this.allClients[i]))
             this.clientsSearched.push(this.allClients[i])
         }
-      }
+      }}
     },
 
     /**
@@ -218,12 +230,19 @@ export default {
      */
     addSearchedEmployees: function () {
       this.employeesSearched = []
+      if (this.searchKey.length!==0){
       for (let i = 0; i < this.allEmployees.length; i++) {
         if (this.allEmployees[i].name.toLowerCase().includes(this.searchKey.toLowerCase())) {
           if (!this.employeesSearched.includes(this.allEmployees[i]))
             this.employeesSearched.push(this.allEmployees[i])
         }
-      }
+      }}
+    },
+
+    search:function() {
+      this.addSearchedProjects()
+      this.addSearchedEmployees()
+      this.addSearchedClients()
     },
 
     reset: function () {
