@@ -9,6 +9,10 @@ import 'material-icons/iconfont/material-icons.css';
 // Vuex Store
 import store from './store/store'
 
+//Searchbar with Recomandations
+import Autocomplete from '@trevoreyre/autocomplete-vue'
+import '@trevoreyre/autocomplete-vue/dist/style.css'
+Vue.use(Autocomplete)
 
 // Theme Configurations
 import 'prismjs'
