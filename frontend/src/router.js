@@ -28,10 +28,11 @@ export default new Router({
                     component: () => import('./views/StarterPage.vue')
                 },
                 {
-                    path: '/SearchResults',
+                    path: '/searchResults/:searchKey',
                     name: 'Search Results',
                     index: 2,
-                    component: () => import('./views/components/sopra/SearchResults')
+                    component: () => import('./views/components/sopra/SearchResults'),
+                    props: true
                 },
                 {
                     path:'/projectList',

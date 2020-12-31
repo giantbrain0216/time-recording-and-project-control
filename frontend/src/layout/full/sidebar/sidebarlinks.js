@@ -5,12 +5,6 @@
 			icon:"home"
 		},
 		{
-			url:"/SearchResults",
-			name:"Search",
-			icon:"search"
-		},
-
-		{
 			url :"/projectList",
 			name:"Project list",
 			icon:"list"

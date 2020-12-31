@@ -1,20 +1,9 @@
 <template>
   <div>
 
-    <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12">
+    <h2>{{"Search Results for: " + searchKey}}</h2>
 
-      <vs-input style="width: 350px;" class="inputx" @keyup.esc="reset()"
-                @keyup.enter="buttonClicked=true; search()"
-                placeholder="Search Employee, Project or Client..."
-                v-model="searchKey"/>
-      <vs-button class="m-1 fa fa-trash" color="blue "
-                 @click="buttonClicked=true; search()"
-                 icon="search" type="filled"></vs-button>
-      <vs-button class="m-1 fa fa-trash" color="danger"
-                 @click="reset()"
-                 icon="close" type="filled"></vs-button>
-    </vs-row>
-    <div v-show="buttonClicked">
+    <div class="mt-3">
       <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
@@ -136,7 +125,7 @@
 
 <script>
 import axios from "axios";
-import { debounce } from "lodash";
+/*import { debounce } from "lodash";*/
 
 
 export default {
@@ -155,14 +144,14 @@ export default {
       buttonClicked: false
     };
   },
-  watch: {
+ /* watch: {
     searchKey: debounce(function () {
       // buttonClicked is used to show the results of the search. Even though the button is not clicked
       // it means that the search key is not empty. May be it should be refactored !!
       this.buttonClicked = true;
       this.search();
     }, 1500),
-  },
+  },*/
   methods: {
     /**
      * Gets the employees from the DB
@@ -255,12 +244,23 @@ export default {
   },
 
 
-  created() {
-    this.fetchAllExistingClients()
-    this.fetchAllExistingEmployees()
-    this.fetchAllExistingProjects()
-    // this.searchKey = this.$route.params.searchKey;
+  async created() {
+    this.searchKey = this.$route.params.searchKey;
+    await this.fetchAllExistingClients()
+    await this.fetchAllExistingEmployees()
+    await this.fetchAllExistingProjects()
+    this.search()
+  },
 
-  }
+  watch: {
+    '$route.params.searchKey': async function() {
+      this.searchKey = this.$route.params.searchKey;
+      await this.fetchAllExistingClients()
+      await this.fetchAllExistingEmployees()
+      await this.fetchAllExistingProjects()
+      this.search()
+    }
+  },
+
 };
 </script>
