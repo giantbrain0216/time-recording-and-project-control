@@ -1,7 +1,12 @@
 <template>
   <div>
 
-    <h2>{{"Search Results for: " + searchKey}}</h2>
+    <h2> Search Results of : <i>{{ searchKey }}</i></h2>
+    <h6 style="color: #28a745">
+      {{
+        this.timeregistrationSearched.length + this.projectsSearched.length +
+        this.clientsSearched.length + this.employeesSearched.length
+      }} Results</h6>
 
     <div class="mt-3">
       <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
@@ -15,6 +20,7 @@
             <table class="table v-middle border">
               <thead>
               <tr class="">
+                <th class="border-top-0" style="color: cornflowerblue">ID</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
                 <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
@@ -24,6 +30,7 @@
               </thead>
               <tbody>
               <tr v-for="project in projectsSearched" :key="project.projectNumber">
+                <td>{{ project.projectNumber }}</td>
                 <td class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">{{ project.projectName }}
                 </td>
                 <td>{{ project.clientID }}</td>
@@ -33,7 +40,7 @@
                   <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary
                   </vs-progress>
                   <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
-                <td><i icon="information">You need to go to the project list view. You can there edit, assign or delete
+                <td><i>You need to go to the project list view. You can there edit, assign or delete
                   projects !</i></td>
               </tr>
               </tbody>
@@ -71,7 +78,7 @@
                 </td>
                 <td>{{ employee.competences }}</td>
                 <td>{{ employee.remainingWorkingHoursPerWeek }}</td>
-                <td><i icon="information">You need to go to the employee list view. You can there edit or delete
+                <td><i>You need to go to the employee list view. You can there edit or delete
                   employees !</i></td>
               </tr>
               </tbody>
@@ -109,7 +116,45 @@
                 </td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.projectIDs }}</td>
-                <td><i icon="information">You need to go to the client list view. You can there edit or delete clients
+                <td><i >You need to go to the client list view. You can there edit or delete clients
+                  !</i></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </vs-card>
+      </vs-row>
+
+      <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
+              code-toggler>
+        <vs-card class="cardx">
+          <div slot="header">
+            <h3 class="float-left" style="color: cornflowerblue"><strong style="color: red">
+              {{ this.timeregistrationSearched.length }} </strong> Time Registrations found</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table v-middle border">
+              <thead>
+              <tr class="">
+                <th class="border-top-0">Project ID</th>
+                <th class="border-top-0">Employee ID</th>
+                <th class="border-top-0">From</th>
+                <th class="border-top-0">To</th>
+                <th class="border-top-0">Duration</th>
+                <th class="border-top-0">Brief Description</th>
+                <th class="border-top-0">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="registration in timeregistrationSearched" :key="registration.id">
+                <td >{{ registration.projectID }}</td>
+                <td >{{ registration.employeeID }}</td>
+                <td >{{ registration.start }}</td>
+                <td >{{ registration.end }}</td>
+                <td >  {{ ((new Date(registration.end) - new Date(registration.start)) / 36e5).toFixed(2) }} Hours</td>
+                <td >{{ registration.description }}</td>
+                <td><i>You need to go to the time registration list view. You can there delete time
+                  registrations
                   !</i></td>
               </tr>
               </tbody>
@@ -137,6 +182,8 @@ export default {
       allProjects: [],
       allClients: [],
       allEmployees: [],
+      allTimeRegistrations: [],
+      timeregistrationSearched: [],
       projectsSearched: [],
       clientsSearched: [],
       employeesSearched: [],
@@ -144,14 +191,14 @@ export default {
       buttonClicked: false
     };
   },
- /* watch: {
-    searchKey: debounce(function () {
-      // buttonClicked is used to show the results of the search. Even though the button is not clicked
-      // it means that the search key is not empty. May be it should be refactored !!
-      this.buttonClicked = true;
-      this.search();
-    }, 1500),
-  },*/
+  /* watch: {
+     searchKey: debounce(function () {
+       // buttonClicked is used to show the results of the search. Even though the button is not clicked
+       // it means that the search key is not empty. May be it should be refactored !!
+       this.buttonClicked = true;
+       this.search();
+     }, 1500),
+   },*/
   methods: {
     /**
      * Gets the employees from the DB
@@ -186,18 +233,27 @@ export default {
           })
     },
 
+    fetchAllExistingRegistrations: async function () {
+      await axios.get(`http://localhost:8080/timeregistrations/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.allTimeRegistrations = response.data
+          })
+    },
+
     /**
      * adds the projects whose name include the search key to one array
      */
     addSearchedProjects: function () {
       this.projectsSearched = []
-      if (this.searchKey.length!==0){
-      for (let i = 0; i < this.allProjects.length; i++) {
-        if (this.allProjects[i].projectName.toLowerCase().includes(this.searchKey.toLowerCase())) {
-          if (!this.projectsSearched.includes(this.allProjects[i]))
-            this.projectsSearched.push(this.allProjects[i])
+      if (this.searchKey.length !== 0) {
+        for (let i = 0; i < this.allProjects.length; i++) {
+          if (this.allProjects[i].projectName.toLowerCase().includes(this.searchKey.toLowerCase())) {
+            if (!this.projectsSearched.includes(this.allProjects[i]))
+              this.projectsSearched.push(this.allProjects[i])
+          }
         }
-      }}
+      }
     },
 
     /**
@@ -205,13 +261,14 @@ export default {
      */
     addSearchedClients: function () {
       this.clientsSearched = []
-      if (this.searchKey.length!==0){
-      for (let i = 0; i < this.allClients.length; i++) {
-        if (this.allClients[i].name.toLowerCase().includes(this.searchKey.toLowerCase())) {
-          if (!this.clientsSearched.includes(this.allClients[i]))
-            this.clientsSearched.push(this.allClients[i])
+      if (this.searchKey.length !== 0) {
+        for (let i = 0; i < this.allClients.length; i++) {
+          if (this.allClients[i].name.toLowerCase().includes(this.searchKey.toLowerCase())) {
+            if (!this.clientsSearched.includes(this.allClients[i]))
+              this.clientsSearched.push(this.allClients[i])
+          }
         }
-      }}
+      }
     },
 
     /**
@@ -219,19 +276,36 @@ export default {
      */
     addSearchedEmployees: function () {
       this.employeesSearched = []
-      if (this.searchKey.length!==0){
-      for (let i = 0; i < this.allEmployees.length; i++) {
-        if (this.allEmployees[i].name.toLowerCase().includes(this.searchKey.toLowerCase())) {
-          if (!this.employeesSearched.includes(this.allEmployees[i]))
-            this.employeesSearched.push(this.allEmployees[i])
+      if (this.searchKey.length !== 0) {
+        for (let i = 0; i < this.allEmployees.length; i++) {
+          if (this.allEmployees[i].name.toLowerCase().includes(this.searchKey.toLowerCase())) {
+            if (!this.employeesSearched.includes(this.allEmployees[i]))
+              this.employeesSearched.push(this.allEmployees[i])
+          }
         }
-      }}
+      }
     },
 
-    search:function() {
+    /**
+     * adds the time registrations whose brief description  include the search key to one array
+     */
+    addSearchedTimeRegistrations: function () {
+      this.timeregistrationSearched = []
+      if (this.searchKey.length !== 0) {
+        for (let i = 0; i < this.allTimeRegistrations.length; i++) {
+          if (this.allTimeRegistrations[i].description.toLowerCase().includes(this.searchKey.toLowerCase())) {
+            if (!this.timeregistrationSearched.includes(this.allTimeRegistrations[i]))
+              this.timeregistrationSearched.push(this.allTimeRegistrations[i])
+          }
+        }
+      }
+    },
+
+    search: function () {
       this.addSearchedProjects()
       this.addSearchedEmployees()
       this.addSearchedClients()
+      this.addSearchedTimeRegistrations()
     },
 
     reset: function () {
@@ -249,15 +323,17 @@ export default {
     await this.fetchAllExistingClients()
     await this.fetchAllExistingEmployees()
     await this.fetchAllExistingProjects()
+    await this.fetchAllExistingRegistrations()
     this.search()
   },
 
   watch: {
-    '$route.params.searchKey': async function() {
+    '$route.params.searchKey': async function () {
       this.searchKey = this.$route.params.searchKey;
       await this.fetchAllExistingClients()
       await this.fetchAllExistingEmployees()
       await this.fetchAllExistingProjects()
+      await this.fetchAllExistingRegistrations()
       this.search()
     }
   },
