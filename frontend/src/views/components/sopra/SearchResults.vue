@@ -13,7 +13,7 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h3 class="float-left" style="color: cornflowerblue"><strong style="color: red">
+            <h3 class="float-left" style="color: gray"><strong style="color: red">
               {{ this.projectsSearched.length }} </strong> Projects found</h3>
           </div>
           <div class="table-responsive">
@@ -53,7 +53,7 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h3 class="float-left" style="color: cornflowerblue"><strong style="color: red">
+            <h3 class="float-left" style="color: gray"><strong style="color: red">
               {{ this.employeesSearched.length }} </strong> Employees found</h3>
           </div>
           <div class="table-responsive">
@@ -91,7 +91,7 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h3 class="float-left" style="color: cornflowerblue"><strong style="color: red">
+            <h3 class="float-left" style="color: gray"><strong style="color: red">
               {{ this.clientsSearched.length }} </strong> Clients found</h3>
           </div>
           <div class="table-responsive">
@@ -129,20 +129,20 @@
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
-            <h3 class="float-left" style="color: cornflowerblue"><strong style="color: red">
+            <h3 class="float-left" style="color: gray"><strong style="color: red">
               {{ this.timeregistrationSearched.length }} </strong> Time Registrations found</h3>
           </div>
           <div class="table-responsive">
             <table class="table v-middle border">
               <thead>
               <tr class="">
-                <th class="border-top-0">Project ID</th>
-                <th class="border-top-0">Employee ID</th>
-                <th class="border-top-0">From</th>
-                <th class="border-top-0">To</th>
-                <th class="border-top-0">Duration</th>
-                <th class="border-top-0">Brief Description</th>
-                <th class="border-top-0">Actions</th>
+                <th class="border-top-0" style="color: cornflowerblue">Project ID</th>
+                <th class="border-top-0" style="color: cornflowerblue">Employee ID</th>
+                <th class="border-top-0" style="color: cornflowerblue">From</th>
+                <th class="border-top-0" style="color: cornflowerblue">To</th>
+                <th class="border-top-0" style="color: cornflowerblue">Duration</th>
+                <th class="border-top-0" style="color: cornflowerblue">Brief Description</th>
+                <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
               </thead>
               <tbody>
