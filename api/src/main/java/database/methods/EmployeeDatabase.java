@@ -47,7 +47,7 @@ public class EmployeeDatabase {
     private int createID() {
         List<Employee> listOfEmployees = this.getAllEmployees();
         //  sort the list by ID
-        Collections.sort(listOfEmployees, Comparator.comparing(employee -> employee.getEmployeeID()));
+        listOfEmployees.sort(Comparator.comparing(employee -> employee.getEmployeeID()));
         for (int i = 0; i < listOfEmployees.size(); i++) {
             if (listOfEmployees.get(i).getEmployeeID() != i + 1) {
                 return i + 1;

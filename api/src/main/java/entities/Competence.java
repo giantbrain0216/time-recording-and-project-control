@@ -16,6 +16,14 @@ public class Competence {
     @NotNull
     private String name;
 
+    public Competence() {
+    }
+
+    public Competence(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }
