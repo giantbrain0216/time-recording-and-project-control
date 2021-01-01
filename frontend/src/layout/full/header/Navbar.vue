@@ -3,7 +3,7 @@
 		<vs-navbar
       v-model="indexActive"
       :color="topbarColor"
-      class="topnavbar" text-color="rgba(255,255,255,0.7)" active-text-color="rgba(255,255,255,1)">
+      class="topnavbar"  >
       <!---
       Template logo
       --> 
@@ -13,13 +13,20 @@
       </div>
       <!---
       Mobile toggle
-      --> 
+      -->
+      <vs-input style="color:black" icon="search" placeholder="Search" v-model="search" @keyup.enter='$router.push({name:"Search Results", params: {searchKey: search}});search=""'/>
+
       <div slot="title">
         <div class="hiddenDesktop cursor-pointer" @click.stop="activeSidebar"><vs-icon icon="menu"></vs-icon></div>
       </div>
 
 
-     
+
+
+
+
+
+
 
       <vs-spacer></vs-spacer>
        
@@ -47,7 +54,8 @@ export default {
   },
   data:()=>({
     indexActive: 0,
-    showToggle: false
+    showToggle: false,
+    search: ""
     
   }),
 
