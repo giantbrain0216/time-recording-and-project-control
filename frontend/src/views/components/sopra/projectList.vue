@@ -249,6 +249,7 @@
             <vs-input type="number" label-placeholder="Number of Hours This Week" class="mb-3" v-model="assignHours"/>
 
 
+
           </div>
           <div class="ml-5">
             <ul>
@@ -310,7 +311,8 @@
         </div>
       </vs-prompt>
     </vs-row>
-  </div>
+
+   </div>
 </template>
 
 <script>
@@ -568,20 +570,31 @@ export default {
           'contactPersonID': this.currentClient.contactPersonID,
           'projectIDs': this.currentClient.projectIDs + "\t" + result.data
         }).then(() => {
-          this.notify("Confirmation","Project has been successfully deleted.","success")
+          this.notify("Confirmation", "Project has been successfully deleted.", "success")
 
         }).catch((error) => {
-          if (error.response){
+          if (error.response) {
             this.notify("Error", error.message, "danger");
           }
         })
 
 
       }).catch((error) => {
-        if (error.response){
+        if (error.response) {
           this.notify("Error", error.message, "danger");
         }
-      })
+      });
+
+
+
+
+
+
+
+
+
+
+
 
       await this.fetchAllProjects()
       this.resetAllValues()
