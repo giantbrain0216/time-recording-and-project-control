@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import controllers.Application;
 import entities.Competence;
 import entities.Employee;
 
@@ -29,7 +30,7 @@ public class CompetenceDatabase {
      * @param connectionSource to set up the connection with the database
      * @throws SQLException if the dao element cannot be created.
      */
-    public CompetenceDatabase(final ConnectionSource connectionSource) throws SQLException {
+    public CompetenceDatabase(ConnectionSource connectionSource) throws SQLException {
         competenceDao = DaoManager.createDao(connectionSource, Competence.class);
         TableUtils.createTableIfNotExists(connectionSource, Competence.class);
     }

@@ -10,16 +10,16 @@ public class Competence {
 
     @DatabaseField(columnName = "ID", id = true)
     @NotNull
-    private int id;
+    private Integer id;
 
-    @DatabaseField(columnName = "Name", id = true)
+    @DatabaseField(columnName = "Name")
     @NotNull
     private String name;
 
     public Competence() {
     }
 
-    public Competence(int id, String name) {
+    public Competence(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
