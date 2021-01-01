@@ -37,7 +37,8 @@
                 <vs-button @click="checkDeletePermission(client)" icon="delete" class="m-1" color="danger" type="filled">
                 Delete</vs-button>
                 <vs-button @click="updateEditID(client.clientID)" icon="edit" class="m-1" color="warning" type="filled">
-                Edit</vs-button>
+                </vs-button>
+                <ExportInvoiceButton :client-i-d="client.clientID"/>
               </div>
             </td>
           </tr>
@@ -67,6 +68,7 @@
         </vs-card>
       </vs-col>
     </vs-row>
+
     <vs-prompt
         title="Add Client"
         color="primary"
@@ -171,9 +173,11 @@
 
 <script>
 import axios from 'axios';
+import ExportInvoiceButton from "@/views/components/ExportInvoice/ExportInvoiceButton";
 
 export default {
   name: "clientList",
+  components: {ExportInvoiceButton},
   data: () => {
     return {
       employees:[],
