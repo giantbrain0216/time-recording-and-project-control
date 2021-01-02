@@ -34,7 +34,7 @@ public class AssignedCompetencesEmployeeController {
      * @return List of all assignedCompetencesEmployee
      */
     @GetMapping("/assignedCompetencesEmployee")
-    public List<AssignedCompetencesEmployee> getassignedCompetencesEmployee() {
+    public List<AssignedCompetencesEmployee> getAssignedCompetencesEmployee() {
         return assignedCompetencesEmployeeDatabase.getAllAssignedCompetencesEmployee();
     }
 
@@ -48,9 +48,8 @@ public class AssignedCompetencesEmployeeController {
      * @return Assignment corresponding to the id
      */
     @GetMapping("/assignedCompetencesEmployee/{id}")
-    public AssignedCompetencesEmployee getassignedCompetencesEmployee(@PathVariable("id") Integer assignmentID) {
-        AssignedCompetencesEmployee assignedCompetencesEmployee = assignedCompetencesEmployeeDatabase.getAssignedCompetencesEmployee(assignmentID);
-        return assignedCompetencesEmployee;
+    public AssignedCompetencesEmployee getAssignedCompetencesEmployee(@PathVariable("id") Integer assignmentID) {
+        return assignedCompetencesEmployeeDatabase.getAssignedCompetencesEmployee(assignmentID);
     }
 
     /**
@@ -105,12 +104,12 @@ public class AssignedCompetencesEmployeeController {
      * precondition: the given id exists in the database of assignedCompetencesEmployee
      * postcondition: correct list of competences is returned
      *
-     * @param projectID - The ID of the project
-     * @return the competences corresponding to the project id
+     * @param employeeID - The ID of the employee
+     * @return the competences corresponding to the employeeID
      */
     @GetMapping("/competencesByEmployee/{id}")
-    public List<Integer> getCompetencesByEmployee(@PathVariable("id") Integer projectID) {
-        return assignedCompetencesEmployeeDatabase.getCompetences(projectID);
+    public List<Integer> getCompetencesByEmployee(@PathVariable("id") Integer employeeID) {
+        return assignedCompetencesEmployeeDatabase.getCompetences(employeeID);
     }
 }
 

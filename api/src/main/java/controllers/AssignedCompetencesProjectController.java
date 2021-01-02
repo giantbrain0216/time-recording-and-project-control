@@ -115,11 +115,5 @@ public class AssignedCompetencesProjectController {
     public List<Integer> getCompetencesByProject(@PathVariable("id") Integer projectID) {
         return assignedCompetencesProjectDatabase.getCompetences(projectID);
     }
-
-    public static void main(String[] args) throws SQLException {
-        Application application = new Application();
-        AssignedCompetencesEmployeeDatabase assignedCompetencesEmployeeDatabase = new AssignedCompetencesEmployeeDatabase(application.connectionSource);
-        assignedCompetencesEmployeeDatabase.addToDatabase(new AssignedCompetencesEmployee(1,2,2));
-    }
 }
 
