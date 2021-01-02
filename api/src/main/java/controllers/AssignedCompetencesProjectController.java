@@ -109,7 +109,7 @@ public class AssignedCompetencesProjectController {
      * @param projectID - The ID of the project
      * @return the competences corresponding to the project id
      */
-    @GetMapping("/competencesbyproject/{id}")
+    @GetMapping("/competencesByProject/{id}")
     public List<Integer> getCompetencesByProject(@PathVariable("id") Integer projectID) {
         return assignedCompetencesProjectDatabase.getCompetences(projectID);
     }
