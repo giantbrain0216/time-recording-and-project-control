@@ -16,6 +16,9 @@ public class Competence {
     @NotNull
     private String name;
 
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "Relation")
+    private AssignedCompetencesProject assignedCompetencesProject;
+
     public Competence() {
     }
 
