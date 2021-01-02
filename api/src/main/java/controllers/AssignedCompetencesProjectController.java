@@ -2,8 +2,10 @@ package controllers;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import database.methods.AssignedCompetencesEmployeeDatabase;
 import database.methods.AssignedCompetencesProjectDatabase;
 import database.methods.ClientDatabase;
+import entities.AssignedCompetencesEmployee;
 import entities.AssignedCompetencesProject;
 import entities.Assignment;
 import entities.Client;
@@ -112,6 +114,12 @@ public class AssignedCompetencesProjectController {
     @GetMapping("/competencesByProject/{id}")
     public List<Integer> getCompetencesByProject(@PathVariable("id") Integer projectID) {
         return assignedCompetencesProjectDatabase.getCompetences(projectID);
+    }
+
+    public static void main(String[] args) throws SQLException {
+        Application application = new Application();
+        AssignedCompetencesEmployeeDatabase assignedCompetencesEmployeeDatabase = new AssignedCompetencesEmployeeDatabase(application.connectionSource);
+        assignedCompetencesEmployeeDatabase.addToDatabase(new AssignedCompetencesEmployee(1,2,2));
     }
 }
 

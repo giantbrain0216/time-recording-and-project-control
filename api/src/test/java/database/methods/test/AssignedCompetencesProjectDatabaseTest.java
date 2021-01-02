@@ -55,10 +55,6 @@ public class AssignedCompetencesProjectDatabaseTest {
     @Test
     public void modifyDataTest() throws SQLException {
         AssignedCompetencesProject assignedCompetencesProject = new AssignedCompetencesProject(null, 99, 99);
-        //  assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject);
-        //Assert.assertTrue(assignedCompetencesProjectDatabase.getAllAssignedCompetencesProject().stream().anyMatch(object -> object.getId() == (assignedCompetencesProject.getId())));
-        //assignedCompetencesProjectDatabase.deleteFromDatabase(assignedCompetencesProject.getId());
-        //Assert.assertFalse(assignedCompetencesProjectDatabase.getAllAssignedCompetencesProject().stream().anyMatch(object -> object.getId() == (assignedCompetencesProject.getId())));
         int id = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject);
         Assert.assertEquals(99, assignedCompetencesProject.getCompetenceID());
         Assert.assertEquals(99, assignedCompetencesProject.getProjectID());
@@ -67,7 +63,6 @@ public class AssignedCompetencesProjectDatabaseTest {
         assignedCompetencesProjectDatabase.modifyAssignedCompetencesProject(assignedCompetencesProject);
         Assert.assertEquals(321, assignedCompetencesProject.getCompetenceID());
         Assert.assertEquals(321, assignedCompetencesProject.getProjectID());
-        // Assert.assertEquals("test", assignedCompetencesProjectDatabase.getCompetence(id).getName());
         assignedCompetencesProjectDatabase.deleteFromDatabase(id);
     }
 
