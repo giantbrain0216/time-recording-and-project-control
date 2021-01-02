@@ -8,6 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The objects created for testing are removed from the database immediately after the test.
@@ -62,7 +67,7 @@ public class AssignedCompetencesProjectDatabaseTest {
         assignedCompetencesProjectDatabase.modifyAssignedCompetencesProject(assignedCompetencesProject);
         Assert.assertEquals(321, assignedCompetencesProject.getCompetenceID());
         Assert.assertEquals(321, assignedCompetencesProject.getProjectID());
-       // Assert.assertEquals("test", assignedCompetencesProjectDatabase.getCompetence(id).getName());
+        // Assert.assertEquals("test", assignedCompetencesProjectDatabase.getCompetence(id).getName());
         assignedCompetencesProjectDatabase.deleteFromDatabase(id);
     }
 
@@ -80,8 +85,26 @@ public class AssignedCompetencesProjectDatabaseTest {
         Assert.assertTrue(assignedCompetencesProjectDatabase.getAllAssignedCompetencesProject().stream().anyMatch(object -> object.getId() == (assignedCompetencesProject.getId())));
         assignedCompetencesProjectDatabase.deleteFromDatabase(assignedCompetencesProject.getId());
         Assert.assertFalse(assignedCompetencesProjectDatabase.getAllAssignedCompetencesProject().stream().anyMatch(object -> object.getId() == (assignedCompetencesProject.getId())));
+    }
 
-
+    @Test
+    public void getCompetencesTest() throws SQLException {
+        AssignedCompetencesProject assignedCompetencesProject1 = new AssignedCompetencesProject(null, 99, 1);
+        AssignedCompetencesProject assignedCompetencesProject2 = new AssignedCompetencesProject(null, 99, 2);
+        AssignedCompetencesProject assignedCompetencesProject3 = new AssignedCompetencesProject(null, 99, 3);
+        AssignedCompetencesProject assignedCompetencesProject4 = new AssignedCompetencesProject(null, 99, 4);
+        int id1 = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject1);
+        int id2 = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject2);
+        int id3 = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject3);
+        int id4 = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject4);
+        List<Integer> listOfCompetences = assignedCompetencesProjectDatabase.getCompetences(99);
+        Assert.assertEquals(4, listOfCompetences.size());
+        Collections.sort(listOfCompetences);
+        Assert.assertTrue(listOfCompetences.contains(1) && listOfCompetences.contains(2) && listOfCompetences.contains(3) && listOfCompetences.contains(4));
+        assignedCompetencesProjectDatabase.deleteFromDatabase(id1);
+        assignedCompetencesProjectDatabase.deleteFromDatabase(id2);
+        assignedCompetencesProjectDatabase.deleteFromDatabase(id3);
+        assignedCompetencesProjectDatabase.deleteFromDatabase(id4);
     }
 }
 

@@ -5,6 +5,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import database.methods.AssignedCompetencesProjectDatabase;
 import database.methods.ClientDatabase;
 import entities.AssignedCompetencesProject;
+import entities.Assignment;
 import entities.Client;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -97,7 +98,20 @@ public class AssignedCompetencesProjectController {
     @PutMapping("/assignedCompetencesProject")
     public void updateClient(@Valid @RequestBody AssignedCompetencesProject requestBody) {
         assignedCompetencesProjectDatabase.modifyAssignedCompetencesProject(requestBody);
+    }
 
+    /**
+     * REST METHOD GET FOR ASSIGNMENTS BY PROJECT
+     *
+     *  precondition: the given id exists in the database of AssignedCompetencesProject
+     *  postcondition: correct list of competences is returned
+     *
+     * @param projectID - The ID of the project
+     * @return the competences corresponding to the project id
+     */
+    @GetMapping("/competencesbyproject/{id}")
+    public List<Integer> getCompetencesByProject(@PathVariable("id") Integer projectID) {
+        return assignedCompetencesProjectDatabase.getCompetences(projectID);
     }
 }
 

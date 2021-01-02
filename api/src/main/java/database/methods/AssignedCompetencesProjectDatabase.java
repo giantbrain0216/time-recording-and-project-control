@@ -6,12 +6,14 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import controllers.Application;
 import entities.AssignedCompetencesProject;
+import entities.Assignment;
 import entities.Competence;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -140,6 +142,23 @@ public class AssignedCompetencesProjectDatabase {
             return new ArrayList<>();
         }
     }
+
+    /**
+     * searches the database and then returns the list with the competences IDs  of the
+     * project whose ID was given
+     *
+     * @param projectID of the project
+     * @return list of IDs of competences of the project whose ID was given
+     */
+    public List<Integer> getCompetences(Integer projectID) {
+        List<AssignedCompetencesProject> allAssignedCompetencesProject = this.getAllAssignedCompetencesProject();
+        return allAssignedCompetencesProject.stream().filter(assignment -> assignment.getProjectID() == (projectID))
+                .map(AssignedCompetencesProject::getCompetenceID)
+                .collect(Collectors.toList());
+    }
+
+
+
 
 }
 

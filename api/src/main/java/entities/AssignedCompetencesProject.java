@@ -13,7 +13,6 @@ import java.sql.SQLException;
 @DatabaseTable(tableName = "Assigned Competences to the projects")
 public class AssignedCompetencesProject {
     @DatabaseField(columnName = "ID", id = true)
-    @NotNull
     private Integer id;
 
     @DatabaseField(columnName = "Project ID")
