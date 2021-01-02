@@ -9,15 +9,12 @@ import javax.validation.constraints.NotNull;
 public class Competence {
 
     @DatabaseField(columnName = "ID", id = true)
-    @NotNull
     private Integer id;
 
     @DatabaseField(columnName = "Name")
     @NotNull
     private String name;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "Relation")
-    private AssignedCompetencesProject assignedCompetencesProject;
 
     public Competence() {
     }
