@@ -41,7 +41,7 @@ public class AssignedCompetencesProject {
         this.id = id;
     }
 
-    public Integer getProjectID() {
+    public int getProjectID() {
         return projectID;
     }
 
@@ -49,11 +49,11 @@ public class AssignedCompetencesProject {
         this.projectID = projectID;
     }
 
-    public Integer getCompetences() {
+    public int getCompetenceID() {
         return competenceID;
     }
 
-    public void setCompetences(Integer competenceID) {
+    public void setCompetenceID(Integer competenceID) {
         this.competenceID = competenceID;
     }
 
