@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import entities.AssignedCompetencesProject;
 import entities.AssignedProjectsClient;
 
 import java.sql.SQLException;
@@ -149,8 +150,8 @@ public class AssignedProjectsClientDatabase {
      */
     public List<Integer> getProjectIDs(Integer clientID) {
         List<AssignedProjectsClient> allAssignedProjectsClient = this.getAllAssignedProjectsClient();
-        return allAssignedProjectsClient.stream().map(AssignedProjectsClient::getClientID)
-                .filter(integer -> integer.equals(clientID))
+        return allAssignedProjectsClient.stream().filter(assignment -> assignment.getClientID() == (clientID))
+                .map(AssignedProjectsClient::getProjectID)
                 .collect(Collectors.toList());
     }
 

@@ -37,7 +37,7 @@ public class AssignedCompetencesEmployeeDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        AssignedCompetencesEmployee assignedCompetencesEmployee = new AssignedCompetencesEmployee(null, 99, 99);
+        AssignedCompetencesEmployee assignedCompetencesEmployee = new AssignedCompetencesEmployee( 99, 99);
         assignedCompetencesEmployeeDatabase.addToDatabase(assignedCompetencesEmployee);
         Assert.assertTrue(assignedCompetencesEmployeeDatabase.getAllAssignedCompetencesEmployee().stream().anyMatch(object -> object.getId() == (assignedCompetencesEmployee.getId())));
         assignedCompetencesEmployeeDatabase.deleteFromDatabase(assignedCompetencesEmployee.getId());
@@ -52,7 +52,7 @@ public class AssignedCompetencesEmployeeDatabaseTest {
      */
     @Test
     public void modifyDataTest() throws SQLException {
-        AssignedCompetencesEmployee assignedCompetencesEmployee = new AssignedCompetencesEmployee(null, 99, 99);
+        AssignedCompetencesEmployee assignedCompetencesEmployee = new AssignedCompetencesEmployee( 99, 99);
         int id = assignedCompetencesEmployeeDatabase.addToDatabase(assignedCompetencesEmployee);
         Assert.assertEquals(99, assignedCompetencesEmployee.getCompetenceID());
         Assert.assertEquals(99, assignedCompetencesEmployee.getEmployeeID());
@@ -73,7 +73,7 @@ public class AssignedCompetencesEmployeeDatabaseTest {
      */
     @Test
     public void deleteFromDatabaseTest() throws SQLException {
-        AssignedCompetencesEmployee assignedCompetencesEmployee = new AssignedCompetencesEmployee(null, 99, 99);
+        AssignedCompetencesEmployee assignedCompetencesEmployee = new AssignedCompetencesEmployee( 99, 99);
         assignedCompetencesEmployeeDatabase.addToDatabase(assignedCompetencesEmployee);
         Assert.assertTrue(assignedCompetencesEmployeeDatabase.getAllAssignedCompetencesEmployee().stream().anyMatch(object -> object.getId() == (assignedCompetencesEmployee.getId())));
         assignedCompetencesEmployeeDatabase.deleteFromDatabase(assignedCompetencesEmployee.getId());
@@ -82,10 +82,10 @@ public class AssignedCompetencesEmployeeDatabaseTest {
 
     @Test
     public void getCompetencesTest() throws SQLException {
-        AssignedCompetencesEmployee assignedCompetencesEmployee1 = new AssignedCompetencesEmployee(null, 99, 1);
-        AssignedCompetencesEmployee assignedCompetencesEmployee2 = new AssignedCompetencesEmployee(null, 99, 2);
-        AssignedCompetencesEmployee assignedCompetencesEmployee3 = new AssignedCompetencesEmployee(null, 99, 3);
-        AssignedCompetencesEmployee assignedCompetencesEmployee4 = new AssignedCompetencesEmployee(null, 99, 4);
+        AssignedCompetencesEmployee assignedCompetencesEmployee1 = new AssignedCompetencesEmployee( 99, 1);
+        AssignedCompetencesEmployee assignedCompetencesEmployee2 = new AssignedCompetencesEmployee( 99, 2);
+        AssignedCompetencesEmployee assignedCompetencesEmployee3 = new AssignedCompetencesEmployee( 99, 3);
+        AssignedCompetencesEmployee assignedCompetencesEmployee4 = new AssignedCompetencesEmployee( 99, 4);
         int id1 = assignedCompetencesEmployeeDatabase.addToDatabase(assignedCompetencesEmployee1);
         int id2 = assignedCompetencesEmployeeDatabase.addToDatabase(assignedCompetencesEmployee2);
         int id3 = assignedCompetencesEmployeeDatabase.addToDatabase(assignedCompetencesEmployee3);

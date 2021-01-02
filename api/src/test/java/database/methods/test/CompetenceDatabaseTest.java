@@ -33,7 +33,7 @@ public class CompetenceDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Competence competence = new Competence(null, "Test");
+        Competence competence = new Competence( "Test");
         competenceDatabase.addToDatabase(competence);
         Assert.assertTrue(competenceDatabase.getAllCompetences().stream().anyMatch(competence1 -> competence1.getId() == (competence.getId())));
         competenceDatabase.deleteFromDatabase(competence.getId());
@@ -48,7 +48,7 @@ public class CompetenceDatabaseTest {
      */
     @Test
     public void modifyDataTest() throws SQLException {
-        Competence competence = new Competence(null, "TEST");
+        Competence competence = new Competence( "TEST");
         int id = competenceDatabase.addToDatabase(competence);
         Assert.assertEquals("TEST", competence.getName());
         competence.setName("test");
@@ -66,7 +66,7 @@ public class CompetenceDatabaseTest {
      */
     @Test
     public void deleteFromDatabaseTest() throws SQLException {
-        Competence competence = new Competence(null, "Test");
+        Competence competence = new Competence( "Test");
         competenceDatabase.addToDatabase(competence);
         Assert.assertTrue(competenceDatabase.getAllCompetences().stream().anyMatch(competence1 -> competence1.getId() == (competence.getId())));
         competenceDatabase.deleteFromDatabase(competence.getId());

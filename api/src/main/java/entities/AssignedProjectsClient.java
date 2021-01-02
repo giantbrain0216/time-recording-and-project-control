@@ -36,7 +36,7 @@ public class AssignedProjectsClient {
         this.id = id;
     }
 
-    public Integer getProjectID() {
+    public int getProjectID() {
         return projectID;
     }
 
@@ -44,7 +44,7 @@ public class AssignedProjectsClient {
         this.projectID = projectID;
     }
 
-    public Integer getClientID() {
+    public int getClientID() {
         return clientID;
     }
 

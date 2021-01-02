@@ -22,8 +22,7 @@ public class AssignedCompetencesEmployee {
     public AssignedCompetencesEmployee() {
     }
 
-    public AssignedCompetencesEmployee(Integer id, Integer employeeID, Integer competences) {
-        this.id = id;
+    public AssignedCompetencesEmployee(Integer employeeID, Integer competences) {
         this.employeeID = employeeID;
         this.competenceID = competences;
     }

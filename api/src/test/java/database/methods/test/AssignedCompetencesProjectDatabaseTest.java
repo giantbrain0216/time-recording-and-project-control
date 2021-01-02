@@ -39,7 +39,7 @@ public class AssignedCompetencesProjectDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        AssignedCompetencesProject assignedCompetencesProject = new AssignedCompetencesProject(null, 99, 99);
+        AssignedCompetencesProject assignedCompetencesProject = new AssignedCompetencesProject( 99, 99);
         assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject);
         Assert.assertTrue(assignedCompetencesProjectDatabase.getAllAssignedCompetencesProject().stream().anyMatch(object -> object.getId() == (assignedCompetencesProject.getId())));
         assignedCompetencesProjectDatabase.deleteFromDatabase(assignedCompetencesProject.getId());
@@ -54,7 +54,7 @@ public class AssignedCompetencesProjectDatabaseTest {
      */
     @Test
     public void modifyDataTest() throws SQLException {
-        AssignedCompetencesProject assignedCompetencesProject = new AssignedCompetencesProject(null, 99, 99);
+        AssignedCompetencesProject assignedCompetencesProject = new AssignedCompetencesProject( 99, 99);
         int id = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject);
         Assert.assertEquals(99, assignedCompetencesProject.getCompetenceID());
         Assert.assertEquals(99, assignedCompetencesProject.getProjectID());
@@ -75,7 +75,7 @@ public class AssignedCompetencesProjectDatabaseTest {
      */
     @Test
     public void deleteFromDatabaseTest() throws SQLException {
-        AssignedCompetencesProject assignedCompetencesProject = new AssignedCompetencesProject(null, 99, 99);
+        AssignedCompetencesProject assignedCompetencesProject = new AssignedCompetencesProject( 99, 99);
         assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject);
         Assert.assertTrue(assignedCompetencesProjectDatabase.getAllAssignedCompetencesProject().stream().anyMatch(object -> object.getId() == (assignedCompetencesProject.getId())));
         assignedCompetencesProjectDatabase.deleteFromDatabase(assignedCompetencesProject.getId());
@@ -84,10 +84,10 @@ public class AssignedCompetencesProjectDatabaseTest {
 
     @Test
     public void getCompetencesTest() throws SQLException {
-        AssignedCompetencesProject assignedCompetencesProject1 = new AssignedCompetencesProject(null, 99, 1);
-        AssignedCompetencesProject assignedCompetencesProject2 = new AssignedCompetencesProject(null, 99, 2);
-        AssignedCompetencesProject assignedCompetencesProject3 = new AssignedCompetencesProject(null, 99, 3);
-        AssignedCompetencesProject assignedCompetencesProject4 = new AssignedCompetencesProject(null, 99, 4);
+        AssignedCompetencesProject assignedCompetencesProject1 = new AssignedCompetencesProject( 99, 1);
+        AssignedCompetencesProject assignedCompetencesProject2 = new AssignedCompetencesProject( 99, 2);
+        AssignedCompetencesProject assignedCompetencesProject3 = new AssignedCompetencesProject( 99, 3);
+        AssignedCompetencesProject assignedCompetencesProject4 = new AssignedCompetencesProject( 99, 4);
         int id1 = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject1);
         int id2 = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject2);
         int id3 = assignedCompetencesProjectDatabase.addToDatabase(assignedCompetencesProject3);

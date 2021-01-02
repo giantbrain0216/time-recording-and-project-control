@@ -26,8 +26,7 @@ public class AssignedCompetencesProject {
     public AssignedCompetencesProject() {
     }
 
-    public AssignedCompetencesProject(Integer id, Integer projectID, Integer competences) {
-        this.id = id;
+    public AssignedCompetencesProject(Integer projectID, Integer competences) {
         this.projectID = projectID;
         this.competenceID = competences;
     }
