@@ -99,7 +99,7 @@ public class AssignedCompetencesProjectDatabase {
      *
      * @param competenceWithData with the modified and updated data
      */
-    public void modifyCompetence(final AssignedCompetencesProject competenceWithData) {
+    public void modifyAssignedCompetencesProject(final AssignedCompetencesProject competenceWithData) {
         try {
             assignedCompetencesProjectDao.update(competenceWithData);
         } catch (SQLException e) {

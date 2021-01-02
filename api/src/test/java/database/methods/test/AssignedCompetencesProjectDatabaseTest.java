@@ -44,7 +44,7 @@ public class AssignedCompetencesProjectDatabaseTest {
 
     /**
      * This method tests whether an object can be successfully modified in the
-     * database by checking after the modification whether the new data of the competence has
+     * database by checking after the modification whether the new data of the assigned competence has
      * been saved in the database and the old one has been overwritten.
      */
     @Test
@@ -59,7 +59,7 @@ public class AssignedCompetencesProjectDatabaseTest {
         Assert.assertEquals(99, assignedCompetencesProject.getProjectID());
         assignedCompetencesProject.setCompetenceID(321);
         assignedCompetencesProject.setProjectID(321);
-        assignedCompetencesProjectDatabase.modifyCompetence(assignedCompetencesProject);
+        assignedCompetencesProjectDatabase.modifyAssignedCompetencesProject(assignedCompetencesProject);
         Assert.assertEquals(321, assignedCompetencesProject.getCompetenceID());
         Assert.assertEquals(321, assignedCompetencesProject.getProjectID());
        // Assert.assertEquals("test", assignedCompetencesProjectDatabase.getCompetence(id).getName());
