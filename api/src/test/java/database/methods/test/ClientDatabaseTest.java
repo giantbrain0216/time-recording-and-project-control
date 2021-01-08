@@ -49,7 +49,7 @@ public class ClientDatabaseTest {
 
     /**
      * This method tests whether an object can be successfully modified in the
-     * database by checking after the modification whether the new data of the employee has
+     * database by checking after the modification whether the new data of the client has
      * been saved in the database and the old one has been overwritten.
      */
     @Test
