@@ -34,7 +34,7 @@ public class ClientDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Client clientToAdd = new Client("TEST", "test@test.de", "1597536482", 2, "98");
+        Client clientToAdd = new Client("TEST", "test@test.de", "1597536482", 2, "Stuttgart");
         clientDatabase.addToDatabase(clientToAdd);
         Assert.assertTrue(clientDatabase.getAllClients().stream().anyMatch(client -> client.getClientID().equals(clientToAdd.getClientID())));
         clientDatabase.deleteFromDatabase(clientToAdd.getClientID());
@@ -54,13 +54,13 @@ public class ClientDatabaseTest {
      */
     @Test
     public void modifyClientDataTest() throws SQLException {
-        Client clientToModify = new Client("Test", "test@web.de", "12345678", 6, "1");
+        Client clientToModify = new Client("Test", "test@web.de", "12345678", 6, "Feuerbach");
         clientDatabase.addToDatabase(clientToModify);
         Assert.assertEquals("test@web.de", clientToModify.getEmail());
         Assert.assertEquals("12345678", clientToModify.getTelephoneNumber());
         // Assert.assertEquals(1, clientToAdd.getContactPersonID());
         clientToModify.setContactPersonID(2);
-        clientToModify.addProject(5);
+        clientToModify.setAddress("Fellbach");
         clientToModify.setEmail("testtest@web.de");
         clientToModify.setTelephoneNumber("789987789");
         clientDatabase.modifyClientData(clientToModify);
@@ -68,7 +68,7 @@ public class ClientDatabaseTest {
         Assert.assertEquals("testtest@web.de", clientToModify.getEmail());
         Assert.assertEquals("789987789", clientToModify.getTelephoneNumber());
         Assert.assertEquals(2, clientToModify.getContactPersonID());
-        Assert.assertTrue(clientToModify.getProjectIDs().contains("5"));
+        Assert.assertEquals("Fellbach",clientToModify.getAddress());
         clientDatabase.deleteFromDatabase(clientToModify.getClientID());
     }
 
@@ -81,7 +81,7 @@ public class ClientDatabaseTest {
      */
     @Test
     public void deleteFromDatabaseTest() throws SQLException {
-        Client clientToDelete = new Client("Test", "test@web.de", "12345678", 6, "1");
+        Client clientToDelete = new Client("Test", "test@web.de", "12345678", 6, "Bietigheim");
         clientDatabase.addToDatabase(clientToDelete);
         Assert.assertTrue(clientDatabase.getAllClients().stream().anyMatch(client -> client.getClientID().equals(clientToDelete.getClientID())));
         clientDatabase.deleteFromDatabase(clientToDelete.getClientID());

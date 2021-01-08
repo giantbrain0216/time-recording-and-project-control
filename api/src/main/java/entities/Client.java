@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @DatabaseTable(tableName = "Clients")
 public class Client {
 
-    @DatabaseField(columnName ="ID of Client",id=true)
+    @DatabaseField(columnName = "ID of Client", id = true)
     private Integer clientID;
 
     @DatabaseField(columnName = "Name")
@@ -41,26 +41,30 @@ public class Client {
     @DatabaseField(columnName = "IDs of the projects")
     private String projectIDs;
 
-    public Client() {}
+    @DatabaseField(columnName = "Address")
+    private String address;
+
+
+    public Client() {
+    }
 
     /**
      * Constructor to create an object from type Client who can have
      * {@link Project} within the society.
      *
-     * @param name          of the client
-     * @param email         to communicate with him. It will be verified before accepting it
+     * @param name            of the client
+     * @param email           to communicate with him. It will be verified before accepting it
      * @param telephoneNumber to contact him
      * @param contactPersonID ID of the  {@link Employee} who will communicate with the client
-     * @param projectIDs    which the client has in the society. It will be verified
-     *                      because it must match the format "id-id-id-....-id"
+     * @param address         where the client is located
      */
     public Client(final String name, final String email, final String telephoneNumber,
-                  final Integer contactPersonID, final String projectIDs) {
+                  final Integer contactPersonID, final String address) {
         this.name = name;
         this.contactPersonID = contactPersonID;
         this.email = email;
-        this.projectIDs = projectIDs;
         this.telephoneNumber = telephoneNumber;
+        this.address = address;
     }
 
     public Integer getClientID() {
@@ -122,7 +126,7 @@ public class Client {
      *                          of competences of the employee
      */
     public void deleteProject(Integer projectIDToRemove) {
-         if (!this.projectIDs.contains(projectIDToRemove.toString())) {
+        if (!this.projectIDs.contains(projectIDToRemove.toString())) {
             System.out.println("This client does not have this project");
         }
 
@@ -144,10 +148,18 @@ public class Client {
                 ", telefonNumber='" + telephoneNumber + '\'' +
                 ", contactPersonID='" + contactPersonID + '\'' +
                 ", projectIDs='" + projectIDs + '\'' +
-                '}' +"\n";
+                '}' + "\n";
     }
 
     public void setID(int id) {
         this.clientID = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
