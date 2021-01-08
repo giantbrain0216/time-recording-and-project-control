@@ -20,7 +20,7 @@ npm run serve
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">EMAIL</th>
                 <th class="border-top-0" style="color: cornflowerblue">ADDRESS</th>
-                <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>
+<!--                <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>-->
                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
               </thead>
@@ -42,7 +42,7 @@ npm run serve
                 </td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.address }}</td>
-                <td>{{ client.projectIDs }}</td>
+<!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
                 <td>
                   <div>
                     <vs-button @click="checkDeletePermission(client)" icon="delete" class="m-1" color="danger"
@@ -77,7 +77,7 @@ npm run serve
             <hr>
             <p><strong>Contact Person (ID): </strong>{{ currentClient.contactPersonID }}</p>
             <hr>
-            <p><strong>Projects (IDs): </strong>{{ currentClient.projectIDs }}</p>
+            <p><strong>Projects (IDs): </strong>{{currentClient.projectsIDs}}</p>
             <hr>
           </div>
         </vs-card>
@@ -217,7 +217,7 @@ export default {
         emailField: '',
         numberField: '',
         addressField: '',
-
+        projectsField: ''
       },
       prompts: {
         activePrompt: false,
@@ -290,16 +290,31 @@ export default {
      * @return curreentClient with client data of DB
      */
     fetchCustomerAndUpdateCurrentClient: async function (id) {
+      var projects = ""
+      await axios.get('http://localhost:8080/projectsByClient/' + id).then((response) => {
+        var string = ''
+        var arr = response.data
+        // eslint-disable-next-line no-console
+        console.log(arr)
+        // eslint-disable-next-line no-console
+        arr.forEach(function(project) {string = string.concat(", " + project.toString())})
+        projects = string.substr(1)
+      })
+
       await axios.get(`http://localhost:8080/clients/${id}`)
-          .then(response => {
+          .then(async response => {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
             this.currentClient = response.data
+            this.currentClient.projectsIDs = projects
+
           }).catch((error) => {
             if (error.response) {
               this.notify("Client Database Error", error.message, "danger")
             }
           })
+
+
     },
 
     /**
@@ -406,27 +421,40 @@ export default {
         }
       }
       this.editValues.addressField = this.currentClient.address
+      this.editValues.projectsField = this.currentClient.projectsIDs
       this.prompts.activeEditPromt = true;
 
     },
 
+
     /** Checks if a client has any opened projects before delete */
     validForDelete: async function (client) {
-      var projects = client.projectIDs.split(" ")
-      var bool = true
-      for (var i = 0; i < projects.length; i++) {
-        await axios.get(`http://localhost:8080/projects/` + projects[i])
-            .then(response => {
-              var today = new Date().getTime()
-              var date = new Date(response.data.plannedEnd)
-              date = date.getTime()
-              if (today < date) {
-                bool = false
 
-              }
-            })
+      //var projects = client.projectIDs.split(" ")
+      var projects = await this.fetchProjectsByClient(client.clientID)
+
+
+
+      if(projects == ""){
+        return true
+      }else{
+        return false
       }
-      return bool;
+
+      // var bool = true
+      // for (var i = 0; i < projects.length; i++) {
+      //   await axios.get(`http://localhost:8080/projects/` + projects[i])
+      //       .then(response => {
+      //         var today = new Date().getTime()
+      //         var date = new Date(response.data.plannedEnd)
+      //         date = date.getTime()
+      //         if (today < date) {
+      //           bool = false
+      //
+      //         }
+      //       })
+      // }
+      // return bool;
     },
 
     /** When delete button is pressed, checks if client is valid for deletion. If yes, shows delete prompt*/
@@ -436,7 +464,7 @@ export default {
         this.currentClient = client
         this.prompts.activeDeletePrompt = true
       } else {
-        this.notify("Warning", "Client cannot be deleted because it still has open projects", "danger")
+        this.notify("Warning", "Client cannot be deleted because there are still projects associated to this client", "danger")
       }
 
     },
@@ -462,6 +490,7 @@ export default {
       this.editValues.emailField = '';
       this.editValues.numberField = '';
       this.editValues.addressField = '';
+      this.editValues.projectsField = '';
     }
 
   }
