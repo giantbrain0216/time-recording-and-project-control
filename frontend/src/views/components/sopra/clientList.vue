@@ -50,7 +50,7 @@ npm run serve
                       Delete
                     </vs-button>
                     <vs-button @click="updateEditID(client.clientID)" icon="edit" class="m-1" color="warning"
-                               type="filled">
+                               type="filled"> Edit
                     </vs-button>
                     <ExportInvoiceButton :client-i-d="client.clientID"/>
                   </div>
@@ -73,12 +73,15 @@ npm run serve
             <hr>
             <p><strong>Client ID: </strong>{{ currentClient.clientID }}</p>
             <hr>
-            <p><strong>Tel: </strong>{{ currentClient.telephoneNumber }}</p>
+            <p><strong>Phone Number: </strong>{{ currentClient.telephoneNumber }}</p>
             <hr>
             <p><strong>Contact Person (ID): </strong>{{ currentClient.contactPersonID }}</p>
             <hr>
             <p><strong>Projects (IDs): </strong>{{currentClient.projectsIDs}}</p>
             <hr>
+            <p><strong>Address: </strong>{{ currentClient.address}}</p>
+
+
           </div>
         </vs-card>
       </vs-col>
@@ -94,11 +97,10 @@ npm run serve
         :active.sync="prompts.activePrompt"
     >
       <div class="con-exemple-prompt">
-        Please insert client data.
-        <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.nameField"/>
-        <vs-input label-placeholder="Email" class="mb-3" v-model="inputValues.emailField"/>
-        <vs-input label-placeholder="Address" class="mb-3" v-model="inputValues.addressField"/>
-        <vs-input type="number" label-placeholder="Tel" class="mb-3" v-model="inputValues.numberField"/>
+        <vs-input label-placeholder="Name" class="mb-4" v-model="inputValues.nameField"/>
+        <vs-input label-placeholder="Email" class="mb-4" v-model="inputValues.emailField"/>
+        <vs-input label-placeholder="Address" class="mb-4" v-model="inputValues.addressField"/>
+        <vs-input type="number" label-placeholder="Tel" class="mb-4" v-model="inputValues.numberField"/>
         <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
           <div>Contact Person:</div>
           <vs-dropdown class="ml-1">
@@ -135,7 +137,6 @@ npm run serve
         :active.sync="prompts.activeEditPromt"
     >
       <div class="con-exemple-prompt">
-        Please Modify Client Data
 
         <div></div>
         <div>Name</div>
@@ -223,7 +224,9 @@ export default {
         activePrompt: false,
         activeEditPromt: false,
         activeDeletePrompt: false,
-      }
+      },
+      map:null,
+      mapCenter:{lat:0,lng:0},
     };
   },
 

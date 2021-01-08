@@ -581,21 +581,12 @@ export default {
         }
       });
 
-
-
-
-
-
-
-
-
-
-
-
       await this.fetchAllProjects()
       this.resetAllValues()
 
     },
+
+
 
     /**
      * Gets specific client from DB

@@ -238,7 +238,7 @@ export default {
             "end":this.dateInput + " " + this.endtime,
             "description":this.textarea}).then(() => {
          axios.get(`http://localhost:8080/projects/` + this.currentProject.projectNumber).then(response => {
-          var startDate = new Date("1970-01-01 " + this.startime);
+          var startDate = new Date("1970-01-01 " + this.starttime);
           var endDate = new Date("1970-01-01 " + this.endtime);
           let hours = ((endDate - startDate) / 36e5);
           var project = response.data
