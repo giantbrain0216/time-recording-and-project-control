@@ -100,7 +100,6 @@ public class AssignmentController {
      * precondition: The request body corresponds to the Assignment Class and the id exists in the database
      * postcondition: The correct assignment has been updated
      *
-     * @return
      */
     @PutMapping("/assignments")
     public void updateAssignment(@Valid @RequestBody Assignment requestBody) {

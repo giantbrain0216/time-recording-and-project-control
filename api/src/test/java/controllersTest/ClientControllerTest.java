@@ -29,7 +29,7 @@ public class ClientControllerTest {
     private int createMockObject(){
         String requestBody = " {\"name\": \"Muster Firma\" , \"email\": \"muster@web.de\", " +
                 "\"telephoneNumber\": " +
-                "\"1111222111\"," + " \"contactPersonID\": 2, \"projectIDs\": \"1-3\"} ";
+                "\"1111222111\"," + " \"contactPersonID\": 2, \"address\": \"Berlin\"} ";
         try {
             MvcResult result =
                     this.mockMvc.perform(post("/clients").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andReturn();
@@ -121,7 +121,7 @@ public class ClientControllerTest {
                 "\"ModifyTest#2383832\", " +
                 "\"telephoneNumber\": " +
                 "\"1111222111\"," +
-                " \"contactPersonID\": 2, \"projectIDs\": \"1-3\"} ";
+                " \"contactPersonID\": 2, \"address\": \"Berlin\"} ";
         this.mockMvc.perform(put("/clients").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/clients")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("ModifyTest#2383832")));
