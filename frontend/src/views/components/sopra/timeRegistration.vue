@@ -39,10 +39,12 @@
                 </vs-dropdown-menu>
               </vs-dropdown>
             </div>
+
             <div class="m-3">
-            <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for a
-              project which has not started yet</h6>
+            <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for this
+              project because it has not started yet !</h6>
             </div>
+            <div v-show="!projectNotStarted(currentProject)">
             <div class="m-3"><input type="date" id="date" name="date"
                                     v-model="dateInput"
                                     min="2018-01-01" :max="dateToday"></div>
@@ -60,13 +62,13 @@
               <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger"
                            v-model="textarea"/>
             </div>
-
             <div @click="submitTimeRegistration" class="m-3">
               <vs-button color="success" type="relief"
                          v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)">Save Time
                 Registration
               </vs-button>
             </div>
+          </div>
           </div>
 
         </vs-card>
