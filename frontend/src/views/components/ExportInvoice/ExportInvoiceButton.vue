@@ -12,7 +12,7 @@
         :is-valid="validInput(startDateInput,endDateInput,currentSelectedProject,pricePerHour)"
         :active.sync="activePrompt"
     >
-<!--      <div class="con-exemple-prompt">-->
+      <div class="con-exemple-prompt">
 <!--        Please Modify Client Data-->
 <!--      </div>-->
       <div class="mt-2">
@@ -53,7 +53,7 @@
       >
         Please check your input
       </vs-alert>
-
+      </div>
     </vs-prompt>
   </div>
 </template>
@@ -83,7 +83,25 @@ export default {
     };
   },
   async created() {
-    await axios.get(`http://localhost:8080/projects/`)
+
+    await axios.get(`http://localhost:8080/projectsByClient/` + this.clientID)
+        .then(async response => {
+          var arr = response.data
+          for(var i=0;i<arr.length;i++){
+            await axios.get(`http://localhost:8080/projects/` + arr[i]).then((response) => {
+              this.projects.push(response.data)
+            })
+          }
+        })
+        .catch((error) => {
+          if(error.response){
+            this.notify("Projects Database Error", error.message,"danger")
+          }})
+
+
+
+
+ /*   await axios.get(`http://localhost:8080/projects/`)
         .then(response => {
           for(var i=0;i<response.data.length;i++){
             if(response.data[i].clientID == this.clientID){
@@ -94,7 +112,7 @@ export default {
         .catch((error) => {
           if(error.response){
             this.notify("Projects Database Error", error.message,"danger")
-          }})
+          }})*/
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
