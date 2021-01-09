@@ -434,11 +434,22 @@ export default {
     validForDelete: async function (client) {
 
       //var projects = client.projectIDs.split(" ")
-      var projects = await this.fetchProjectsByClient(client.clientID)
+      var projects = []
 
+      await axios.get(`http://localhost:8080/projectsByClient/` + client.clientID).then((response) => {
+        projects = response.data
 
+      }).catch((error) => {
+        if (error.response) {
+          this.notify("Error", error.message, "danger");
 
-      if(projects == ""){
+        }
+      })
+
+      // eslint-disable-next-line no-console
+      console.log(projects)
+
+      if(projects.length ==  0){
         return true
       }else{
         return false
