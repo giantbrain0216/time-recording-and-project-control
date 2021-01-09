@@ -474,8 +474,8 @@ export default {
     deleteEmployee: async function () {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`).then(
-          () => {
-
+         async () => {
+            await axios.delete(`http://localhost:8080/timeregistrationsEmployee/${this.currentEmployee.employeeID}`);
             this.notify('Success','Deletion was successful.',"success")
           }
       ).catch((error) => {

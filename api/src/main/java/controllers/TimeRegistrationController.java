@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.List;
+
 import static properties.Properties.*;
 
 @RestController
@@ -20,12 +21,12 @@ public class TimeRegistrationController {
 
     private TimeRegistrationDatabase timeregistrationDatabase;
 
-    public TimeRegistrationController(){
+    public TimeRegistrationController() {
         try {
             ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://" + LINK, USERNAME,
                     PASSWORD);
             timeregistrationDatabase = new TimeRegistrationDatabase(connectionSource);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
         }
     }
@@ -36,15 +37,37 @@ public class TimeRegistrationController {
      * @return List of all Time Registrations
      */
     @GetMapping("/timeregistrations")
-    public List<TimeRegistration> getProjects() {
+    public List<TimeRegistration> getTimeRegistrations() {
         return timeregistrationDatabase.getAllTimeRegistrations();
     }
 
     /**
-     * REST METHOD GET FOR ONE TIME REGISTRATION
+     * REST METHOD GET FOR ALL TIME REGISTRATIONS OF ONE EMPLOYEE
      *
-     *  precondition: the given id exists in the database
-     *  postcondition: correct Time Registration is returned
+     * @param employeeID whose time registrations should be searched
+     * @return List of all Time Registrations of the employee
+     */
+    @GetMapping("/timeregistrationsEmployee/{id}")
+    public List<TimeRegistration> getTimeRegistrationsEmployee(@PathVariable("id") Integer employeeID) {
+        return timeregistrationDatabase.getTimeRegistrationsOfEmployee(employeeID);
+    }
+
+
+    /**
+     * REST METHOD DELETE FOR ALL TIME REGISTRATIONS OF ONE EMPLOYEE
+     *
+     * @param employeeID whose time registrations should be searched
+      */
+    @DeleteMapping("/timeregistrationsEmployee/{id}")
+    public void deleteTimeRegistrationsEmployee(@PathVariable("id") Integer employeeID) throws SQLException {
+         timeregistrationDatabase.deleteTimeRegistrationsOfEmployee(employeeID);
+    }
+
+    /**
+     * REST METHOD GET FOR ONE TIME REGISTRATION
+     * <p>
+     * precondition: the given id exists in the database
+     * postcondition: correct Time Registration is returned
      *
      * @param timeregistrationID - The ID of the time registration
      * @return the time registration corresponding to the id
@@ -57,7 +80,7 @@ public class TimeRegistrationController {
 
     /**
      * REST METHOD DELETE TIME REGISTRATION
-     *
+     * <p>
      * precondition: the given id exists in the database
      * postcondition: time registration no longer exists in the database and the registration is returned
      *
@@ -73,7 +96,7 @@ public class TimeRegistrationController {
 
     /**
      * REST METHOD POST TO ADD TIME REGISTRATION
-     *
+     * <p>
      * precondition: The request body corresponds to the TimeRegistration Class
      * postcondition: The given Time Registration is added to the database
      *
@@ -84,7 +107,7 @@ public class TimeRegistrationController {
     public int addTimeRegistration(@Valid @RequestBody TimeRegistration timeRegistration) {
         try {
             return timeregistrationDatabase.addToDataBase(timeRegistration);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             return 0;
         }
@@ -92,14 +115,14 @@ public class TimeRegistrationController {
 
     /**
      * REST METHOD UPDATE TIME REGISTRATION
-     *
+     * <p>
      * precondition: The request body corresponds to the TimeRegistration Class and the id exists in the database
      * postcondition: The correct time registration has been updated
      *
      * @return
      */
     @PutMapping("/timeregistrations")
-    public void updateTimeRegistration(@Valid @RequestBody TimeRegistration requestBody){
+    public void updateTimeRegistration(@Valid @RequestBody TimeRegistration requestBody) {
         timeregistrationDatabase.modifyTimeRegistrationData(requestBody);
     }
 }

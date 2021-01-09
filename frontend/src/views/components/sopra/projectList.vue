@@ -562,13 +562,9 @@ export default {
         "competences": this.inputValues.competencesField,
       }).then(async (result) => {
 
-        await axios.put(`http://localhost:8080/clients/`, {
-          'id': this.currentClient.clientID,
-          'name': this.currentClient.name,
-          'email': this.currentClient.email,
-          'telephoneNumber': this.currentClient.telephoneNumber,
-          'contactPersonID': this.currentClient.contactPersonID,
-          'projectIDs': this.currentClient.projectIDs + "\t" + result.data
+        await axios.post(`http://localhost:8080/assignedProjectsClient`, {
+          'clientID': this.currentClient.clientID,
+          'projectID': result.data,
         }).then(() => {
           this.notify("Confirmation", "Project has been successfully deleted.", "success")
 
@@ -585,21 +581,12 @@ export default {
         }
       });
 
-
-
-
-
-
-
-
-
-
-
-
       await this.fetchAllProjects()
       this.resetAllValues()
 
     },
+
+
 
     /**
      * Gets specific client from DB
@@ -686,15 +673,17 @@ export default {
       await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber).then(async () => {
 
         await this.fetchCustomer(this.currentProject.clientID)
-        //if the deletion was successfull, the project is removed from the client
-        await axios.put(`http://localhost:8080/clients/`, {
-          'id': this.currentClient.clientID,
-          'name': this.currentClient.name,
-          'email': this.currentClient.email,
-          'telephoneNumber': this.currentClient.telephoneNumber,
-          'contactPersonID': this.currentClient.contactPersonID,
-          'projectIDs': this.currentClient.projectIDs.replace(this.currentProject.projectNumber.toString(), "") //TODO : HOW TO GET THE ID OF THE PROJECT TO BE ADDED
-        }).then( async () => {
+
+        var idOfAssignment = 0
+        await axios.get(`http://localhost:8080/assignedProjectsClient/`).then(async (result) => {
+           for(var i=0; i<result.data.length; i++){
+             if(result.data[i].clientID == this.currentProject.clientID && result.data[i].projectID == this.currentProject.projectNumber ){
+               idOfAssignment = result.data[i].id
+             }
+          }
+
+        })
+        await axios.delete(`http://localhost:8080/assignedProjectsClient/` + idOfAssignment).then(async() => {
           this.notify("Confirmation","Project has been succesfully deleted.","success")
         }).catch((error) => {
           if (error.response){
