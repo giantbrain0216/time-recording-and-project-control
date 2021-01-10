@@ -61,56 +61,56 @@ export default {
   name: "csv-import",
   data: () => {
     return {
-      timeRegistrationCSV: [[1,8,"2021-01-06 14:00", "2020-12-06 14:30","TEST NEW API 55555 "],
-        [3,8,"2021-12-06 14:00", "2021-12-06 14:50","TEST NEW API"]],
-      selectedFile :false,
+      timeRegistrationCSV: [[1, 8, "2021-01-06 14:00", "2020-12-06 14:30", "TEST NEW API 55555 "],
+        [3, 8, "2021-12-06 14:00", "2021-12-06 14:50", "TEST NEW API"]],
+      selectedFile: false,
     }
   },
   methods: {
-    submit: async function (){
-      for (let i=0; i<this.timeRegistrationCSV.length;i++){
-    await axios.post(`http://localhost:8080/timeregistrations`,
-        {
-          "employeeID": this.timeRegistrationCSV[i][0],
-          "projectID": this.timeRegistrationCSV[i][1],
-          "start": this.timeRegistrationCSV[i][2],
-          "end": this.timeRegistrationCSV[i][3],
-          "description": this.timeRegistrationCSV[i][4]
-        }).then(() => {
-      axios.get(`http://localhost:8080/projects/` + parseInt(this.timeRegistrationCSV[i][1])).then(response => {
-        var startDate = new Date("1970-01-01 "+this.timeRegistrationCSV[i][2].slice(this.timeRegistrationCSV[i][2].length -5 ));
-        var endDate = new Date("1970-01-01 "+this.timeRegistrationCSV[i][3].slice(this.timeRegistrationCSV[i][3].length -5 ));
-        let hours = ((endDate - startDate) / 36e5);
-        // eslint-disable-next-line no-console
-        console.log(hours)
-        var project = response.data
-        project.performedEffort = project.performedEffort + hours
-        axios.put(`http://localhost:8080/projects/`, project).then(async () => {
-          this.notify("Success", "Registration has been successfully added.", "success")
+    submit: async function () {
+      for (let i = 0; i < this.timeRegistrationCSV.length; i++) {
+        await axios.post(`http://localhost:8080/timeregistrations`,
+            {
+              "employeeID": this.timeRegistrationCSV[i][0],
+              "projectID": this.timeRegistrationCSV[i][1],
+              "start": this.timeRegistrationCSV[i][2],
+              "end": this.timeRegistrationCSV[i][3],
+              "description": this.timeRegistrationCSV[i][4]
+            }).then(() => {
+          axios.get(`http://localhost:8080/projects/` + parseInt(this.timeRegistrationCSV[i][1])).then(response => {
+            var startDate = new Date("1970-01-01 " + this.timeRegistrationCSV[i][2].slice(this.timeRegistrationCSV[i][2].length - 5));
+            var endDate = new Date("1970-01-01 " + this.timeRegistrationCSV[i][3].slice(this.timeRegistrationCSV[i][3].length - 5));
+            let hours = ((endDate - startDate) / 36e5);
+            // eslint-disable-next-line no-console
+            var project = response.data
+            project.performedEffort = project.performedEffort + hours
+            axios.put(`http://localhost:8080/projects/`, project).then(async () => {
+              this.notify("Success", "Registration has been successfully added.", "success")
 
 
+            }).catch((error) => {
+              // handle this error here
+              if (error.response) {
+                this.notify("Error", error.message, "danger")
+              }
+            })
 
-        }).catch((error) => {
-          // handle this error here
-          if (error.response) {
-            this.notify("Error", error.message, "danger")
-          }
+          }).catch((error) => {
+            // handle this error here
+            if (error.response) {
+              this.notify("Error", error.message, "danger")
+            }
+          })
         })
-
-      }).catch((error) => {
-        // handle this error here
-        if (error.response) {
-          this.notify("Error", error.message, "danger")
-        }
-      })
-    })
-        .catch((error) => {
-          // handle this error here
-          if (error.response) {
-            this.notify("Error", error.message, "danger")
-          }
-        })}
-      this.selectedFile = false},
+            .catch((error) => {
+              // handle this error here
+              if (error.response) {
+                this.notify("Error", error.message, "danger")
+              }
+            })
+      }
+      this.selectedFile = false
+    },
     handleFileUpload: function () {
       this.selectedFile = true;
       /* return first object in FileList */
@@ -118,39 +118,32 @@ export default {
       this.$papa.parse(file, {
         header: true,
 
-        complete: function (results) {
-          // eslint-disable-next-line no-console
-          console.log(results);
-          // eslint-disable-next-line no-console
-          console.log(results.data);
-          let y = [];
+        complete: (results) => {
+          let timeRegistrationCSV = [];
           for (let i = 0; i < results.data.length; i++) {
-            let sample = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
-            let hours = Math.floor(sample)
-            let minutes = (sample - hours) * 60
+            let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
+            let hours = Math.floor(sumOfStartAndDuration)
+            let minutes = (sumOfStartAndDuration - hours) * 60
             let starttime = results.data[i]["work_ids/date"] + " " + results.data[i]["work_ids/time"];
-            let endtime = results.data[i]["work_ids/date"] + " " + hours + ":" + minutes;
-            let currentTimeRegistratin = [];
-            currentTimeRegistratin.push(results.data[i]["id"])
-            currentTimeRegistratin.push(results.data[i]["project id"])
-            currentTimeRegistratin.push(starttime)
-            currentTimeRegistratin.push(endtime)
-            currentTimeRegistratin.push(results.data[i]["work_ids/name"])
-y.push(currentTimeRegistratin)
-// eslint-disable-next-line no-console
-         //   console.log(currentTimeRegistratin)
+            let endtime = (results.data[i]["work_ids/date"] + " " + hours + ":" + minutes).padEnd(16, '0');
+            let currentTimeRegistration = [];
+
+            // only the data needed in the database will be parsed
+            currentTimeRegistration.push(results.data[i]["id"])
+            currentTimeRegistration.push(results.data[i]["project id"])
+            currentTimeRegistration.push(starttime)
+            currentTimeRegistration.push(endtime)
+            currentTimeRegistration.push(results.data[i]["work_ids/name"]);
+            timeRegistrationCSV.push(currentTimeRegistration)
           }
-          this.timeRegistrationCSV = y;
-
-          // eslint-disable-next-line no-console
-          console.log(y)
-          // eslint-disable-next-line no-console
-          console.log(y[1][4])
-
+          // save the data in the local variable so that http requests and the preview will be possible
+          this.timeRegistrationCSV = timeRegistrationCSV;
 
         }
       })
     },
+
+
     /** Shows prompt with title, message and selected color*/
     notify: function (title, message, color) {
       this.$vs.notify({
