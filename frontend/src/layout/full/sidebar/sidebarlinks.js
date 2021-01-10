@@ -24,5 +24,10 @@
 			name:"Time Registration",
 			icon:"watch_later"
 		},
+		{
+			url:"/CSV-Import",
+			name:"CSV Import",
+			icon:"get_app"
+		},
 
 ]

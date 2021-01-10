@@ -59,6 +59,12 @@ export default new Router({
                     index: 6,
                     component: () => import('./views/components/sopra/timeRegistration')
                 },
+                {
+                    path: '/CSV-Import',
+                    name: 'CSV Import',
+                    index: 6,
+                    component: () => import('./views/components/sopra/CSV-Import')
+                },
 
 
 

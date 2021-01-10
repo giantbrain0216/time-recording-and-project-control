@@ -418,8 +418,8 @@ export default {
       this.editValues.emailField = this.currentClient.email
       this.editValues.numberField = this.currentClient.telephoneNumber
       this.selectedEmployeeID = this.currentClient.contactPersonID
-      for (var i = 0; i < this.employees.length; i++) {
-        if (this.employees[i].employeeID == this.currentClient.contactPersonID) {
+      for (let i = 0; i < this.employees.length; i++) {
+        if (this.employees[i].employeeID === this.currentClient.contactPersonID) {
           this.selectedEmployeeName = this.employees[i].name
         }
       }

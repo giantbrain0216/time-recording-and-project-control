@@ -41,34 +41,34 @@
             </div>
 
             <div class="m-3">
-            <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for this
-              project because it has not started yet !</h6>
+              <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for this
+                project because it has not started yet !</h6>
             </div>
             <div v-show="!projectNotStarted(currentProject)">
-            <div class="m-3"><input type="date" id="date" name="date"
-                                    v-model="dateInput"
-                                    min="2018-01-01" :max="dateToday"></div>
+              <div class="m-3"><input type="date" id="date" name="date"
+                                      v-model="dateInput"
+                                      min="2018-01-01" :max="dateToday"></div>
 
-            <div class="m-3"><input type="time" id="starttime" name="starttime"
-                                    min="06:00" max="22:00" v-model="starttime" required>
-              <small> Start Time</small>
-            </div>
+              <div class="m-3"><input type="time" id="starttime" name="starttime"
+                                      min="06:00" max="22:00" v-model="starttime" required>
+                <small> Start Time</small>
+              </div>
 
-            <div class="m-3"><input type="time" id="endtime" name="endtime"
-                                    min="06:00" max="22:00" v-model="endtime" required>
-              <small> End Time</small>
+              <div class="m-3"><input type="time" id="endtime" name="endtime"
+                                      min="06:00" max="22:00" v-model="endtime" required>
+                <small> End Time</small>
+              </div>
+              <div class="m-3">
+                <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger"
+                             v-model="textarea"/>
+              </div>
+              <div @click="submitTimeRegistration" class="m-3">
+                <vs-button color="success" type="relief"
+                           v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)">Save Time
+                  Registration
+                </vs-button>
+              </div>
             </div>
-            <div class="m-3">
-              <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger"
-                           v-model="textarea"/>
-            </div>
-            <div @click="submitTimeRegistration" class="m-3">
-              <vs-button color="success" type="relief"
-                         v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)">Save Time
-                Registration
-              </vs-button>
-            </div>
-          </div>
           </div>
 
           <div class="container">
@@ -319,96 +319,96 @@ export default {
 
     projectNotStarted(project) {
 
-        // eslint-disable-next-line no-console
-        console.log((new Date(project.plannedStart + " 00:00").getTime() > new Date(this.dateToday).getTime()))
-        return (new Date(project.plannedStart).getTime() > new Date(this.dateToday+ " 00:00").getTime())
+      // eslint-disable-next-line no-console
+      console.log((new Date(project.plannedStart + " 00:00").getTime() > new Date(this.dateToday).getTime()))
+      return (new Date(project.plannedStart).getTime() > new Date(this.dateToday+ " 00:00").getTime())
 
     },
 
-  /**Deletes Registration*/
-  async deleteRegistration() {
-    var timeOfRegistration = 0;
-    await axios.get(`http://localhost:8080/timeregistrations/` + this.currentRegistration).then(response => {
-      var reg = response.data
-      var startDate = new Date(reg.start);
-      var endDate = new Date(reg.end);
-      timeOfRegistration = Math.round(Math.abs(endDate - startDate) / 36e5);
+    /**Deletes Registration*/
+    async deleteRegistration() {
+      var timeOfRegistration = 0;
+      await axios.get(`http://localhost:8080/timeregistrations/` + this.currentRegistration).then(response => {
+        var reg = response.data
+        var startDate = new Date(reg.start);
+        var endDate = new Date(reg.end);
+        timeOfRegistration = Math.round(Math.abs(endDate - startDate) / 36e5);
 
-    }).catch((error) => {
-      if (error.response) {
+      }).catch((error) => {
+        if (error.response) {
 
-        this.notify("Error", error.message, "danger")
-      }
-    })
-
-    await axios.delete(`http://localhost:8080/timeregistrations/` + this.currentRegistration).then(() => {
-      var projectID = 0;
-      for (var i = 0; i < this.timeregistrations.length; i++) {
-        if (this.timeregistrations[i].id === this.currentRegistration) {
-          projectID = this.timeregistrations[i].projectID
+          this.notify("Error", error.message, "danger")
         }
-      }
+      })
 
-      axios.get(`http://localhost:8080/projects/` + projectID).then(response => {
-        var project = response.data
-        project.performedEffort = project.performedEffort - timeOfRegistration
-        axios.put(`http://localhost:8080/projects/`, project).then(() => {
-          this.notify("Success", 'Registration has been successfully deleted.', "success")
-          this.resetAllValues()
+      await axios.delete(`http://localhost:8080/timeregistrations/` + this.currentRegistration).then(() => {
+        var projectID = 0;
+        for (var i = 0; i < this.timeregistrations.length; i++) {
+          if (this.timeregistrations[i].id === this.currentRegistration) {
+            projectID = this.timeregistrations[i].projectID
+          }
+        }
+
+        axios.get(`http://localhost:8080/projects/` + projectID).then(response => {
+          var project = response.data
+          project.performedEffort = project.performedEffort - timeOfRegistration
+          axios.put(`http://localhost:8080/projects/`, project).then(() => {
+            this.notify("Success", 'Registration has been successfully deleted.', "success")
+            this.resetAllValues()
+          }).catch((error) => {
+            // handle this error here
+            if (error.response) {
+              this.notify("Error", error.message, "danger")
+            }
+          })
+
         }).catch((error) => {
           // handle this error here
           if (error.response) {
             this.notify("Error", error.message, "danger")
           }
         })
-
       }).catch((error) => {
         // handle this error here
         if (error.response) {
+          this.activeDeletePrompt = false;
           this.notify("Error", error.message, "danger")
+
         }
       })
-    }).catch((error) => {
-      // handle this error here
-      if (error.response) {
-        this.activeDeletePrompt = false;
-        this.notify("Error", error.message, "danger")
+      await this.fetchTimeRegistrationsByEmployee(this.currentEmployeeID)
+    },
 
-      }
-    })
-    await this.fetchTimeRegistrationsByEmployee(this.currentEmployeeID)
-  },
+    /** Shows prompt with title, message and selected color*/
+    notify: function (title, message, color) {
+      this.$vs.notify({
+        title: title,
+        text: message,
+        color: color, type: "gradient",
+      })
+    },
 
-  /** Shows prompt with title, message and selected color*/
-  notify: function (title, message, color) {
-    this.$vs.notify({
-      title: title,
-      text: message,
-      color: color, type: "gradient",
-    })
-  },
+    /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
+    resetAllValues: function () {
+      this.currentProject = {projectName: "Project"}
+      this.currentEmployee = {name: "Employee"}
+      this.dateInput = this.dateToday
+      this.starttime = ""
+      this.endtime = ""
+      this.timeregistrations = []
+      this.textarea = ""
+    },
 
-  /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
-  resetAllValues: function () {
-    this.currentProject = {projectName: "Project"}
-    this.currentEmployee = {name: "Employee"}
-    this.dateInput = this.dateToday
-    this.starttime = ""
-    this.endtime = ""
-    this.timeregistrations = []
-    this.textarea = ""
-  },
-
-  handleFileUpload: function(){
-    /* return first object in FileList */
-    var file = event.target.files[0];
-    this.$papa.parse(file, {
-      header: true,
-      complete: function (results) {
-        // eslint-disable-next-line no-console
-        console.log(results.data);}
-    })
-  },
+    handleFileUpload: function(){
+      /* return first object in FileList */
+      var file = event.target.files[0];
+      this.$papa.parse(file, {
+        header: true,
+        complete: function (results) {
+          // eslint-disable-next-line no-console
+          console.log(results.data);}
+      })
+    },
 
   }
 }
