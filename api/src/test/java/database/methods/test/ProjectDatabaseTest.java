@@ -39,8 +39,8 @@ public class ProjectDatabaseTest {
      */
     @Test
     public void addToDatabaseTest() throws SQLException {
-        Project project = new Project("Project Test",21, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 100,  "HTML-CSS");
+        Project project = new Project("Project Test", new Date(11 - 11 - 2020),
+                new Date(2020 - 11 - 11), 100);
         projectDatabase.addToDatabase(project);
         Assert.assertTrue(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
         projectDatabase.deleteFromDatabase(project.getProjectNumber());
@@ -59,8 +59,8 @@ public class ProjectDatabaseTest {
      */
     @Test
     public void deleteProjectTest() throws SQLException {
-        Project project = new Project("Project Test",21, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 268,  "HTML");
+        Project project = new Project("Project Test", new Date(11 - 11 - 2020),
+                new Date(2020 - 11 - 11), 100);
         projectDatabase.addToDatabase(project);
         Assert.assertTrue(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
         projectDatabase.deleteFromDatabase(project.getProjectNumber());
@@ -74,15 +74,15 @@ public class ProjectDatabaseTest {
      */
     @Test
     public void modifyProjectDataTest() throws SQLException {
-        Project project = new Project("Project Test",21, new Date(11 - 11 - 2020),
-                new Date(2020 - 11 - 11), 268,  "HTML");
+        Project project = new Project("Project Test", new Date(11 - 11 - 2020),
+                new Date(2020 - 11 - 11), 100);
         projectDatabase.addToDatabase(project);
         Assert.assertTrue(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
 
-        Assert.assertEquals("HTML",project.getCompetences());
-        project.addCompetence("ANGULAR");
+        Assert.assertEquals(100,project.getPlannedEffort());
+        project.setPlannedEffort(250);
         projectDatabase.modifyProjectData(project);
-        Assert.assertEquals("HTML-ANGULAR",project.getCompetences());
+        Assert.assertEquals(250,project.getPlannedEffort());
         projectDatabase.deleteFromDatabase(project.getProjectNumber());
         Assert.assertFalse(projectDatabase.getAllProjects().stream().anyMatch(project1 -> project1.getProjectNumber().equals(project.getProjectNumber())));
 
