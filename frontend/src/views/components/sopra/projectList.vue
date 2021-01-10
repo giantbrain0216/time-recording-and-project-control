@@ -131,10 +131,10 @@
       <vs-prompt
           title="Add New Project"
           color="success"
-          @cancel='resetAllValues;notify("Closed","Add was closed successfully","warning")'
+          @cancel='resetAllValues();notify("Closed","Add was closed successfully","warning")'
           @accept="addProject"
-          @close='resetAllValues;notify("Closed","Add was closed successfully","warning")'
-          :is-valid="validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
+          @close='resetAllValues();notify("Closed","Add was closed successfully","warning")'
+          :is-valid= "validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
           :active.sync="prompts.activeAddPrompt"
       >
         <div class="con-exemple-prompt">
@@ -168,7 +168,22 @@
                     v-model="inputValues.plannedEffortField"/>
           <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
           />
-          <vs-input label-placeholder="competences" class="mb-3" v-model="inputValues.competencesField"/>
+          <autocomplete
+              ref="textSearchOfCompetencesAdd"
+              :search="filterItems"
+              :get-result-value="getResultValue"
+              @submit="handleSubmit"
+              placeholder="Search for a competence"
+              aria-label="Search for a competence"
+              auto-select
+          ></autocomplete>
+<!--          <ul class="list-group mt-2 mb-2" >-->
+<!--            <li v-for="competence in inputValues.selectedCompetences" :key="competence.id" class="list-group-item" style="border-radius:3px !important; width:80%"><div class="float-left">{{ competence.name }}</div><button style="border-radius:3px" type="button" class="btn btn-danger float-right">Remove</button></li>-->
+<!--          </ul>-->
+          <div class="mt-3 mb-3">
+          <vs-checkbox v-for="competence in inputValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="inputValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
+          </div>
+
           <vs-alert
               :active="!validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
               color="danger"
@@ -323,6 +338,7 @@ export default {
   data: () => {
     return {
       projects: [],
+      competences: [],
       clients: [],
       employees: [],
       currentProjectAssignments: [],
@@ -344,7 +360,8 @@ export default {
         plannedStartField: "",
         plannedEndField: "",
         plannedEffortField: "",
-        competencesField: ""
+        selectedCompetences: [],
+        tickBoxesForCompetences: {}
       },
       editValues: {
         clientIDField: "",
@@ -354,7 +371,7 @@ export default {
         performedEffortField: "",
         competencesField: ""
       },
-      selectedClientNameEdit:""
+      selectedClientNameEdit:"",
     };
   },
 
@@ -372,6 +389,7 @@ export default {
     this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllProjects();
+    this.fetchAllCompetences();
 
 
   },
@@ -388,14 +406,58 @@ export default {
   },
 
   methods: {
+
+    /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
+    resetAllValues: function(){
+      this.inputValues.projectName = ''
+      this.inputValues.clientIDField = ''
+      this.inputValues.plannedStartField = this.dateToday;
+      this.inputValues.plannedEndField = this.dateToday;
+      this.inputValues.plannedEffortField = ''
+      this.inputValues.selectedCompetences = []
+      this.inputValues.tickBoxesForCompetences = {}
+      this.currentClient = {name:"Owner of the project"}
+      this.currentEmployee= {name:"Employee"}
+      //this.selectedEmployeeForAssignment= {name:"Employee"}
+      this.assignHours = ''
+      this.editValues.clientIDField = ''
+      this.editValues.plannedStartField = ''
+      this.editValues.plannedEndField = ''
+      this.editValues.plannedEffortField = ''
+      this.editValues.competencesField = ''
+      this.editValues.performedEffortField = ''
+      this.assignHours = 0
+    },
+
+
+    async filterItems(input) {
+
+      if (input.length < 1) { return [] }
+      return this.competences.filter(competence => {
+        return competence.name.toLowerCase()
+            .startsWith(input.toLowerCase())
+      })
+    },
+
+    getResultValue(result){
+      return result.name
+    },
+
+    handleSubmit(result){
+      this.inputValues.selectedCompetences.push(result)
+      this.inputValues.tickBoxesForCompetences[result.id] = true
+      this.$refs.textSearchOfCompetencesAdd.value = ""
+
+    },
+
+
+
     /**Checks for add and edit prompt if time input is correct*/
     validProjectTimes(start,finish,editPrompt){
       if(editPrompt == true){
-        return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(start).getTime() <= new Date(finish).getTime())
-            && this.editValues.competencesField.length > 0)
+        return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(start).getTime() <= new Date(finish).getTime()))
       }else{
-        return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(finish).getTime())
-            && this.inputValues.competencesField.length > 0) }
+        return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(finish).getTime()))}
 
     },
 
@@ -554,13 +616,14 @@ export default {
     addProject: async function () {
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
-        "clientID": parseInt(this.currentClient.clientID),
         "plannedStart": this.inputValues.plannedStartField + " " + "00:00",
         "plannedEnd": this.inputValues.plannedEndField + " " + "00:00",
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": 0,
-        "competences": this.inputValues.competencesField,
       }).then(async (result) => {
+        // eslint-disable-next-line no-console
+
+
 
         await axios.post(`http://localhost:8080/assignedProjectsClient`, {
           'clientID': this.currentClient.clientID,
@@ -573,6 +636,27 @@ export default {
             this.notify("Error", error.message, "danger");
           }
         })
+
+        var arr = Object.keys(this.inputValues.tickBoxesForCompetences)
+
+        for(var i=0; i < arr.length;i++){
+          if(this.inputValues.tickBoxesForCompetences[arr[i]]){
+            // eslint-disable-next-line no-console
+            console.log("Went inside")
+            await axios.post(`http://localhost:8080/assignedCompetencesProject`, {
+              'projectID': result.data,
+              'competenceID': arr[i],
+            }).then((response) => {
+
+              // eslint-disable-next-line no-console
+              console.log("Added Assignment with " + response.data)
+            }).catch((error) => {
+              if (error.response) {
+                this.notify("Error", error.message, "danger");
+              }
+            })
+          }
+        }
 
 
       }).catch((error) => {
@@ -672,7 +756,7 @@ export default {
       //deletes the project
       await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber).then(async () => {
 
-        await this.fetchCustomer(this.currentProject.clientID)
+        //await this.fetchCustomer(this.currentProject.clientID)
 
         var idOfAssignment = 0
         await axios.get(`http://localhost:8080/assignedProjectsClient/`).then(async (result) => {
@@ -690,6 +774,24 @@ export default {
             this.notify("Delete Error", error.message,"danger")
           }
         })
+
+        var idsOfCompetenceAssignments = []
+        await axios.get(`http://localhost:8080/assignedCompetencesProject/`).then(async (result) => {
+          for(var i=0; i<result.data.length; i++){
+            if(result.data[i].projectID == this.currentProject.projectNumber){
+              idsOfCompetenceAssignments.push(result.data[i].id)
+            }
+          }
+        })
+        idsOfCompetenceAssignments.forEach(async (idOfAssignment) => {
+          await axios.delete(`http://localhost:8080/assignedCompetencesProject/` + idOfAssignment).catch((error) => {
+            if (error.response){
+              this.notify("Delete Error", error.message,"danger")
+            }
+          })
+        })
+
+
 
       }).catch((error) => {
         if (error.response){
@@ -736,6 +838,27 @@ export default {
           })
     },
 
+    /**
+     * Gets all competences from DB
+     */
+    fetchAllCompetences: async function () {
+      await axios.get(`http://localhost:8080/competences/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            // eslint-disable-next-line no-console
+            console.log(response.data)
+            this.competences = response.data
+          })
+          .catch((error) => {
+            if(error.response){
+              this.notify("Competences Database Error", error.message,"danger")
+            }else{
+              this.notify("Employees Database Error", "Connection to Database Error","danger")
+            }
+          })
+    },
+
+
 
     /**
      * Gets a specific project from DB
@@ -748,6 +871,22 @@ export default {
             // JSON responses are automatically parsed.
             this.currentProject = response.data
           })
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }
+          })
+      await axios.get(`http://localhost:8080/assignedProjectsClient/`).then(response => {
+        // JSON responses are automatically parsed.
+        for(var i = 0; i<response.data.length;i++){
+          if(response.data[i].projectID == id){
+            this.currentProject.clientID = response.data[i].clientID
+          }
+        }
+
+
+
+      })
           .catch((error) => {
             if(error.response){
               this.notify("Projects Database Error", error.message,"danger")
@@ -792,11 +931,11 @@ export default {
           let deadline = new Date(this.projects[i].plannedEnd)
           if (today.getTime() > deadline.getTime()) {
             // eslint-disable-next-line no-console
-            console.log("Returning false")
+            //console.log("Returning false")
             return false;
           } else {
             // eslint-disable-next-line no-console
-            console.log("Returning true")
+            //console.log("Returning true")
             return true;
           }
         }
@@ -812,28 +951,12 @@ export default {
       })
     },
 
-    /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
-    resetAllValues: function(){
-      this.inputValues.projectName = ''
-      this.inputValues.clientIDField = ''
-      this.inputValues.plannedStartField = this.dateToday;
-      this.inputValues.plannedEndField = this.dateToday;
-      this.inputValues.plannedEffortField = ''
-      this.inputValues.competencesField = ''
-      this.currentClient = {name:"Owner of the project"}
-      this.currentEmployee= {name:"Employee"}
-      //this.selectedEmployeeForAssignment= {name:"Employee"}
-      this.assignHours = ''
-      this.editValues.clientIDField = ''
-      this.editValues.plannedStartField = ''
-      this.editValues.plannedEndField = ''
-      this.editValues.plannedEffortField = ''
-      this.editValues.competencesField = ''
-      this.editValues.performedEffortField = ''
-      this.assignHours = 0
+
+
     }
 
-}
+
+
 }
 </script>
 
