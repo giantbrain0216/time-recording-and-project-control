@@ -71,6 +71,14 @@
           </div>
           </div>
 
+          <div class="container">
+            <div class="large-12 medium-12 small-12 cell">
+              <label>File
+                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+              </label>
+            </div>
+          </div>
+
         </vs-card>
       </vs-col>
       <vs-col v-if="timeregistrations.length!==0" type="flex" vs-justify="center" vs-align="center" :vs-lg="8"
@@ -122,6 +130,10 @@
       </vs-col>
     </vs-row>
 
+
+
+
+
     <vs-prompt
         title="Delete Registration"
         color="danger"
@@ -141,6 +153,7 @@
 <script>
 import axios from "axios";
 
+
 export default {
   name: "timeRegistration",
   data: () => {
@@ -158,7 +171,8 @@ export default {
       activeDeletePrompt: false,
       currentRegistration: 0,
       textarea: '',
-      counterDanger: false
+      counterDanger: false,
+      csv:''
 
     };
   },
@@ -309,9 +323,7 @@ export default {
         console.log((new Date(project.plannedStart + " 00:00").getTime() > new Date(this.dateToday).getTime()))
         return (new Date(project.plannedStart).getTime() > new Date(this.dateToday+ " 00:00").getTime())
 
-    }
-  }
-  ,
+    },
 
   /**Deletes Registration*/
   async deleteRegistration() {
@@ -365,8 +377,7 @@ export default {
       }
     })
     await this.fetchTimeRegistrationsByEmployee(this.currentEmployeeID)
-  }
-  ,
+  },
 
   /** Shows prompt with title, message and selected color*/
   notify: function (title, message, color) {
@@ -375,8 +386,7 @@ export default {
       text: message,
       color: color, type: "gradient",
     })
-  }
-  ,
+  },
 
   /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
   resetAllValues: function () {
@@ -387,9 +397,20 @@ export default {
     this.endtime = ""
     this.timeregistrations = []
     this.textarea = ""
+  },
+
+  handleFileUpload: function(){
+    /* return first object in FileList */
+    var file = event.target.files[0];
+    this.$papa.parse(file, {
+      header: true,
+      complete: function (results) {
+        // eslint-disable-next-line no-console
+        console.log(results.data);}
+    })
+  },
+
   }
-
-
 }
 </script>
 
