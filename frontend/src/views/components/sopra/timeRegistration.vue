@@ -41,7 +41,8 @@
             </div>
 
             <div class="m-3">
-              <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for this
+              <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for
+                this
                 project because it has not started yet !</h6>
             </div>
             <div v-show="!projectNotStarted(currentProject)">
@@ -71,14 +72,16 @@
             </div>
           </div>
 
-          <div class="container">
-            <div class="large-12 medium-12 small-12 cell">
-              <label>File
-                <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-              </label>
-            </div>
+        </vs-card>
+          <h4 style="text-align: center">Or</h4>
+        <vs-card class="cardx mt-3">
+          <div slot="header">
+            <h4>
+              <vs-button @click='$router.push({name:"CSV Import", params: {}});' color="success"
+                         type="filled"> Import Time Registrations From CSV File
+              </vs-button>
+            </h4>
           </div>
-
         </vs-card>
       </vs-col>
       <vs-col v-if="timeregistrations.length!==0" type="flex" vs-justify="center" vs-align="center" :vs-lg="8"
@@ -131,9 +134,6 @@
     </vs-row>
 
 
-
-
-
     <vs-prompt
         title="Delete Registration"
         color="danger"
@@ -172,7 +172,7 @@ export default {
       currentRegistration: 0,
       textarea: '',
       counterDanger: false,
-      csv:''
+      csv: ''
 
     };
   },
@@ -321,7 +321,7 @@ export default {
 
       // eslint-disable-next-line no-console
       console.log((new Date(project.plannedStart + " 00:00").getTime() > new Date(this.dateToday).getTime()))
-      return (new Date(project.plannedStart).getTime() > new Date(this.dateToday+ " 00:00").getTime())
+      return (new Date(project.plannedStart).getTime() > new Date(this.dateToday + " 00:00").getTime())
 
     },
 
@@ -399,14 +399,15 @@ export default {
       this.textarea = ""
     },
 
-    handleFileUpload: function(){
+    handleFileUpload: function () {
       /* return first object in FileList */
       var file = event.target.files[0];
       this.$papa.parse(file, {
         header: true,
         complete: function (results) {
           // eslint-disable-next-line no-console
-          console.log(results.data);}
+          console.log(results.data);
+        }
       })
     },
 
