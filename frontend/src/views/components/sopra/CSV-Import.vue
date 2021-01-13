@@ -8,7 +8,9 @@
       </div>
       <div style="display:flex;">
         <vs-input type="file" style="width: 500px;" id="file" ref="file" v-on:change="handleFileUpload()"></vs-input>
-        <vs-button @click="submit()" class="float-right ml-2" color="success" type="filled"> Submit</vs-button>
+        <vs-button v-show="this.selectedFile" @click="submit()" class="float-right ml-2" color="success" type="filled">
+          Submit
+        </vs-button>
       </div>
     </vs-card>
 
@@ -27,10 +29,13 @@
             <th class="border-top-0">From</th>
             <th class="border-top-0">To</th>
             <th class="border-top-0">Brief Description</th>
+            <th class="border-top-0">Actions</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="registration in timeRegistrationCSV" :key="registration.id">
+          <tr v-for="(registration,index)  in deletedTimeRegistrations"
+              :key="registration.index"
+          >
             <td>
               <div class="d-flex align-items-center">
                 <div class="mr-2">{{ registration[0] }}</div>
@@ -44,7 +49,21 @@
             </td>
             <td>{{ registration[3] }}</td>
             <td>{{ registration[4] }}</td>
+            <td>
+              <div>
+                <vs-button @click="deleteTimeRegistration(index)" v-show="deletedRegistrations(index)" icon="delete" class="m-1" color="danger"
+                           type="filled">
+                  Delete
+                </vs-button>
 
+                <vs-button @click="undo(index)" v-show="!deletedRegistrations(index)" icon="cancel" class="m-1" color="warning"
+                           type="filled">
+                  Undo
+                </vs-button>
+
+
+              </div>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -61,25 +80,35 @@ export default {
   name: "csv-import",
   data: () => {
     return {
-      timeRegistrationCSV: [[1, 8, "2021-01-06 14:00", "2020-12-06 14:30", "TEST NEW API 55555 "],
-        [3, 8, "2021-12-06 14:00", "2021-12-06 14:50", "TEST NEW API"]],
+      timeRegistrationCSV: [],
+      deletedTimeRegistrations: [],
       selectedFile: false,
     }
   },
+
   methods: {
+
     submit: async function () {
-      for (let i = 0; i < this.timeRegistrationCSV.length; i++) {
+      for (let i = 0; i < this.deletedTimeRegistrations.length; i++) {
+        // eslint-disable-next-line no-console
+        console.log(this.deletedTimeRegistrations[i][0].localeCompare("")!==0)
+        if (this.deletedTimeRegistrations[i][0].localeCompare("")!==0){
         await axios.post(`http://localhost:8080/timeregistrations`,
             {
-              "employeeID": this.timeRegistrationCSV[i][0],
-              "projectID": this.timeRegistrationCSV[i][1],
-              "start": this.timeRegistrationCSV[i][2],
-              "end": this.timeRegistrationCSV[i][3],
-              "description": this.timeRegistrationCSV[i][4]
-            }).then(() => {
-          axios.get(`http://localhost:8080/projects/` + parseInt(this.timeRegistrationCSV[i][1])).then(response => {
-            var startDate = new Date("1970-01-01 " + this.timeRegistrationCSV[i][2].slice(this.timeRegistrationCSV[i][2].length - 5));
-            var endDate = new Date("1970-01-01 " + this.timeRegistrationCSV[i][3].slice(this.timeRegistrationCSV[i][3].length - 5));
+              "employeeID": this.deletedTimeRegistrations[i][0],
+              "projectID": this.deletedTimeRegistrations[i][1],
+              "start": this.deletedTimeRegistrations[i][2],
+              "end": this.deletedTimeRegistrations[i][3],
+              "description": this.deletedTimeRegistrations[i][4]
+            }).then(async () => {
+
+          // eslint-disable-next-line no-console
+        //      console.log("Hallo")
+
+          await axios.get(`http://localhost:8080/projects/` + parseInt(this.deletedTimeRegistrations[i][1])).
+          then(response => {
+            var startDate = new Date("1970-01-01 " + this.deletedTimeRegistrations[i][2].slice(this.deletedTimeRegistrations[i][2].length - 5));
+            var endDate = new Date("1970-01-01 " + this.deletedTimeRegistrations[i][3].slice(this.deletedTimeRegistrations[i][3].length - 5));
             let hours = ((endDate - startDate) / 36e5);
             // eslint-disable-next-line no-console
             var project = response.data
@@ -108,7 +137,7 @@ export default {
                 this.notify("Error", error.message, "danger")
               }
             })
-      }
+      }}
       this.selectedFile = false
     },
     handleFileUpload: function () {
@@ -138,12 +167,30 @@ export default {
           }
           // save the data in the local variable so that http requests and the preview will be possible
           this.timeRegistrationCSV = timeRegistrationCSV;
+          //make deep copy so that not the two arrays will be changed when one of them has been changed
+          this.deletedTimeRegistrations = JSON.parse(JSON.stringify(this.timeRegistrationCSV));
 
         }
       })
     },
 
+    deleteTimeRegistration: function (id) {
 
+      // this.$data._deletedTimeRegistrations.push(this.timeRegistrationCSV[id])
+      for (let i = 0; i < this.deletedTimeRegistrations[id].length; i++) {
+        this.$set(this.deletedTimeRegistrations[id],i,"" );
+      }
+    },
+
+    deletedRegistrations: function(id) {
+      return this.deletedTimeRegistrations[id][2].localeCompare("")!==0;
+    },
+
+    undo: function (id){
+      // the loops goes until 5 because we have 4 elements in the arrays
+      for (let i=0;i<5;i++){
+      this.$set(this.deletedTimeRegistrations[id],i,this.timeRegistrationCSV[id][i]) }
+    },
     /** Shows prompt with title, message and selected color*/
     notify: function (title, message, color) {
       this.$vs.notify({
