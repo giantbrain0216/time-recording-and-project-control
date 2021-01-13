@@ -27,14 +27,14 @@ public class ProjectControllerTest {
 
     private int createMockObject(){
 
-        String requestBody = " {\"projectName\":\"Mock Project\",\"clientID\": 1, \"plannedStart\": " +
+        String requestBody = " {\"projectName\":\"Mock Project\", \"plannedStart\": " +
                 "\"2012-04-23 18:25:00\" ,"+
-                " \"plannedEnd\": \"2012-08-23 18:25:00\", \"plannedEffort\": 1000, \"performedEffort\":0," +
-                        "\"competences\":\"SEARCHTOKEN\"} ";
+                " \"plannedEnd\": \"2012-08-23 18:25:00\", \"plannedEffort\": 1000, \"performedEffort\":0 } ";
 
         try {
             MvcResult result =
-                    this.mockMvc.perform(post("/projects").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andReturn();
+                    this.mockMvc.perform(post("/projects").contentType(MediaType.APPLICATION_JSON).
+                            content(requestBody)).andReturn();
             Integer id = Integer.parseInt(result.getResponse().getContentAsString());
             return id;
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class ProjectControllerTest {
     public void getAllProjectsTest() throws Exception {
         int id = createMockObject();
         this.mockMvc.perform(get("/projects")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("SEARCHTOKEN")));
+                .andExpect(content().string(containsString("Mock Project")));
         deleteMockObject(id);
     }
 
@@ -74,7 +74,7 @@ public class ProjectControllerTest {
     public void getProjectTest() throws Exception {
         int id = createMockObject();
         this.mockMvc.perform(get("/projects/" + String.valueOf(id))).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("SEARCHTOKEN")));
+                .andExpect(content().string(containsString("Mock Project")));
         deleteMockObject(id);
     }
 
@@ -89,7 +89,7 @@ public class ProjectControllerTest {
     public void deleteProjectTest() throws Exception {
         int id = createMockObject();
         this.mockMvc.perform(delete("/projects/" + String.valueOf(id))).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("SEARCHTOKEN")));
+                .andExpect(content().string(containsString("Mock Project")));
 
     }
 
@@ -103,7 +103,8 @@ public class ProjectControllerTest {
     @Test
     public void addProjectTest() throws Exception {
         int id = createMockObject();
-        this.mockMvc.perform(delete("/projects/" + String.valueOf(id))).andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("SEARCHTOKEN")));
+        this.mockMvc.perform(delete("/projects/" + String.valueOf(id))).andDo(print())
+                .andExpect(status().isOk()).andExpect(content().string(containsString("Mock Project")));
 
     }
 
@@ -118,13 +119,12 @@ public class ProjectControllerTest {
     @Test
     public void modifyProjectTest() throws Exception {
         int id = createMockObject();
-        String requestBody = " {\"projectName\":\"Mock Project\",\"projectNumber\":" + String.valueOf(id) + ",\"clientID\": 1, \"plannedStart\": " +
+        String requestBody = " {\"projectName\":\"Mock Project\",\"projectNumber\":" + String.valueOf(id) + ", \"plannedStart\": " +
                 "\"2012-04-23 18:25:43\" ,"+
-                " \"plannedEnd\": \"2012-08-23 18:25:43\", \"plannedEffort\": 1000, \"performedEffort\":0," +
-                "\"competences\":\"AZNBNENEN\"} ";
+                " \"plannedEnd\": \"2012-08-23 18:25:43\", \"plannedEffort\": 1000, \"performedEffort\":0} ";
         this.mockMvc.perform(put("/projects").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/projects")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("AZNBNENEN")));
+                .andExpect(content().string(containsString("Mock Project")));
         deleteMockObject(id);
 
     }

@@ -192,7 +192,7 @@ npm run serve
   </div>
 </template>
 
-<script>
+ <script>
 import axios from 'axios';
 import ExportInvoiceButton from "@/views/components/ExportInvoice/ExportInvoiceButton";
 
