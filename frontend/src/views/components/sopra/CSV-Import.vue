@@ -7,7 +7,12 @@
         </h4>
       </div>
       <div style="display:flex;">
-        <vs-input type="file" style="width: 500px;" id="file" ref="file" v-on:change="handleFileUpload()"></vs-input>
+        <span v-show="!this.selectedFile" class="filewrap">
+      <h5 class="mb-2"> Drag and Drop a File here or Click !</h5>
+          <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
+      </span>
+        <p  v-show="this.selectedFile"> TODO : READ NAME FROM INPUT </p>
+
         <vs-button v-show="this.selectedFile" @click="submit()" class="float-right ml-2" color="success" type="filled">
           Submit
         </vs-button>
@@ -19,6 +24,8 @@
         <h4 style="color:#007bff;">
           Preview
         </h4>
+        <h6 class="mt-2" style="color: #28a745">{{ numberOfTimeRegistrations() }} Time Registrations will be uploaded
+          !</h6>
       </div>
       <div class="table-responsive">
         <table class="table v-middle border">
@@ -33,7 +40,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(registration,index)  in deletedTimeRegistrations"
+          <tr v-for="(registration,index)  in timeRegistrationsToUpload"
               :key="registration.index"
           >
             <td>
@@ -51,12 +58,14 @@
             <td>{{ registration[4] }}</td>
             <td>
               <div>
-                <vs-button @click="deleteTimeRegistration(index)" v-show="deletedRegistrations(index)" icon="delete" class="m-1" color="danger"
+                <vs-button @click="deleteTimeRegistration(index)" v-show="deletedRegistrations(index)" icon="delete"
+                           class="m-1" color="danger"
                            type="filled">
                   Delete
                 </vs-button>
 
-                <vs-button @click="undo(index)" v-show="!deletedRegistrations(index)" icon="cancel" class="m-1" color="warning"
+                <vs-button @click="undo(index)" v-show="!deletedRegistrations(index)" icon="cancel" class="m-1"
+                           color="warning"
                            type="filled">
                   Undo
                 </vs-button>
@@ -80,42 +89,58 @@ export default {
   name: "csv-import",
   data: () => {
     return {
-      timeRegistrationCSV: [],
-      deletedTimeRegistrations: [],
+      name:"",
+      allTimeRegistrationFromCSV: [],
+      timeRegistrationsToUpload: [],
       selectedFile: false,
     }
   },
 
+
   methods: {
-
+    numberOfTimeRegistrations() {
+      let sum = 0;
+      for (let i = 0; i < this.timeRegistrationsToUpload.length; i++) {
+        // if one cell has the value null or is empty it will now be uploaded
+        if (!this.timeRegistrationsToUpload[i].includes("") && !this.timeRegistrationsToUpload[i].includes(null))
+          sum += 1;
+      }
+      return sum;
+    },
     submit: async function () {
-      for (let i = 0; i < this.deletedTimeRegistrations.length; i++) {
+      for (let i = 0; i < this.timeRegistrationsToUpload.length; i++) {
         // eslint-disable-next-line no-console
-        console.log(this.deletedTimeRegistrations[i][0].localeCompare("")!==0)
-        if (this.deletedTimeRegistrations[i][0].localeCompare("")!==0){
-        await axios.post(`http://localhost:8080/timeregistrations`,
-            {
-              "employeeID": this.deletedTimeRegistrations[i][0],
-              "projectID": this.deletedTimeRegistrations[i][1],
-              "start": this.deletedTimeRegistrations[i][2],
-              "end": this.deletedTimeRegistrations[i][3],
-              "description": this.deletedTimeRegistrations[i][4]
-            }).then(async () => {
+        console.log(this.timeRegistrationsToUpload[i][0].localeCompare("") !== 0)
+        if (this.timeRegistrationsToUpload[i][0].localeCompare("") !== 0) {
+          await axios.post(`http://localhost:8080/timeregistrations`,
+              {
+                "employeeID": this.timeRegistrationsToUpload[i][0],
+                "projectID": this.timeRegistrationsToUpload[i][1],
+                "start": this.timeRegistrationsToUpload[i][2],
+                "end": this.timeRegistrationsToUpload[i][3],
+                "description": this.timeRegistrationsToUpload[i][4]
+              }).then(async () => {
 
-          // eslint-disable-next-line no-console
-        //      console.log("Hallo")
-
-          await axios.get(`http://localhost:8080/projects/` + parseInt(this.deletedTimeRegistrations[i][1])).
-          then(response => {
-            var startDate = new Date("1970-01-01 " + this.deletedTimeRegistrations[i][2].slice(this.deletedTimeRegistrations[i][2].length - 5));
-            var endDate = new Date("1970-01-01 " + this.deletedTimeRegistrations[i][3].slice(this.deletedTimeRegistrations[i][3].length - 5));
-            let hours = ((endDate - startDate) / 36e5);
             // eslint-disable-next-line no-console
-            var project = response.data
-            project.performedEffort = project.performedEffort + hours
-            axios.put(`http://localhost:8080/projects/`, project).then(async () => {
-              this.notify("Success", "Registration has been successfully added.", "success")
+            //      console.log("Hallo")
 
+            await axios.get(`http://localhost:8080/projects/` + parseInt(this.timeRegistrationsToUpload[i][1])).then(response => {
+              var startDate = new Date("1970-01-01 " + this.timeRegistrationsToUpload[i][2].slice(this.timeRegistrationsToUpload[i][2].length - 5));
+              var endDate = new Date("1970-01-01 " + this.timeRegistrationsToUpload[i][3].slice(this.timeRegistrationsToUpload[i][3].length - 5));
+              let hours = ((endDate - startDate) / 36e5);
+              // eslint-disable-next-line no-console
+              var project = response.data
+              project.performedEffort = project.performedEffort + hours
+              axios.put(`http://localhost:8080/projects/`, project).then(async () => {
+                this.notify("Success", "Registration has been successfully added.", "success")
+
+
+              }).catch((error) => {
+                // handle this error here
+                if (error.response) {
+                  this.notify("Error", error.message, "danger")
+                }
+              })
 
             }).catch((error) => {
               // handle this error here
@@ -123,21 +148,15 @@ export default {
                 this.notify("Error", error.message, "danger")
               }
             })
-
-          }).catch((error) => {
-            // handle this error here
-            if (error.response) {
-              this.notify("Error", error.message, "danger")
-            }
           })
-        })
-            .catch((error) => {
-              // handle this error here
-              if (error.response) {
-                this.notify("Error", error.message, "danger")
-              }
-            })
-      }}
+              .catch((error) => {
+                // handle this error here
+                if (error.response) {
+                  this.notify("Error", error.message, "danger")
+                }
+              })
+        }
+      }
       this.selectedFile = false
     },
     handleFileUpload: function () {
@@ -148,7 +167,7 @@ export default {
         header: true,
 
         complete: (results) => {
-          let timeRegistrationCSV = [];
+          let allTimeRegistrationFromCSV = [];
           for (let i = 0; i < results.data.length; i++) {
             let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
             let hours = Math.floor(sumOfStartAndDuration)
@@ -163,12 +182,12 @@ export default {
             currentTimeRegistration.push(starttime)
             currentTimeRegistration.push(endtime)
             currentTimeRegistration.push(results.data[i]["work_ids/name"]);
-            timeRegistrationCSV.push(currentTimeRegistration)
+            allTimeRegistrationFromCSV.push(currentTimeRegistration)
           }
           // save the data in the local variable so that http requests and the preview will be possible
-          this.timeRegistrationCSV = timeRegistrationCSV;
+          this.allTimeRegistrationFromCSV = allTimeRegistrationFromCSV;
           //make deep copy so that not the two arrays will be changed when one of them has been changed
-          this.deletedTimeRegistrations = JSON.parse(JSON.stringify(this.timeRegistrationCSV));
+          this.timeRegistrationsToUpload = JSON.parse(JSON.stringify(this.allTimeRegistrationFromCSV));
 
         }
       })
@@ -176,20 +195,21 @@ export default {
 
     deleteTimeRegistration: function (id) {
 
-      // this.$data._deletedTimeRegistrations.push(this.timeRegistrationCSV[id])
-      for (let i = 0; i < this.deletedTimeRegistrations[id].length; i++) {
-        this.$set(this.deletedTimeRegistrations[id],i,"" );
+      // this.$data._timeRegistrationsToUpload.push(this.allTimeRegistrationFromCSV[id])
+      for (let i = 0; i < this.timeRegistrationsToUpload[id].length; i++) {
+        this.$set(this.timeRegistrationsToUpload[id], i, "");
       }
     },
 
-    deletedRegistrations: function(id) {
-      return this.deletedTimeRegistrations[id][2].localeCompare("")!==0;
+    deletedRegistrations: function (id) {
+      return this.timeRegistrationsToUpload[id][2].localeCompare("") !== 0;
     },
 
-    undo: function (id){
+    undo: function (id) {
       // the loops goes until 5 because we have 4 elements in the arrays
-      for (let i=0;i<5;i++){
-      this.$set(this.deletedTimeRegistrations[id],i,this.timeRegistrationCSV[id][i]) }
+      for (let i = 0; i < 5; i++) {
+        this.$set(this.timeRegistrationsToUpload[id], i, this.allTimeRegistrationFromCSV[id][i])
+      }
     },
     /** Shows prompt with title, message and selected color*/
     notify: function (title, message, color) {
@@ -203,3 +223,23 @@ export default {
   },
 }
 </script>
+<style>.filewrap {
+  position: relative;
+  background: #17a2b8;
+  border: 1px solid #007bff;
+  padding: 15px 100px;
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input[type="file"] {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}</style>
