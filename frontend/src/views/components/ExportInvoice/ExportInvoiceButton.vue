@@ -89,7 +89,10 @@ export default {
           var arr = response.data
           for(var i=0;i<arr.length;i++){
             await axios.get(`http://localhost:8080/projects/` + arr[i]).then((response) => {
-              this.projects.push(response.data)
+              if(response.data){
+                this.projects.push(response.data)
+              }
+
             })
           }
         })

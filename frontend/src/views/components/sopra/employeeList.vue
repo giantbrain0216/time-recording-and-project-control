@@ -137,9 +137,22 @@
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-4" v-model="inputValues.nameField"/>
           <vs-input label-placeholder="Domicile" class="mb-4" v-model="inputValues.domicileField"/>
-          <vs-input label-placeholder="Competences" class="mb-4" v-model="inputValues.competencesField"/>
           <vs-input type="number" label-placeholder="Working Hours Per Week" class="mb-4"
                     v-model="inputValues.workingHoursField"/>
+
+          <autocomplete
+              ref="textSearchOfCompetencesAdd"
+              :search="filterCompetenceItemsAdd"
+              :get-result-value="getCompetenceResultValue"
+              @submit="handleCompetenceSubmitAdd"
+              placeholder="Search for a competence"
+              aria-label="Search for a competence"
+              auto-select
+          ></autocomplete>
+          <div class="mt-3 mb-3">
+            <vs-checkbox v-for="competence in inputValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="inputValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
+          </div>
+
           <vs-alert
               :active="!validEmployee"
               color="danger"
@@ -152,9 +165,9 @@
       <vs-prompt
           title="Edit Employee"
           color="warning"
-          @cancel='resetAllValues;notify("Edit Closed","Edit was cancelled.","warning")'
+          @cancel='resetAllValues();notify("Edit Closed","Edit was cancelled.","warning")'
           @accept="updateEmployee"
-          @close='resetAllValues;notify("Edit Closed","Edit was cancelled.","warning")'
+          @close='resetAllValues();notify("Edit Closed","Edit was cancelled.","warning")'
           :is-valid="validEmployeeEdit"
           :active.sync="prompts.activeEditPrompt"
       >
@@ -162,13 +175,24 @@
           <h5>Please Modify Employee Data of <strong class="edit-employeee">{{ editValues.nameField }}</strong></h5>
           <h5>ID of the Employee: <strong class="edit-employeee">{{ currentEmployee.employeeID }}</strong></h5>
           <hr>
-          <br>
-          <vs-input label="Domicile" :placeholder="currentEmployee.domicile" class="mb-4"
+          <vs-input label="Domicile" :placeholder="currentEmployee.domicile" class="mb-3"
                     v-model="editValues.domicileField"/>
-          <vs-input label="Competences" :placeholder="currentEmployee.competences" class="mb-4"
-                    v-model="editValues.competencesField"/>
           <vs-input label="Working Hours Peer Week" type="number" :placeholder="currentEmployee.workingHoursPerWeek"
-                    class="mb-4" v-model="editValues.workingHoursField"/>
+                    class="mb-3" v-model="editValues.workingHoursField"/>
+
+          <autocomplete
+              ref="textSearchOfCompetencesEdit"
+              :search="filterCompetenceItemsEdit"
+              :get-result-value="getCompetenceResultValue"
+              @submit="handleCompetenceSubmitEdit"
+              placeholder="Search for a competence"
+              aria-label="Search for a competence"
+              auto-select
+          ></autocomplete>
+          <div class="mt-3 mb-3">
+            <vs-checkbox v-for="competence in editValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
+          </div>
+
           <vs-alert
               :active="!validEmployeeEdit"
               color="warning"
@@ -219,6 +243,7 @@ export default {
   components: {EmployeeChart},
   data: () => {
     return {
+      competences:[],
       employees: [],
       assignments: [],
       projects:[],
@@ -229,14 +254,17 @@ export default {
       inputValues: {
         nameField: '',
         domicileField: '',
-        competencesField: '',
         workingHoursField: '',
+        selectedCompetences: [],
+        tickBoxesForCompetences: {}
       },
       editValues: {
         nameField: '',
         domicileField: '',
         competencesField: '',
-        workingHoursField: ''
+        workingHoursField: '',
+        selectedCompetences: [],
+        tickBoxesForCompetences: {}
       },
       prompts:{activeAddPrompt:false,activeDeletePrompt:false,activeEditPrompt:false, activeDeleteAssignmentPrompt:false}
     }
@@ -245,7 +273,8 @@ export default {
   created() {
     this.fetchEmployees();
     this.fetchAllAssignments();
-    this.fetchAllProjects()
+    this.fetchAllProjects();
+    this.fetchAllCompetences();
   },
 
   computed: {
@@ -264,6 +293,46 @@ export default {
   },
 
   methods: {
+
+    async filterCompetenceItemsAdd(input) {
+
+      if (input.length < 1) { return [] }
+
+      return this.competences.filter(competence => {
+        // eslint-disable-next-line no-console
+        return (competence.name.toLowerCase()
+            .startsWith(input.toLowerCase()) && ! Object.keys(this.inputValues.tickBoxesForCompetences).includes(competence.id.toString()))
+      })
+    },
+
+    getCompetenceResultValue(result){
+      return result.name
+    },
+
+    handleCompetenceSubmitAdd(result){
+      this.inputValues.selectedCompetences.push(result)
+      this.inputValues.tickBoxesForCompetences[result.id] = true
+      this.$refs.textSearchOfCompetencesAdd.value = ""
+
+    },
+
+    async filterCompetenceItemsEdit(input) {
+
+      if (input.length < 1) { return [] }
+
+      return this.competences.filter(competence => {
+        // eslint-disable-next-line no-console
+        return (competence.name.toLowerCase()
+            .startsWith(input.toLowerCase()) && ! Object.keys(this.editValues.tickBoxesForCompetences).includes(competence.id.toString()))
+      })
+    },
+
+    handleCompetenceSubmitEdit(result){
+      this.editValues.selectedCompetences.push(result)
+      this.editValues.tickBoxesForCompetences[result.id] = true
+      this.$refs.textSearchOfCompetencesEdit.value = ""
+
+    },
 
     /**Returns name of project with given id*/
     currentProjectName(id){
@@ -321,9 +390,26 @@ export default {
       await this.fetchEmployeeUpdateCurrentEmployee(id);
       this.editValues.nameField = this.currentEmployee.name
       this.editValues.domicileField = this.currentEmployee.domicile
-      this.editValues.competencesField = this.currentEmployee.competences
       this.editValues.workingHoursField = this.currentEmployee.workingHoursPerWeek
       this.prompts.activeEditPrompt = true;
+
+      await axios.get(`http://localhost:8080/competencesByEmployee/${id}`)
+          .then(async response => {
+            for(var i=0; i<response.data.length;i++){
+
+              await axios.get(`http://localhost:8080/competences/` + response.data[i]).then((competence) => {
+                this.editValues.selectedCompetences.push(competence.data)
+                this.editValues.tickBoxesForCompetences[competence.data.id] = true
+              })
+
+            }
+          })
+          .catch((error) => {
+            if(error.response){
+              this.notify("Assignments Employee Competence Database Error", error.message,"danger")
+            }
+          })
+
 
     },
 
@@ -335,7 +421,6 @@ export default {
         'employeeID': this.currentEmployee.employeeID,
         'name': this.editValues.nameField,
         'domicile': this.editValues.domicileField,
-        'competences': this.editValues.competencesField,//.
         'workingHoursPerWeek': this.editValues.workingHoursField,
         'remainingWorkingHoursPerWeek': parseInt(this.currentEmployee.remainingWorkingHoursPerWeek)
             + parseInt(this.editValues.workingHoursField) - parseInt(this.currentEmployee.workingHoursPerWeek),
@@ -346,8 +431,59 @@ export default {
           this.notify("Editing error",error.message,"danger")
       })
 
+      var currentCompetences = []
+      await axios.get(`http://localhost:8080/competencesByEmployee/` + this.currentEmployee.employeeID)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            currentCompetences = response.data
+          })
+          .catch((error) => {
+            if(error.response){
+              this.notify("Competences for Employees Database Error", error.message,"danger")
+            }
+          })
+
+      var arr = Object.keys(this.editValues.tickBoxesForCompetences)
+
+
+      for(var i=0; i < arr.length;i++){
+        if(this.editValues.tickBoxesForCompetences[parseInt(arr[i])]){
+          if(!currentCompetences.includes(parseInt(arr[i]))){
+
+            await axios.post(`http://localhost:8080/assignedCompetencesEmployee`, {
+              'employeeID': this.currentEmployee.employeeID,
+              'competenceID': parseInt(arr[i]),
+            }).catch((error) => {
+              if (error.response) {
+                this.notify("Error", error.message, "danger");
+              }
+            })
+
+          }
+        }
+        else {
+          if(currentCompetences.includes(parseInt(arr[i]))){
+            await axios.get(`http://localhost:8080/assignedCompetencesEmployee`).then(async response => {
+              for(var j=0; j<response.data.length;j++){
+                if(response.data[j].employeeID == this.currentEmployee.employeeID && response.data[j].competenceID == parseInt( arr[i])){
+                  await axios.delete(`http://localhost:8080/assignedCompetencesEmployee/` + response.data[j].id).catch((error) => {
+                    if (error.response) {
+                      this.notify("Error", error.message, "danger");
+                    }
+                  })
+                }
+              }
+            })
+
+
+
+          }
+        }
+      }
+
       await this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
       await this.fetchEmployees()
+      this.resetAllValues()
     },
 
     /**
@@ -421,6 +557,26 @@ export default {
           })
     },
 
+    /**
+     * Gets all competences from DB
+     */
+    fetchAllCompetences: async function () {
+      await axios.get(`http://localhost:8080/competences/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            // eslint-disable-next-line no-console
+            console.log(response.data)
+            this.competences = response.data
+          })
+          .catch((error) => {
+            if(error.response){
+              this.notify("Competences Database Error", error.message,"danger")
+            }else{
+              this.notify("Employees Database Error", "Connection to Database Error","danger")
+            }
+          })
+    },
+
     fetchAllProjects: async function () {
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {
@@ -445,10 +601,26 @@ export default {
       await axios.post('http://localhost:8080/employees', {
         'name': this.inputValues.nameField,
         'domicile': this.inputValues.domicileField,
-        'competences': this.inputValues.competencesField,//.
         'workingHoursPerWeek': this.inputValues.workingHoursField,
         'remainingWorkingHoursPerWeek': this.inputValues.workingHoursField,
-      }).then(() => {
+      }).then(async (result) => {
+
+        var arr = Object.keys(this.inputValues.tickBoxesForCompetences)
+
+        for(var i=0; i < arr.length;i++){
+          if(this.inputValues.tickBoxesForCompetences[arr[i]]){
+            // eslint-disable-next-line no-console
+            await axios.post(`http://localhost:8080/assignedCompetencesEmployee`, {
+              'employeeID': result.data,
+              'competenceID': arr[i],
+            }).catch((error) => {
+              if (error.response) {
+                this.notify("Error", error.message, "danger");
+              }
+            })
+          }
+        }
+
           this.notify("Success", "Successfully added Employee.","success")
 
           }).catch(error => {
@@ -476,7 +648,26 @@ export default {
       await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`).then(
          async () => {
             await axios.delete(`http://localhost:8080/timeregistrationsEmployee/${this.currentEmployee.employeeID}`);
+
+           var idsOfCompetenceAssignments = []
+           await axios.get(`http://localhost:8080/assignedCompetencesEmployee/`).then(async (result) => {
+             for(var i=0; i<result.data.length; i++){
+               if(result.data[i].employeeID == this.currentEmployee.employeeID){
+                 idsOfCompetenceAssignments.push(result.data[i].id)
+               }
+             }
+           })
+           idsOfCompetenceAssignments.forEach(async (idOfAssignment) => {
+             await axios.delete(`http://localhost:8080/assignedCompetencesEmployee/` + idOfAssignment).catch((error) => {
+               if (error.response){
+                 this.notify("Delete Error", error.message,"danger")
+               }
+             })
+           })
+
+
             this.notify('Success','Deletion was successful.',"success")
+
           }
       ).catch((error) => {
         if (error.response) {
@@ -514,12 +705,14 @@ export default {
     resetAllValues: function(){
       this.inputValues.nameField = '';
       this.inputValues.domicileField = ''
-      this.inputValues.competencesField = ''
       this.inputValues.workingHoursField = ''
+      this.inputValues.selectedCompetences = []
+      this.inputValues.tickBoxesForCompetences = {}
       this.editValues.nameField = ''
       this.editValues.domicileField = ''
-      this.editValues.competencesField = ''
       this.editValues.workingHoursField = ''
+      this.editValues.selectedCompetences = []
+      this.editValues.tickBoxesForCompetences = {}
       this.currentEmployee = {}
 
     }

@@ -128,9 +128,9 @@
     <vs-prompt
         title="Edit Clients"
         color="warning"
-        @cancel='resetAllValues;notify("Closed","Edit was cancelled","warning")'
+        @cancel='resetAllValues();notify("Closed","Edit was cancelled","warning")'
         @accept="updateClient"
-        @close='resetAllValues;notify("Closed","Edit was cancelled","warning")'
+        @close='resetAllValues();notify("Closed","Edit was cancelled","warning")'
         :is-valid="validClientEdit"
         :active.sync="prompts.activeEditPromt"
     >
@@ -520,13 +520,14 @@ export default {
       this.inputValues.emailField = '';
       this.inputValues.numberField = '';
       this.inputValues.addressField = '';
-      this.selectedEmployeeName = "None"
+      this.selectedEmployeeName = "None";
       this.selectedEmployeeID = 0;
       this.editValues.nameField = '';
       this.editValues.emailField = '';
       this.editValues.numberField = '';
       this.editValues.addressField = '';
       this.editValues.projectsField = '';
+      this.currentClient = {};
     }
 
   }
