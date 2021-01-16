@@ -1,4 +1,3 @@
-npm run serve
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
@@ -77,7 +76,10 @@ npm run serve
             <hr>
             <p><strong>Contact Person (ID): </strong>{{ currentClient.contactPersonID }}</p>
             <hr>
-            <p><strong>Projects (IDs): </strong>{{currentClient.projectsIDs}}</p>
+            <p><strong>Projects Names: </strong></p>
+            <ul class="ml-3 mt-2">
+              <li v-for="projectnamedetail in currentClient.projectsNames" :key="projectnamedetail">{{projectnamedetail}}</li>
+            </ul>
             <hr>
             <p><strong>Address: </strong>{{ currentClient.address}}</p>
 
@@ -101,22 +103,18 @@ npm run serve
         <vs-input label-placeholder="Email" class="mb-4" v-model="inputValues.emailField"/>
         <vs-input label-placeholder="Address" class="mb-4" v-model="inputValues.addressField"/>
         <vs-input type="number" label-placeholder="Tel" class="mb-4" v-model="inputValues.numberField"/>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-          <div>Contact Person:</div>
-          <vs-dropdown class="ml-1">
-            <a class="a-icon" href="#">
-              {{ this.selectedEmployeeName }}
-              <vs-icon class="" icon="expand_more"></vs-icon>
-            </a>
-            <vs-dropdown-menu>
-              <vs-dropdown-item @click="selectedEmployeeID=employee.employeeID;selectedEmployeeName=employee.name"
-                                v-for="employee in employees" :key="employee.employeeID">
-                {{ employee.name }}
-              </vs-dropdown-item>
-            </vs-dropdown-menu>
-          </vs-dropdown>
-
-
+        <autocomplete
+            ref="textSearchOfEmployeeAdd"
+            :search="filterEmployeeItemsAdd"
+            :get-result-value="getEmployeeResultValue"
+            @submit="handleEmployeeSubmitAdd"
+            placeholder="Choose contact person"
+            aria-label="Search for a employee"
+            auto-select
+        ></autocomplete>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+          <div>Selected Employee:</div>
+          <div class="ml-1" style="color:royalblue;">{{this.selectedEmployeeName }}</div>
         </div>
         <vs-alert
             :active="!validClient"
@@ -147,26 +145,24 @@ npm run serve
         <vs-input :placeholder="editValues.addressField" class="mb-3" v-model="editValues.addressField"/>
         Telephone Number
         <vs-input :placeholder="editValues.numberField" class="mb-3" v-model="editValues.numberField"/>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-          <div>Contact Person:</div>
-          <vs-dropdown class="ml-1">
-            <a class="a-icon" href="#">
-              {{ this.selectedEmployeeName }}
-              <vs-icon class="" icon="expand_more"></vs-icon>
-            </a>
-            <vs-dropdown-menu>
-              <vs-dropdown-item @click="selectedEmployeeID=employee.employeeID;selectedEmployeeName=employee.name"
-                                v-for="employee in employees" :key="employee.employeeID">
-                {{ employee.name }}
-              </vs-dropdown-item>
-            </vs-dropdown-menu>
-          </vs-dropdown>
-
-
+        <autocomplete
+            ref="textSearchOfEmployeeAdd"
+            :search="filterEmployeeItemsAdd"
+            :get-result-value="getEmployeeResultValue"
+            @submit="handleEmployeeSubmitAdd"
+            placeholder="Choose contact person"
+            aria-label="Search for a employee"
+            auto-select
+        ></autocomplete>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+          <div>Selected Employee:</div>
+          <div class="ml-1" style="color:royalblue;">{{this.selectedEmployeeName }}</div>
         </div>
-
-
-        <div class="mb-3"><h5>{{ "Projects ID's: " + editValues.projectsField }}</h5></div>
+        <hr>
+        <h5>Projects of the Client</h5>
+        <ul class="ml-3 mt-2">
+          <li v-for="projectname in editValues.projectsField" :key="projectname">{{projectname}}</li>
+        </ul>
         <vs-alert
             :active="!validClientEdit"
             color="warning"
@@ -203,7 +199,7 @@ export default {
     return {
       employees: [],
       selectedEmployeeID: 0,
-      selectedEmployeeName: "Contact Person",
+      selectedEmployeeName: "None",
       clients: [],
       currentClient: {},
       showDetailedView: false,
@@ -218,7 +214,7 @@ export default {
         emailField: '',
         numberField: '',
         addressField: '',
-        projectsField: ''
+        projectsField: []
       },
       prompts: {
         activePrompt: false,
@@ -261,6 +257,29 @@ export default {
 
   methods: {
 
+    async filterEmployeeItemsAdd(input) {
+
+      if (input.length < 1) { return [] }
+
+      return this.employees.filter(competence => {
+        // eslint-disable-next-line no-console
+        return (competence.name.toLowerCase()
+            .startsWith(input.toLowerCase()))
+      })
+    },
+
+    getEmployeeResultValue(result){
+      return result.name
+    },
+
+    handleEmployeeSubmitAdd(result){
+      this.selectedEmployeeName = result.name
+      this.selectedEmployeeID = result.employeeID
+      this.$refs.textSearchOfEmployeeAdd.value = ""
+
+    },
+
+
     /**
      * Sets the editValues to the data of the current client
      *
@@ -293,15 +312,18 @@ export default {
      * @return curreentClient with client data of DB
      */
     fetchCustomerAndUpdateCurrentClient: async function (id) {
-      var projects = ""
-      await axios.get('http://localhost:8080/projectsByClient/' + id).then((response) => {
-        var string = ''
+      var arrayProjectNames = []
+      await axios.get('http://localhost:8080/projectsByClient/' + id).then(async (response) => {
         var arr = response.data
         // eslint-disable-next-line no-console
         console.log(arr)
         // eslint-disable-next-line no-console
-        arr.forEach(function(project) {string = string.concat(", " + project.toString())})
-        projects = string.substr(1)
+        for(var i=0;i<arr.length;i++){
+          await axios.get('http://localhost:8080/projects/' + arr[i]).then((response) => {
+            arrayProjectNames.push(response.data.projectName)
+          })
+        }
+
       })
 
       await axios.get(`http://localhost:8080/clients/${id}`)
@@ -309,7 +331,7 @@ export default {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
             this.currentClient = response.data
-            this.currentClient.projectsIDs = projects
+            this.currentClient.projectsNames = arrayProjectNames
 
           }).catch((error) => {
             if (error.response) {
@@ -374,7 +396,7 @@ export default {
         'contactPersonID': this.selectedEmployeeID,
         'address': this.inputValues.addressField
       }).then(() => {
-        this.notify("Notification:", "Employee was added.", "success")
+        this.notify("Notification:", "Client was added.", "success")
       }).catch((error) => {
         if (error.response) {
           this.notify("Add Client Error", error.message, "danger")
@@ -424,7 +446,7 @@ export default {
         }
       }
       this.editValues.addressField = this.currentClient.address
-      this.editValues.projectsField = this.currentClient.projectsIDs
+      this.editValues.projectsField = this.currentClient.projectsNames
       this.prompts.activeEditPromt = true;
 
     },
@@ -498,7 +520,7 @@ export default {
       this.inputValues.emailField = '';
       this.inputValues.numberField = '';
       this.inputValues.addressField = '';
-      this.selectedEmployeeName = "Contact Person"
+      this.selectedEmployeeName = "None"
       this.selectedEmployeeID = 0;
       this.editValues.nameField = '';
       this.editValues.emailField = '';

@@ -136,26 +136,22 @@
           @close='resetAllValues();notify("Closed","Add was closed successfully","warning")'
           :is-valid= "validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
           :active.sync="prompts.activeAddPrompt"
+
       >
-        <div class="con-exemple-prompt">
+        <div class="con-exemple-prompt"  >
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
-          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-            <div> Client:</div>
-            <vs-dropdown class="ml-1">
-              <a class="a-icon" href="#">
-                {{ this.currentClient.name }}
-                <vs-icon class="" icon="expand_more"></vs-icon>
-              </a>
-              <vs-dropdown-menu>
-                <vs-dropdown-item v-for="client in clients" :key="client.clientID"
-                                  @click="currentClient = client">
-                  {{ client.name }}
-                </vs-dropdown-item>
-              </vs-dropdown-menu>
-            </vs-dropdown>
-
-
-          </div>
+          <hr>
+          <autocomplete
+              ref="textSearchOfClientAdd"
+              :search="filterClientItemsAdd"
+              :get-result-value="getClientResultValue"
+              @submit="handleClientSubmitAdd"
+              placeholder="Search for a client"
+              aria-label="Search for a client"
+              auto-select
+          ></autocomplete>
+          <div class="mt-2">{{"Client Selected: " + currentClient.name}}</div>
+          <hr>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
                                                 v-model="inputValues.plannedStartField"
@@ -164,15 +160,17 @@
             <small>Planned End</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
                                               v-model="inputValues.plannedEndField"
                                               :min="inputValues.plannedStartField" max="2030-12-31" required></div>
+          <hr>
           <vs-input type="number" label-placeholder="Planned Effort In Hours" class="mb-3"
                     v-model="inputValues.plannedEffortField"/>
           <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
           />
+          <hr>
           <autocomplete
               ref="textSearchOfCompetencesAdd"
-              :search="filterItemsAdd"
-              :get-result-value="getResultValue"
-              @submit="handleSubmitAdd"
+              :search="filterCompetenceItemsAdd"
+              :get-result-value="getCompetenceResultValue"
+              @submit="handleCompetenceSubmitAdd"
               placeholder="Search for a competence"
               aria-label="Search for a competence"
               auto-select
@@ -227,9 +225,9 @@
 <!--                    v-model="editValues.competencesField"/>-->
           <autocomplete
               ref="textSearchOfCompetencesEdit"
-              :search="filterItemsEdit"
-              :get-result-value="getResultValue"
-              @submit="handleSubmitEdit"
+              :search="filterCompetenceItemsEdit"
+              :get-result-value="getCompetenceResultValue"
+              @submit="handleCompetenceSubmitEdit"
               placeholder="Search for a competence"
               aria-label="Search for a competence"
               auto-select
@@ -261,28 +259,27 @@
         <h5>Project Name: <strong style="color: red"> {{ this.currentProject.projectName }}</strong></h5>
         <hr>
         <div class="con-exemple-prompt">
-          <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-            <div> Employee:</div>
-            <vs-dropdown class="ml-1">
-              <a class="a-icon" href="#">
-                {{ this.currentEmployee.name }}
-                <vs-icon class="" icon="expand_more"></vs-icon>
-              </a>
-              <vs-dropdown-menu>
-                <vs-dropdown-item v-for="employee in employees" :key="employee.employeeID"
-                                  @click="currentEmployee = employee">
-                  {{ employee.name }}
-                </vs-dropdown-item>
-              </vs-dropdown-menu>
-            </vs-dropdown>
-            <vs-input type="number" label-placeholder="Number of Hours This Week" class="mb-3" v-model="assignHours"/>
-
-
-
+          <autocomplete
+              ref="textSearchOfEmployeeAdd"
+              :search="filterEmployeeItemsAdd"
+              :get-result-value="getEmployeeResultValue"
+              @submit="handleEmployeeSubmitAdd"
+              placeholder="Search for a employee"
+              aria-label="Search for a employee"
+              auto-select
+          ></autocomplete>
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+            <div>Selected Employee:</div>
+          <a class="a-icon ml-1 " href="#">
+            {{this.currentEmployee.name }}
+          </a>
           </div>
+          <hr>
+          <vs-input type="number" label-placeholder="Number of Hours Per Week" class="mt-4" v-model="assignHours"/>
+          <hr>
           <div class="ml-5">
             <ul>
-              <li><h6>Remaining Working Hours This Week: <strong
+              <li><h6>Remaining Working Hours per Week: <strong
                   style="color: red">{{ this.currentEmployee.remainingWorkingHoursPerWeek }}</strong></h6></li>
               <li>
                 <h6 class="mt-2 mb-2" style="font-weight: bold">Effort to perform: <strong style="color: red">{{
@@ -290,6 +287,7 @@
                   }}</strong> Hours</h6></li>
             </ul>
           </div>
+          <hr>
           <table class="table">
             <thead>
             <tr class="">
@@ -359,7 +357,7 @@ export default {
       currentProjectAssignments: [],
       dateToday: "",
       assignHours: '',
-      currentClient: {name:"Owner of the project"},
+      currentClient: {name:"None"},
       currentAssignment: {},
       currentProject: {},
       currentEmployee: {name:"Employee"},
@@ -426,30 +424,10 @@ export default {
   methods: {
 
     /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
-    resetAllValues: function(){
-      this.inputValues.projectName = ''
-      this.inputValues.clientIDField = ''
-      this.inputValues.plannedStartField = this.dateToday;
-      this.inputValues.plannedEndField = this.dateToday;
-      this.inputValues.plannedEffortField = ''
-      this.inputValues.selectedCompetences = []
-      this.inputValues.tickBoxesForCompetences = {}
-      this.currentClient = {name:"Owner of the project"}
-      this.currentEmployee= {name:"Employee"}
-      //this.selectedEmployeeForAssignment= {name:"Employee"}
-      this.assignHours = ''
-      this.editValues.clientIDField = ''
-      this.editValues.plannedStartField = ''
-      this.editValues.plannedEndField = ''
-      this.editValues.plannedEffortField = ''
-      this.editValues.selectedCompetences = []
-      this.editValues.tickBoxesForCompetences = {}
-      this.editValues.performedEffortField = ''
-      this.assignHours = 0
-    },
 
 
-    async filterItemsAdd(input) {
+
+    async filterCompetenceItemsAdd(input) {
 
       if (input.length < 1) { return [] }
 
@@ -460,18 +438,18 @@ export default {
       })
     },
 
-    getResultValue(result){
+    getCompetenceResultValue(result){
       return result.name
     },
 
-    handleSubmitAdd(result){
+    handleCompetenceSubmitAdd(result){
       this.inputValues.selectedCompetences.push(result)
       this.inputValues.tickBoxesForCompetences[result.id] = true
       this.$refs.textSearchOfCompetencesAdd.value = ""
 
     },
 
-    async filterItemsEdit(input) {
+    async filterCompetenceItemsEdit(input) {
 
       if (input.length < 1) { return [] }
 
@@ -482,10 +460,55 @@ export default {
       })
     },
 
-    handleSubmitEdit(result){
+    handleCompetenceSubmitEdit(result){
       this.editValues.selectedCompetences.push(result)
       this.editValues.tickBoxesForCompetences[result.id] = true
       this.$refs.textSearchOfCompetencesEdit.value = ""
+
+    },
+
+
+
+    async filterClientItemsAdd(input) {
+
+      if (input.length < 1) { return [] }
+
+      return this.clients.filter(competence => {
+        // eslint-disable-next-line no-console
+        return (competence.name.toLowerCase()
+            .startsWith(input.toLowerCase()))
+      })
+    },
+
+    getClientResultValue(result){
+      return result.name
+    },
+
+    handleClientSubmitAdd(result){
+      this.currentClient = result
+      this.$refs.textSearchOfClientAdd.value = ""
+
+    },
+
+
+    async filterEmployeeItemsAdd(input) {
+
+      if (input.length < 1) { return [] }
+
+      return this.employees.filter(competence => {
+        // eslint-disable-next-line no-console
+        return (competence.name.toLowerCase()
+            .startsWith(input.toLowerCase()) && !this.currentProjectAssignments.map(x => x.employeeID).includes(competence.employeeID))
+      })
+    },
+
+    getEmployeeResultValue(result){
+      return result.name
+    },
+
+    handleEmployeeSubmitAdd(result){
+      this.currentEmployee = result
+      this.$refs.textSearchOfEmployeeAdd.value = ""
 
     },
 
@@ -699,6 +722,7 @@ export default {
       });
 
       await this.fetchAllProjects()
+      await this.fetchNameOfClientForProjects()
       this.resetAllValues()
 
     },
@@ -1109,6 +1133,28 @@ export default {
         text: message,
         color:color, type: "gradient",
       })
+    },
+
+    resetAllValues: function(){
+      this.inputValues.projectName = ''
+      this.inputValues.clientIDField = ''
+      this.inputValues.plannedStartField = this.dateToday;
+      this.inputValues.plannedEndField = this.dateToday;
+      this.inputValues.plannedEffortField = ''
+      this.inputValues.selectedCompetences = []
+      this.inputValues.tickBoxesForCompetences = {}
+      this.currentClient = {name:"None"}
+      this.currentEmployee= {name:"Employee"}
+      //this.selectedEmployeeForAssignment= {name:"Employee"}
+      this.assignHours = ''
+      this.editValues.clientIDField = ''
+      this.editValues.plannedStartField = ''
+      this.editValues.plannedEndField = ''
+      this.editValues.plannedEffortField = ''
+      this.editValues.selectedCompetences = []
+      this.editValues.tickBoxesForCompetences = {}
+      this.editValues.performedEffortField = ''
+      this.assignHours = 0
     },
 
 
