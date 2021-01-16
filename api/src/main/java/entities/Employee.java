@@ -29,8 +29,6 @@ public class Employee {
     @DatabaseField(columnName = "Domicile")
     private String domicile;
 
-    @DatabaseField(columnName = "Competences")
-    private String competences;
 
     @DatabaseField(columnName = "Working hours per week")
     @NotNull
@@ -43,20 +41,27 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String name, String domicile, String competences, Integer workingHoursPerWeek) {
-        this.name = name;
-        this.domicile = domicile;
-        this.workingHoursPerWeek = workingHoursPerWeek;
-        this.competences = competences.toUpperCase();
-        this.remainingWorkingHoursPerWeek = workingHoursPerWeek;
+    public Employee(String name, String domicile, Integer workingHoursPerWeek) {
+        this.setName(name);
+        this.setDomicile(domicile);
+        this.setWorkingHoursPerWeek(workingHoursPerWeek);
+        this.setRemainingWorkingHoursPerWeek(workingHoursPerWeek);
     }
 
-    public int getEmployeeID() {
+    public Integer getEmployeeID() {
         return employeeID;
+    }
+
+    public void setEmployeeID(Integer employeeID) {
+        this.employeeID = employeeID;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDomicile() {
@@ -65,61 +70,6 @@ public class Employee {
 
     public void setDomicile(String domicile) {
         this.domicile = domicile;
-    }
-
-    public String getCompetences() {
-        return competences;
-    }
-
-    public void addCompetence(String competence) {
-        if (!this.competences.equals("")) {
-            this.competences += "-" + competence.toUpperCase();
-        } else {
-            this.competences = competence.toUpperCase();
-        }
-
-    }
-
-    /**
-     * a competence will be removed from the list of competences of the employee.
-     * If this competence the first saved competence and the employee has other
-     * competences, then both the competence and the delimiter symbol after it will be removed.
-     * if the employee has many competences then both the competence and the delimiter
-     * symbol before it will be removed, else the employee has only this competence and
-     * after removing it he will have no qualities more
-     *
-     * @param competenceToRemove competence to be removed from the list
-     *                           of competences of the employee
-     */
-    public void removeCompetence(String competenceToRemove) {
-        competenceToRemove = competenceToRemove.toUpperCase();
-        if (!this.competences.contains(competenceToRemove)) {
-            System.out.println("This employee does not have this competence");
-        }
-
-        if (this.competences.contains(competenceToRemove + "-")) {
-            this.competences = this.competences.replace(competenceToRemove + "-", "");
-        } else if (this.competences.contains("-" + competenceToRemove)) {
-            this.competences = this.competences.replace("-" + competenceToRemove, "");
-        } else {
-            this.competences = "";
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "employeeID=" + employeeID +
-                ", name='" + name + '\'' +
-                ", domicile='" + domicile + '\'' +
-                ", competences='" + competences + '\'' +
-                ", working HoursPerWeek=" + workingHoursPerWeek +
-                ", Remaining Working Hours Per Week=" + getRemainingWorkingHoursPerWeek() +
-                '}';
-    }
-
-    public void setID(int id) {
-        this.employeeID = id;
     }
 
     public Integer getWorkingHoursPerWeek() {
