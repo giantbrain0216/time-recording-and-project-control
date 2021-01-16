@@ -75,7 +75,7 @@ public class EmployeeDatabase {
         }
         int employeeToAddID = createID();
         ;
-        employee.setID(employeeToAddID);
+        employee.setEmployeeID(employeeToAddID);
         employeeDao.create(employee);
         return employeeToAddID;
     }

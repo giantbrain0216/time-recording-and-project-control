@@ -26,12 +26,11 @@ public class EmployeeControllerTest {
     private int createMockObject(){
         String requestBody = " {\"name\": \"Max Mustermann\", \"domicile\": \"Made to be " +
                 "deleted\"," +
-                " \"competences\": \"UNIT-TESTS\", \"workingHoursPerWeek\": 40} ";
+                "  \"workingHoursPerWeek\": 40} ";
         try {
             MvcResult result =
                     this.mockMvc.perform(post("/employees").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andReturn();
-            Integer id = Integer.parseInt(result.getResponse().getContentAsString());
-            return id;
+            return Integer.parseInt(result.getResponse().getContentAsString());
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -120,7 +119,7 @@ public class EmployeeControllerTest {
                 "dont" +
                 " " +
                 "delete\"," +
-                " \"competences\": \"UNIT-TESTS\", \"workingHoursPerWeek\": 40} ";
+                " \"workingHoursPerWeek\": 40} ";
         this.mockMvc.perform(put("/employees").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/employees")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("DeleteTest#927292")));

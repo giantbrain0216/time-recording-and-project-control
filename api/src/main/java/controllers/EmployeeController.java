@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+
 import static properties.Properties.*;
 
 @RestController
@@ -22,15 +23,15 @@ public class EmployeeController {
     private EmployeeDatabase employeeDatabase;
 
 
-    public EmployeeController(){
+    public EmployeeController() {
         try {
             ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://" + LINK, USERNAME,
                     PASSWORD);
             employeeDatabase = new EmployeeDatabase(connectionSource);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
         }
-           }
+    }
 
     /**
      * REST METHOD GET FOR ALL EMPLOYEES
@@ -44,22 +45,21 @@ public class EmployeeController {
 
     /**
      * REST METHOD GET FOR ONE EMPLOYEES
-     *
-     *  precondition: the given id exists in the database
-     *  postcondition: correct employee is returned
+     * <p>
+     * precondition: the given id exists in the database
+     * postcondition: correct employee is returned
      *
      * @param employeeID - The ID of the employee
-     * @return  Employee corresponding to the id
+     * @return Employee corresponding to the id
      */
     @GetMapping("/employees/{id}")
     public Employee getEmployee(@PathVariable("id") Integer employeeID) {
-        Employee employee = employeeDatabase.getEmployee(employeeID);
-        return employee;
+        return employeeDatabase.getEmployee(employeeID);
     }
 
     /**
      * REST METHOD DELETE EMPLOYEE
-     *
+     * <p>
      * precondition: the given id exists in the database
      * postcondition: employee no longer exists in the database and the employee is returned
      *
@@ -75,18 +75,18 @@ public class EmployeeController {
 
     /**
      * REST METHOD POST EMPLOYEE TO ADD EMPLOYEE
-     *
+     * <p>
      * precondition: The request body corresponds to the Employee Class
      * postcondition: The given employee is added to the database
      *
-     * @return
+     * @return ID of the new added employee
      */
     @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
-    public int addEmployee(@Valid @RequestBody Employee requestBody){
+    public int addEmployee(@Valid @RequestBody Employee requestBody) {
         try {
             return employeeDatabase.addToDatabase(requestBody);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             return 0;
         }
@@ -94,15 +94,13 @@ public class EmployeeController {
 
     /**
      * REST METHOD UPDATE EMPLOYEE
-     *
+     * <p>
      * precondition: The request body corresponds to the Employee Class and the id exists in the database
      * postcondition: The correct employee has been updated
-     *
-     * @return
      */
     @PutMapping("/employees")
-    public void updateEmployee(@Valid @RequestBody Employee requestBody){
-            employeeDatabase.modifyEmployeeData(requestBody);
+    public void updateEmployee(@Valid @RequestBody Employee requestBody) {
+        employeeDatabase.modifyEmployeeData(requestBody);
 
     }
 }
