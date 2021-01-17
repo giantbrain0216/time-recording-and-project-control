@@ -10,7 +10,7 @@
         
         <div class="footer-sidebar" slot="footer">
             <vs-button icon="reply" color="primary" type="flat" href="https://itestra.com/">Go to Itestra Website</vs-button>
-            <p style="font-size:9px">Copyright © 2020 Mohamed, Clirim, Radu</p>
+            <p style="font-size:9px">Copyright © 2021 Mohamed, Clirim, Radu <br> V1.1.3</p>
         </div>
 
     </vs-sidebar>

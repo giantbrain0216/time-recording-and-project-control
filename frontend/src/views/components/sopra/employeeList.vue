@@ -668,24 +668,9 @@ export default {
       this.activeDeletePrompt = false;
       await axios.delete(`http://localhost:8080/employees/${this.currentEmployee.employeeID}`).then(
          async () => {
-            await axios.delete(`http://localhost:8080/timeregistrationsEmployee/${this.currentEmployee.employeeID}`);
-
-           var idsOfCompetenceAssignments = []
-           await axios.get(`http://localhost:8080/assignedCompetencesEmployee/`).then(async (result) => {
-             for(var i=0; i<result.data.length; i++){
-               if(result.data[i].employeeID == this.currentEmployee.employeeID){
-                 idsOfCompetenceAssignments.push(result.data[i].id)
-               }
-             }
-           })
-           idsOfCompetenceAssignments.forEach(async (idOfAssignment) => {
-             await axios.delete(`http://localhost:8080/assignedCompetencesEmployee/` + idOfAssignment).catch((error) => {
-               if (error.response){
-                 this.notify("Delete Error", error.message,"danger")
-               }
-             })
-           })
-
+           await axios.delete(`http://localhost:8080/timeregistrationsEmployee/${this.currentEmployee.employeeID}`);
+           await axios.delete(`http://localhost:8080/assignmentsbyemployee/${this.currentEmployee.employeeID}`);
+           await axios.delete(`http://localhost:8080/allAssignedCompetencesEmployee/${this.currentEmployee.employeeID}`);
 
             this.notify('Success','Deletion was successful.',"success")
 
