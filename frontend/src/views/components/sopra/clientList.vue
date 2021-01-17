@@ -256,7 +256,7 @@ export default {
   },
 
   methods: {
-
+    /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
 
       if (input.length < 1) { return [] }
@@ -267,11 +267,11 @@ export default {
             .startsWith(input.toLowerCase()))
       })
     },
-
+    /**Returns name of the employee objects*/
     getEmployeeResultValue(result){
       return result.name
     },
-
+    /**Handle function when employee is selected by searchbar add form*/
     handleEmployeeSubmitAdd(result){
       this.selectedEmployeeName = result.name
       this.selectedEmployeeID = result.employeeID

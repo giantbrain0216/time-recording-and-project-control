@@ -63,8 +63,8 @@
               <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger"
                            v-model="textarea"/>
             </div>
-            <div @click="submitTimeRegistration" class="m-3">
-              <vs-button color="success" type="relief"
+            <div  class="m-3">
+              <vs-button color="success" type="relief" @click="submitTimeRegistration"
                          v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)">Save Time
                 Registration
               </vs-button>
@@ -195,7 +195,7 @@ export default {
 
   methods: {
 
-
+    /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
 
       if (input.length < 1) { return [] }
@@ -206,11 +206,11 @@ export default {
             .startsWith(input.toLowerCase()))
       })
     },
-
+    /**Returns name of the employee objects*/
     getEmployeeResultValue(result){
       return result.name
     },
-
+    /**Handle function when employee is selected by searchbar add form*/
     async handleEmployeeSubmitAdd(result){
       await this.fetchProjectsByEmployee(result.employeeID);
       await this.fetchTimeRegistrationsByEmployee(result.employeeID);
@@ -219,7 +219,7 @@ export default {
 
     },
 
-
+    /**Filters items for searchbar of projects on add form*/
     async filterProjectItemsAdd(input) {
 
       if (input.length < 1) { return [] }
@@ -230,11 +230,11 @@ export default {
             .startsWith(input.toLowerCase()))
       })
     },
-
+    /**Returns name of the project objects*/
     getProjectResultValue(result){
       return result.projectName
     },
-
+    /**Handle function when project is selected by searchbar add form*/
     handleProjectSubmitAdd(result){
       this.currentProject = result;
       this.$refs.textSearchOfEmployeeAdd.value = ""
@@ -350,6 +350,7 @@ export default {
           in this.currentProject && this.currentEmployee.name !== "None")
     },
 
+    /**Checks if a project has not started yet*/
     projectNotStarted(project) {
 
         // eslint-disable-next-line no-console

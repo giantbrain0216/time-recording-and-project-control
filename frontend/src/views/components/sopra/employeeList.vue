@@ -280,9 +280,14 @@ export default {
   computed: {
     /**Checks if the input is valid for the add prompt */
     validEmployee() {
-      return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 26
-          && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
-      )
+      if(!this.inputValues.workingHoursField){
+        return false;
+      }else {
+        return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 26
+            && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
+            && this.inputValues.workingHoursField > 0 && this.inputValues.workingHoursField < 41
+        )
+      }
     },
     /**Checks if the input is valid for the edit prompt */
     validEmployeeEdit() {
@@ -294,6 +299,7 @@ export default {
 
   methods: {
 
+    /**Filters items for searchbar of competences on add form*/
     async filterCompetenceItemsAdd(input) {
 
       if (input.length < 1) { return [] }
@@ -304,18 +310,18 @@ export default {
             .startsWith(input.toLowerCase()) && ! Object.keys(this.inputValues.tickBoxesForCompetences).includes(competence.id.toString()))
       })
     },
-
+    /**Returns name of the competence objects*/
     getCompetenceResultValue(result){
       return result.name
     },
-
+    /**Handle function when competence is selected by searchbar add form*/
     handleCompetenceSubmitAdd(result){
       this.inputValues.selectedCompetences.push(result)
       this.inputValues.tickBoxesForCompetences[result.id] = true
       this.$refs.textSearchOfCompetencesAdd.value = ""
 
     },
-
+    /**Filters items for searchbar of competences on edit form*/
     async filterCompetenceItemsEdit(input) {
 
       if (input.length < 1) { return [] }
@@ -326,7 +332,7 @@ export default {
             .startsWith(input.toLowerCase()) && ! Object.keys(this.editValues.tickBoxesForCompetences).includes(competence.id.toString()))
       })
     },
-
+    /**Handle function when competence is selected by searchbar edit form*/
     handleCompetenceSubmitEdit(result){
       this.editValues.selectedCompetences.push(result)
       this.editValues.tickBoxesForCompetences[result.id] = true
@@ -508,11 +514,25 @@ export default {
      * @param id of employee to get from DB
      */
     fetchEmployeeUpdateCurrentEmployee: async function (id) {
+
+      var competencesString = ""
+      await axios.get(`http://localhost:8080/competencesByEmployee/` + id).then(async response => {
+        // JSON responses are automatically parsed.
+        for(var i = 0; i<response.data.length;i++){
+          await axios.get(`http://localhost:8080/competences/` + response.data[i]).then(response1 => {
+
+            competencesString = competencesString.concat(", " + response1.data.name)
+          })
+        }
+
+      })
+
       await axios.get(`http://localhost:8080/employees/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
             this.currentEmployee = response.data
+            this.currentEmployee.competences = competencesString.substr(1);
           }).catch((error) => {
             if (error.response){
               this.notify("Employees Database Error",error.message,"danger")
@@ -577,6 +597,7 @@ export default {
           })
     },
 
+    /** Fetches all projects*/
     fetchAllProjects: async function () {
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {

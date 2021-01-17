@@ -134,7 +134,7 @@
           @cancel='resetAllValues();notify("Closed","Add was closed successfully","warning")'
           @accept="addProject"
           @close='resetAllValues();notify("Closed","Add was closed successfully","warning")'
-          :is-valid= "validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
+          :is-valid= "validProjectAdd"
           :active.sync="prompts.activeAddPrompt"
 
       >
@@ -150,7 +150,10 @@
               aria-label="Search for a client"
               auto-select
           ></autocomplete>
-          <div class="mt-2">{{"Client Selected: " + currentClient.name}}</div>
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+            <div>Selected Client:</div>
+            <div class="ml-1" style="color:royalblue;">{{currentClient.name }}</div>
+          </div>
           <hr>
           <div class="mb-3">
             <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
@@ -183,7 +186,7 @@
           </div>
 
           <vs-alert
-              :active="!validProjectTimes(inputValues.plannedStartField,inputValues.plannedEndField,false)"
+              :active="!validProjectAdd"
               color="danger"
               icon="new_releases"
           >
@@ -200,7 +203,7 @@
           @cancel='resetAllValues();notify("Closed","Edit was cancelled successfully.","warning")'
           @accept="updateProject"
           @close='resetAllValues();notify("Closed","Edit was cancelled successfully.","warning")'
-          :is-valid="validProjectTimes(editValues.plannedStartField,editValues.plannedEndField,true)"
+          :is-valid="validProjectEdit"
           :active.sync="prompts.activeEditPrompt"
       >
         <h5>Project Name : {{ currentProject.projectName }}</h5>
@@ -238,7 +241,7 @@
           </div>
 
           <vs-alert
-              :active="!validProjectTimes(editValues.plannedStartField,editValues.plannedEndField,true)"
+              :active="!validProjectEdit"
               color="warning"
               icon="new_releases"
           >
@@ -412,21 +415,28 @@ export default {
 
 
   computed: {
-
+    /**Checks if Assign of employee is valid*/
     validEmployeeAssign() {
       return this.currentEmployee.remainingWorkingHoursPerWeek >= this.assignHours &&
           this.currentProject.plannedEffort - this.currentProject.performedEffort >= this.assignHours && this.currentEmployee.name !== "Employee" && this.assignHours !== "" && this.assignHours > 0
     },
 
+    validProjectAdd(){
+      return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(this.inputValues.plannedStartField).getTime() <= new Date(this.inputValues.plannedEndField).getTime()) && this.inputValues.projectName !== '' && this.currentClient.name !== 'None')
+    },
+
+    validProjectEdit(){
+      return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(this.editValues.plannedStartField).getTime() <= new Date(this.editValues.plannedEndField).getTime()))
+    }
 
   },
 
   methods: {
 
-    /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
 
 
 
+    /**Filters items for searchbar of competences on add form*/
     async filterCompetenceItemsAdd(input) {
 
       if (input.length < 1) { return [] }
@@ -437,18 +447,18 @@ export default {
             .startsWith(input.toLowerCase()) && ! Object.keys(this.inputValues.tickBoxesForCompetences).includes(competence.id.toString()))
       })
     },
-
+    /**Returns name of the competence objects*/
     getCompetenceResultValue(result){
       return result.name
     },
-
+    /**Handle function when competence is selected by searchbar add form*/
     handleCompetenceSubmitAdd(result){
       this.inputValues.selectedCompetences.push(result)
       this.inputValues.tickBoxesForCompetences[result.id] = true
       this.$refs.textSearchOfCompetencesAdd.value = ""
 
     },
-
+    /**Filters items for searchbar of competences on edit form*/
     async filterCompetenceItemsEdit(input) {
 
       if (input.length < 1) { return [] }
@@ -459,7 +469,7 @@ export default {
             .startsWith(input.toLowerCase()) && ! Object.keys(this.editValues.tickBoxesForCompetences).includes(competence.id.toString()))
       })
     },
-
+    /**Handle function when competence is selected by searchbar edit form*/
     handleCompetenceSubmitEdit(result){
       this.editValues.selectedCompetences.push(result)
       this.editValues.tickBoxesForCompetences[result.id] = true
@@ -468,7 +478,7 @@ export default {
     },
 
 
-
+    /**Filters items for searchbar of clients on add form*/
     async filterClientItemsAdd(input) {
 
       if (input.length < 1) { return [] }
@@ -479,18 +489,18 @@ export default {
             .startsWith(input.toLowerCase()))
       })
     },
-
+    /**Returns name of the client objects*/
     getClientResultValue(result){
       return result.name
     },
-
+    /**Handle function when client is selected by searchbar edit form*/
     handleClientSubmitAdd(result){
       this.currentClient = result
       this.$refs.textSearchOfClientAdd.value = ""
 
     },
 
-
+    /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
 
       if (input.length < 1) { return [] }
@@ -501,11 +511,11 @@ export default {
             .startsWith(input.toLowerCase()) && !this.currentProjectAssignments.map(x => x.employeeID).includes(competence.employeeID))
       })
     },
-
+    /**Returns name of the employee objects*/
     getEmployeeResultValue(result){
       return result.name
     },
-
+    /**Handle function when employee is selected by searchbar add form*/
     handleEmployeeSubmitAdd(result){
       this.currentEmployee = result
       this.$refs.textSearchOfEmployeeAdd.value = ""
@@ -514,13 +524,6 @@ export default {
 
 
     /**Checks for add and edit prompt if time input is correct*/
-    validProjectTimes(start,finish,editPrompt){
-      if(editPrompt == true){
-        return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(start).getTime() <= new Date(finish).getTime()))
-      }else{
-        return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(finish).getTime()))}
-
-    },
 
     /**Gets the name of project with given id*/
     getEmployeeName(id) {
@@ -988,6 +991,7 @@ export default {
           })
     },
 
+    /**Fetches the names of all the clients of all projects*/
     fetchNameOfClientForProjects: async function(){
       var assignments = []
       await axios.get(`http://localhost:8080/assignedProjectsClient/`)
@@ -1134,7 +1138,7 @@ export default {
         color:color, type: "gradient",
       })
     },
-
+    /** Resets all values of input and edit fields. Also resets the values for the employee dropdown*/
     resetAllValues: function(){
       this.inputValues.projectName = ''
       this.inputValues.clientIDField = ''
