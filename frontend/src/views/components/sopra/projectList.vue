@@ -33,6 +33,7 @@
             <table class="table v-middle border">
               <thead>
               <tr class="">
+                <th class="border-top-0" style="color: cornflowerblue">ID</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name of the Client</th>
                 <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
@@ -42,6 +43,7 @@
               </thead>
               <tbody>
               <tr v-for="project in projects" :key="project.projectNumber">
+                <td>{{ project.projectNumber }}</td>
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="">
@@ -889,40 +891,29 @@ export default {
       //deletes the project
       await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber).then(async () => {
 
-        //await this.fetchCustomer(this.currentProject.clientID)
+        await axios.delete(`http://localhost:8080/assignmentsbyproject/${this.currentProject.projectNumber}`);
+        await axios.delete(`http://localhost:8080/allAssignedCompetencesProject/${this.currentProject.projectNumber}`);
+
 
         var idOfAssignment = 0
         await axios.get(`http://localhost:8080/assignedProjectsClient/`).then(async (result) => {
            for(var i=0; i<result.data.length; i++){
-             if(result.data[i].clientID == this.currentProject.clientID && result.data[i].projectID == this.currentProject.projectNumber ){
+             if(result.data[i].clientID === this.currentProject.clientID && result.data[i].projectID === this.currentProject.projectNumber ){
                idOfAssignment = result.data[i].id
              }
           }
 
         })
         await axios.delete(`http://localhost:8080/assignedProjectsClient/` + idOfAssignment).then(async() => {
-          this.notify("Confirmation","Project has been succesfully deleted.","success")
+
+          this.notify("Confirmation","Project has been successfully deleted.","success")
         }).catch((error) => {
           if (error.response){
             this.notify("Delete Error", error.message,"danger")
           }
         })
 
-        var idsOfCompetenceAssignments = []
-        await axios.get(`http://localhost:8080/assignedCompetencesProject/`).then(async (result) => {
-          for(var i=0; i<result.data.length; i++){
-            if(result.data[i].projectID == this.currentProject.projectNumber){
-              idsOfCompetenceAssignments.push(result.data[i].id)
-            }
-          }
-        })
-        idsOfCompetenceAssignments.forEach(async (idOfAssignment) => {
-          await axios.delete(`http://localhost:8080/assignedCompetencesProject/` + idOfAssignment).catch((error) => {
-            if (error.response){
-              this.notify("Delete Error", error.message,"danger")
-            }
-          })
-        })
+
 
 
 
