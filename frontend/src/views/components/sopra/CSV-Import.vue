@@ -7,12 +7,7 @@
         </h4>
       </div>
       <div style="display:flex;">
-        <span v-show="!this.selectedFile" class="filewrap">
-      <h5 class="mb-2"> Drag and Drop a File here or Click !</h5>
           <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
-      </span>
-        <p  v-show="this.selectedFile"> TODO : READ NAME FROM INPUT </p>
-
         <vs-button v-show="this.selectedFile" @click="submit()" class="float-right ml-2" color="success" type="filled">
           Submit
         </vs-button>
@@ -157,7 +152,7 @@ export default {
               })
         }
       }
-      this.selectedFile = false
+      this.$router.push({name: "Time Registration", params: {}});
     },
     handleFileUpload: function () {
       this.selectedFile = true;
@@ -169,12 +164,15 @@ export default {
         complete: (results) => {
           let allTimeRegistrationFromCSV = [];
           for (let i = 0; i < results.data.length; i++) {
-            let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
+            let startTime = new Date(results.data[i]["work_ids/date"] + " " + results.data[i]["work_ids/time"]).getTime();
+            let endtime = new Date(startTime + parseFloat( results.data[i]["work_ids/hours"])*60*60*1000 )
+         /*   let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
             let hours = Math.floor(sumOfStartAndDuration)
-            let minutes = (sumOfStartAndDuration - hours) * 60
-            let starttime = results.data[i]["work_ids/date"] + " " + results.data[i]["work_ids/time"];
-            let endtime = (results.data[i]["work_ids/date"] + " " + hours + ":" + minutes).padEnd(16, '0');
-            let currentTimeRegistration = [];
+            let minutes = (sumOfStartAndDuration - hours) * 60*/
+            let starttime = new Date(startTime)
+            starttime = starttime.getFullYear() + '-' +('0' + (starttime.getMonth()+1)).slice(-2)+ '-' +  ('0' + starttime.getDate()).slice(-2) + ' '+('0'+starttime.getHours()).slice(-2)+ ':'+('0' + (starttime.getMinutes())).slice(-2)
+            endtime = endtime.getFullYear() + '-' +('0' + (endtime.getMonth()+1)).slice(-2)+ '-' +  ('0' + endtime.getDate()).slice(-2) + ' '+('0'+endtime.getHours()).slice(-2)+ ':'+('0' + (endtime.getMinutes())).slice(-2)
+             let currentTimeRegistration = [];
 
             // only the data needed in the database will be parsed
             currentTimeRegistration.push(results.data[i]["id"])
@@ -202,7 +200,7 @@ export default {
     },
 
     deletedRegistrations: function (id) {
-      return this.timeRegistrationsToUpload[id][2].localeCompare("") !== 0;
+      return this.timeRegistrationsToUpload[id][0].localeCompare("") !== 0;
     },
 
     undo: function (id) {
@@ -223,23 +221,3 @@ export default {
   },
 }
 </script>
-<style>.filewrap {
-  position: relative;
-  background: #17a2b8;
-  border: 1px solid #007bff;
-  padding: 15px 100px;
-  color: #fff;
-  font-family: sans-serif;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-input[type="file"] {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
-}</style>
