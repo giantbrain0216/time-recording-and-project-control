@@ -75,11 +75,9 @@
         </vs-card>
           <h4 style="text-align: center">Or</h4>
         <vs-card class="cardx mt-3">
-          <div slot="header">
-            <h4>
-              <vs-button @click='$router.push({name:"CSV Import", params: {}});' color="success"
-                         type="filled"> Import Time Registrations From CSV File
-              </vs-button>
+          <div  slot="header">
+            <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import", params: {}});'>
+              Import Time Registrations From CSV File
             </h4>
           </div>
         </vs-card>

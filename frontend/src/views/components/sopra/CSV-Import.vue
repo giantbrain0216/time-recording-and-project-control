@@ -7,7 +7,7 @@
         </h4>
       </div>
       <div style="display:flex;">
-          <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
+        <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
         <vs-button v-show="this.selectedFile" @click="submit()" class="float-right ml-2" color="success" type="filled">
           Submit
         </vs-button>
@@ -31,6 +31,7 @@
             <th class="border-top-0">From</th>
             <th class="border-top-0">To</th>
             <th class="border-top-0">Brief Description</th>
+            <th class="border-top-0">Remarks</th>
             <th class="border-top-0">Actions</th>
           </tr>
           </thead>
@@ -51,6 +52,9 @@
             </td>
             <td>{{ registration[3] }}</td>
             <td>{{ registration[4] }}</td>
+            <td><p style="color:red;" v-show="!validTimeRegistration(index)"> This Time Registration will not be uploaded
+              <br>Either the Employee ID or the Project ID does not exist
+              or you may have deleted it. </p></td>
             <td>
               <div>
                 <vs-button @click="deleteTimeRegistration(index)" v-show="deletedRegistrations(index)" icon="delete"
@@ -70,6 +74,7 @@
             </td>
           </tr>
           </tbody>
+
         </table>
       </div>
     </vs-card>
@@ -84,20 +89,59 @@ export default {
   name: "csv-import",
   data: () => {
     return {
-      name:"",
+      allProjectIDs: [],
+      allEmployeeIDs: [],
       allTimeRegistrationFromCSV: [],
       timeRegistrationsToUpload: [],
       selectedFile: false,
     }
   },
 
-
+  async created() {
+    await this.fetchAllEmployeeIDs()
+    await this.fetchAllProjectIDs()
+  },
   methods: {
+    fetchAllProjectIDs: async function () {
+      await axios.get(`http://localhost:8080/projects`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.allProjectIDs = response.data.map(project => project.projectNumber)
+          })
+          .catch((error) => {
+            if (error.response) {
+              this.notify("Projects Database Error", error.message, "danger")
+            } else {
+              this.notify("Projects Database Error", "Connection to Database Error", "danger")
+            }
+          })
+    },
+    fetchAllEmployeeIDs: async function () {
+      await axios.get(`http://localhost:8080/employees`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.allEmployeeIDs = response.data.map(project => project.employeeID)
+          })
+          .catch((error) => {
+            if (error.response) {
+              this.notify("Projects Database Error", error.message, "danger")
+            } else {
+              this.notify("Projects Database Error", "Connection to Database Error", "danger")
+            }
+          })
+    },
+// in the first index we save the employee id and in the seconde one the project id
+    validTimeRegistration(index) {
+      return (!this.timeRegistrationsToUpload[index].includes("") && !this.timeRegistrationsToUpload[index].includes(null)
+          && this.allEmployeeIDs.includes(parseInt(this.timeRegistrationsToUpload[index][0])) && this.allProjectIDs
+              .includes(parseInt(this.timeRegistrationsToUpload[index][1])))
+    },
     numberOfTimeRegistrations() {
       let sum = 0;
       for (let i = 0; i < this.timeRegistrationsToUpload.length; i++) {
         // if one cell has the value null or is empty it will now be uploaded
-        if (!this.timeRegistrationsToUpload[i].includes("") && !this.timeRegistrationsToUpload[i].includes(null))
+        let valid = this.validTimeRegistration(i)
+        if (valid)
           sum += 1;
       }
       return sum;
@@ -105,8 +149,7 @@ export default {
     submit: async function () {
       for (let i = 0; i < this.timeRegistrationsToUpload.length; i++) {
         // eslint-disable-next-line no-console
-        console.log(this.timeRegistrationsToUpload[i][0].localeCompare("") !== 0)
-        if (this.timeRegistrationsToUpload[i][0].localeCompare("") !== 0) {
+        if (this.validTimeRegistration(i)) {
           await axios.post(`http://localhost:8080/timeregistrations`,
               {
                 "employeeID": this.timeRegistrationsToUpload[i][0],
@@ -165,14 +208,14 @@ export default {
           let allTimeRegistrationFromCSV = [];
           for (let i = 0; i < results.data.length; i++) {
             let startTime = new Date(results.data[i]["work_ids/date"] + " " + results.data[i]["work_ids/time"]).getTime();
-            let endtime = new Date(startTime + parseFloat( results.data[i]["work_ids/hours"])*60*60*1000 )
-         /*   let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
-            let hours = Math.floor(sumOfStartAndDuration)
-            let minutes = (sumOfStartAndDuration - hours) * 60*/
+            let endtime = new Date(startTime + parseFloat(results.data[i]["work_ids/hours"]) * 60 * 60 * 1000)
+            /*   let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
+               let hours = Math.floor(sumOfStartAndDuration)
+               let minutes = (sumOfStartAndDuration - hours) * 60*/
             let starttime = new Date(startTime)
-            starttime = starttime.getFullYear() + '-' +('0' + (starttime.getMonth()+1)).slice(-2)+ '-' +  ('0' + starttime.getDate()).slice(-2) + ' '+('0'+starttime.getHours()).slice(-2)+ ':'+('0' + (starttime.getMinutes())).slice(-2)
-            endtime = endtime.getFullYear() + '-' +('0' + (endtime.getMonth()+1)).slice(-2)+ '-' +  ('0' + endtime.getDate()).slice(-2) + ' '+('0'+endtime.getHours()).slice(-2)+ ':'+('0' + (endtime.getMinutes())).slice(-2)
-             let currentTimeRegistration = [];
+            starttime = starttime.getFullYear() + '-' + ('0' + (starttime.getMonth() + 1)).slice(-2) + '-' + ('0' + starttime.getDate()).slice(-2) + ' ' + ('0' + starttime.getHours()).slice(-2) + ':' + ('0' + (starttime.getMinutes())).slice(-2)
+            endtime = endtime.getFullYear() + '-' + ('0' + (endtime.getMonth() + 1)).slice(-2) + '-' + ('0' + endtime.getDate()).slice(-2) + ' ' + ('0' + endtime.getHours()).slice(-2) + ':' + ('0' + (endtime.getMinutes())).slice(-2)
+            let currentTimeRegistration = [];
 
             // only the data needed in the database will be parsed
             currentTimeRegistration.push(results.data[i]["id"])
