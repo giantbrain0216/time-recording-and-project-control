@@ -72,7 +72,7 @@ _Beschreibung der wichtigsten implementierten Anwendungsfälle_
   und/oder entfernen. Es wird sowie eine detailierte Ansicht des Projekts angezeigt mit allen Daten des Projekts. In dieser Ansicht werden die fehlenden Kompetenzen rot angezeigt, während die abgedeckten grün angezeigt werden!
 
 ### Wichtiger Anwendungsfall 11
-- **Zuweisung von Mitarbeitern zu den Projekten** : In der **Project List View ** befindet sich neben jedem Projekt einen Button ***Assign***. Mit dem kann man Mitarbeiter dem Projekt zuweisen und/oder entfernen.
+- **Zuweisung von Mitarbeitern zu den Projekten** : In der **Project List View** befindet sich neben jedem Projekt einen Button ***Assign***. Mit dem kann man Mitarbeiter dem Projekt zuweisen und/oder entfernen.
 
 ### Wichtiger Anwendungsfall 11  
 - **Einsicht aller Kunden:** In der **Client View** werden automatisch alle Kunden angezeigt, die in
@@ -95,4 +95,4 @@ _Beschreibung der wichtigsten implementierten Anwendungsfälle_
   angezeigt in Form von einer Chart, jedoch nur für die letzten 5 Tage.
 
 ### Wichtiger Anwendungsfall 15 
-- **Zeiterfassung aus CSV Datei** : In der ** Time registration view** gibt es einen Button mit der Beschriftung : *Import Time Registration Fron CSV File*. Wenn man darauf klickt, dann landet man in einer neuen View. Da steht eine Beispieltabelle, die dem anzunehmenden Format zeigt. Man kann die CSV Datei hochladen kann und dann werden entprechend die Time Registration in in einer Preview Tabelle angezeigt, wo man die löschen bzw. undo kann und nach dem Drücken auf Submit Button werden die jeweiligen Time Registrations in der Datenbank gespeichert.
+- **Zeiterfassung aus CSV Datei** : In der ** Time registration view** gibt es einen Button mit der Beschriftung : ***Import Time Registration From CSV File***. Wenn man darauf klickt, landet man in einer neuen View. Auf der View steht eine ***CSV-Datei-Vorlage*** zur Verfügung, die mit einem Mausklick heruntergelalden werden kann. Man kann die CSV Datei hochladen kann und dann werden entprechend die Time Registration in in einer Preview Tabelle angezeigt, wo man die löschen bzw. undo kann und nach dem Drücken auf Submit Button werden die jeweiligen Time Registrations in der Datenbank gespeichert.
