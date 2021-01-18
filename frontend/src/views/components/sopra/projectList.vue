@@ -1088,11 +1088,16 @@ export default {
      * @param id of client
      */
     async fetchProjectsSortedByCustomer(id) {
+      var indexesOfProjects = []
+      await axios.get(`http://localhost:8080/projectsByClient/` + id ).then((response) => {
+        indexesOfProjects = response.data
+      })
+
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {
             var array = []
             for (var i = 0; i < response.data.length; i++) {
-              if (response.data[i].clientID == id) {
+              if (indexesOfProjects.includes(response.data[i].projectNumber)) {
                 array.push(response.data[i])
               }
             }

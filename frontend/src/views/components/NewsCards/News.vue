@@ -1,4 +1,5 @@
 <template>
+  <div>
   <vs-row v-if="finishedFetching">
     <vs-col vs-lg="3" vs-sm="6" vs-xs="12">
       <vs-card actionable >
@@ -65,15 +66,21 @@
       </vs-card>
     </vs-col>
   </vs-row>
+  <vs-row>
+    <LoadingAnimation v-if="!finishedFetching"/>
+  </vs-row>
+  </div>
 </template>
 
 <script>
 import config from "@/config";
 import axios from 'axios';
+import LoadingAnimation from "@/views/components/NewsCards/LoadingAnimation";
 
 export default {
 name: "News",
-data: () => {
+  components: {LoadingAnimation},
+  data: () => {
   return {
     worldArticle : {},
     businessArticle : {},
