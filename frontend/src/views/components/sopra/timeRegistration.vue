@@ -181,6 +181,7 @@ export default {
         .catch(e => {
           this.errors.push(e)
         })
+    this.fetchProjectNames()
 
 
     var today = new Date();
@@ -257,6 +258,10 @@ export default {
             this.errors.push(e)
           })
 
+
+    },
+
+    fetchProjectNames(){
       for (var i = 0; i < this.projects.length; i++) {
         //this.projectNames.push({key:this.projects[i].projectID ,value: this.projects[i].projectName})
         this.projectNames[this.projects[i].projectNumber] = this.projects[i].projectName
