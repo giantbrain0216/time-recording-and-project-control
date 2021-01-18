@@ -20,7 +20,7 @@ npm run serve
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">EMAIL</th>
                 <th class="border-top-0" style="color: cornflowerblue">ADDRESS</th>
-<!--                <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>-->
+                <!--                <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>-->
                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
               </thead>
@@ -42,7 +42,7 @@ npm run serve
                 </td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.address }}</td>
-<!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
+                <!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
                 <td>
                   <div>
                     <vs-button @click="checkDeletePermission(client)" icon="delete" class="m-1" color="danger"
@@ -77,9 +77,9 @@ npm run serve
             <hr>
             <p><strong>Contact Person (ID): </strong>{{ currentClient.contactPersonID }}</p>
             <hr>
-            <p><strong>Projects (IDs): </strong>{{currentClient.projectsIDs}}</p>
+            <p><strong>Projects (IDs): </strong>{{ currentClient.projectsIDs }}</p>
             <hr>
-            <p><strong>Address: </strong>{{ currentClient.address}}</p>
+            <p><strong>Address: </strong>{{ currentClient.address }}</p>
 
 
           </div>
@@ -192,7 +192,7 @@ npm run serve
   </div>
 </template>
 
- <script>
+<script>
 import axios from 'axios';
 import ExportInvoiceButton from "@/views/components/ExportInvoice/ExportInvoiceButton";
 
@@ -225,8 +225,8 @@ export default {
         activeEditPromt: false,
         activeDeletePrompt: false,
       },
-      map:null,
-      mapCenter:{lat:0,lng:0},
+      map: null,
+      mapCenter: {lat: 0, lng: 0},
     };
   },
 
@@ -252,7 +252,7 @@ export default {
       return (this.editValues.nameField.length > 0
           && 50 > this.editValues.emailField.length && this.editValues.emailField.length > 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length > 7
-          && this.editValues.addressField.length >0
+          && this.editValues.addressField.length > 0
           && re.test(this.editValues.emailField)
           && this.selectedEmployeeID != 0
       )
@@ -300,7 +300,9 @@ export default {
         // eslint-disable-next-line no-console
         console.log(arr)
         // eslint-disable-next-line no-console
-        arr.forEach(function(project) {string = string.concat(", " + project.toString())})
+        arr.forEach(function (project) {
+          string = string.concat(", " + project.toString())
+        })
         projects = string.substr(1)
       })
 
@@ -393,7 +395,15 @@ export default {
      * @return updated clients
      */
     deleteClient: async function (id) {
-      await axios.delete(`http://localhost:8080/clients/` + id).then(() => {
+      await axios.delete(`http://localhost:8080/clients/` + id).then(async () => {
+        await axios.delete(`http://localhost:8080/allAssignedProjectsClient/${id}`).then(async (response1) => {
+          for (let i = 0; i < response1.data.length; i++) {
+            await axios.delete(`http://localhost:8080/projects/` + response1.data[i])
+            await axios.delete(`http://localhost:8080/assignmentsbyproject/${response1.data[i]}`);
+            await axios.delete(`http://localhost:8080/allAssignedCompetencesProject/${response1.data[i]}`);
+          }
+        });
+
         this.notify("Confirmation", "Client has been successfully deleted.", "danger")
 
       }).catch((error) => {
@@ -418,8 +428,8 @@ export default {
       this.editValues.emailField = this.currentClient.email
       this.editValues.numberField = this.currentClient.telephoneNumber
       this.selectedEmployeeID = this.currentClient.contactPersonID
-      for (var i = 0; i < this.employees.length; i++) {
-        if (this.employees[i].employeeID == this.currentClient.contactPersonID) {
+      for (let i = 0; i < this.employees.length; i++) {
+        if (this.employees[i].employeeID === this.currentClient.contactPersonID) {
           this.selectedEmployeeName = this.employees[i].name
         }
       }
@@ -449,9 +459,9 @@ export default {
       // eslint-disable-next-line no-console
       console.log(projects)
 
-      if(projects.length ==  0){
+      if (projects.length == 0) {
         return true
-      }else{
+      } else {
         return false
       }
 
@@ -473,13 +483,13 @@ export default {
 
     /** When delete button is pressed, checks if client is valid for deletion. If yes, shows delete prompt*/
     async checkDeletePermission(client) {
-      var valid = await this.validForDelete(client)
-      if (valid) {
+   /*   var valid = await this.validForDelete(client)
+      if (valid) {*/
         this.currentClient = client
         this.prompts.activeDeletePrompt = true
-      } else {
+  /*   } else {
         this.notify("Warning", "Client cannot be deleted because there are still projects associated to this client", "danger")
-      }
+      }*/
 
     },
 
