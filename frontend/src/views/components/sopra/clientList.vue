@@ -399,6 +399,8 @@ export default {
         await axios.delete(`http://localhost:8080/allAssignedProjectsClient/${id}`).then(async (response1) => {
           for (let i = 0; i < response1.data.length; i++) {
             await axios.delete(`http://localhost:8080/projects/` + response1.data[i])
+            await axios.delete(`http://localhost:8080/assignmentsbyproject/${response1.data[i]}`);
+            await axios.delete(`http://localhost:8080/allAssignedCompetencesProject/${response1.data[i]}`);
           }
         });
 
@@ -481,13 +483,13 @@ export default {
 
     /** When delete button is pressed, checks if client is valid for deletion. If yes, shows delete prompt*/
     async checkDeletePermission(client) {
-      var valid = await this.validForDelete(client)
-      if (valid) {
+   /*   var valid = await this.validForDelete(client)
+      if (valid) {*/
         this.currentClient = client
         this.prompts.activeDeletePrompt = true
-     } else {
+  /*   } else {
         this.notify("Warning", "Client cannot be deleted because there are still projects associated to this client", "danger")
-      }
+      }*/
 
     },
 
