@@ -42,18 +42,19 @@
             </div>
 
             <div class="m-3">
-            <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for this
-              project because it has not started yet !</h6>
+              <h6 style="color: red" v-if="projectNotStarted(currentProject)">You cannot submit time registration for
+                this
+                project because it has not started yet !</h6>
             </div>
             <div v-show="!projectNotStarted(currentProject)">
-            <div class="m-3"><input type="date" id="date" name="date"
-                                    v-model="dateInput"
-                                    min="2018-01-01" :max="dateToday"></div>
+              <div class="m-3"><input type="date" id="date" name="date"
+                                      v-model="dateInput"
+                                      min="2018-01-01" :max="dateToday"></div>
 
-            <div class="m-3"><input type="time" id="starttime" name="starttime"
-                                    min="06:00" max="22:00" v-model="starttime" required>
-              <small> Start Time</small>
-            </div>
+              <div class="m-3"><input type="time" id="starttime" name="starttime"
+                                      min="06:00" max="22:00" v-model="starttime" required>
+                <small> Start Time</small>
+              </div>
 
             <div class="m-3"><input type="time" id="endtime" name="endtime"
                                     min="06:00" max="22:00" v-model="endtime" required>
@@ -72,6 +73,14 @@
           </div>
           </div>
 
+        </vs-card>
+          <h4 style="text-align: center">Or</h4>
+        <vs-card class="cardx mt-3">
+          <div  slot="header">
+            <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import", params: {}});'>
+              Import Time Registrations From CSV File
+            </h4>
+          </div>
         </vs-card>
       </vs-col>
       <vs-col v-if="timeregistrations.length!==0" type="flex" vs-justify="center" vs-align="center" :vs-lg="8"
@@ -159,7 +168,8 @@ export default {
       activeDeletePrompt: false,
       currentRegistration: 0,
       textarea: '',
-      counterDanger: false
+      counterDanger: false,
+      csv: ''
 
     };
   },
@@ -358,9 +368,8 @@ export default {
     /**Checks if a project has not started yet*/
     projectNotStarted(project) {
 
-        // eslint-disable-next-line no-console
-        console.log((new Date(project.plannedStart + " 00:00").getTime() > new Date(this.dateToday).getTime()))
-        return (new Date(project.plannedStart).getTime() > new Date(this.dateToday+ " 00:00").getTime())
+
+      return (new Date(project.plannedStart).getTime() > new Date(this.dateToday + " 00:00").getTime())
 
     },
 
@@ -436,11 +445,21 @@ export default {
       this.endtime = ""
       this.timeregistrations = []
       this.textarea = ""
-    }
+    },
+
+    handleFileUpload: function () {
+      /* return first object in FileList */
+      var file = event.target.files[0];
+      this.$papa.parse(file, {
+        header: true,
+        complete: function (results) {
+          // eslint-disable-next-line no-console
+          console.log(results.data);
+        }
+      })
+    },
+
   }
-
-
-
 }
 </script>
 

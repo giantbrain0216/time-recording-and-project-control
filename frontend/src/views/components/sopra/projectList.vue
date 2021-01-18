@@ -95,7 +95,7 @@
           <div slot="header">
             <vs-button class="float-right" radius color="danger" type="gradient" icon="highlight_off"
                        @click="prompts.activeProjectDetailWindow = false"></vs-button>
-            <h2>Details vom {{ currentProject.projectName }}</h2>
+            <h2>Details of {{ currentProject.projectName }}</h2>
           </div>
           <div>
             <p><strong>Name of the Client: </strong>{{"" + clientsNamesForProjects[currentProject.projectNumber] + " (ID:" + currentProject.clientID + ")" }}</p>
@@ -108,7 +108,7 @@
             <hr>
             <p><strong>Performed Effort <i>(In Hours)</i>: </strong>{{ currentProject.performedEffort }}</p>
             <hr>
-            <p><strong>Competences: </strong>{{"" + currentProject.competences }}</p>
+            <p><strong>Competences: </strong>{{ currentProject.competences }}</p>
             <hr>
           </div>
         </vs-card>
@@ -138,7 +138,6 @@
           @close='resetAllValues();notify("Closed","Add was closed successfully","warning")'
           :is-valid= "validProjectAdd"
           :active.sync="prompts.activeAddPrompt"
-
       >
         <div class="con-exemple-prompt"  >
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
@@ -526,6 +525,15 @@ export default {
 
 
     /**Checks for add and edit prompt if time input is correct*/
+    validProjectTimes(start,finish,editPrompt){
+      if(editPrompt == true){
+        return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(start).getTime() <= new Date(finish).getTime())
+            && this.editValues.competencesField.length > 0)
+      }else{
+        return (parseFloat(this.inputValues.plannedEffortField) > 0 && (new Date(start).getTime() <= new Date(finish).getTime())
+            && this.inputValues.competencesField.length > 0) }
+
+    },
 
     /**Gets the name of project with given id*/
     getEmployeeName(id) {
@@ -682,14 +690,13 @@ export default {
     addProject: async function () {
       await axios.post('http://localhost:8080/projects', {
         "projectName": this.inputValues.projectName,
+        "clientID": parseInt(this.currentClient.clientID),
         "plannedStart": this.inputValues.plannedStartField + " " + "00:00",
         "plannedEnd": this.inputValues.plannedEndField + " " + "00:00",
         "plannedEffort": parseInt(this.inputValues.plannedEffortField),
         "performedEffort": 0,
+        "competences": this.inputValues.competencesField,
       }).then(async (result) => {
-        // eslint-disable-next-line no-console
-
-
 
         await axios.post(`http://localhost:8080/assignedProjectsClient`, {
           'clientID': this.currentClient.clientID,
@@ -761,12 +768,15 @@ export default {
       await axios.put(`http://localhost:8080/projects`, {
         "projectNumber": this.currentProject.projectNumber,
         "projectName": this.currentProject.projectName,
+        "clientID": this.currentProject.clientID,
         "plannedStart": this.editValues.plannedStartField + " " + "00:00",
         "plannedEnd": this.editValues.plannedEndField + " " + "00:00",
         "plannedEffort": parseInt(this.editValues.plannedEffortField),
         "performedEffort": this.currentProject.performedEffort,
+        "competences": this.editValues.competencesField,
       }).then(() => {
         this.notify("Confirmation","Project has been successfully edited.","success")
+
       }).catch((error) => {
         if (error.response){
           this.notify("Edit Error",error.message,"danger")
@@ -912,10 +922,6 @@ export default {
             this.notify("Delete Error", error.message,"danger")
           }
         })
-
-
-
-
 
       }).catch((error) => {
         if (error.response){

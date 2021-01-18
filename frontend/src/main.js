@@ -5,10 +5,16 @@ import 'vuesax/dist/vuesax.css' //Vuesax styles
 import 'material-icons/iconfont/material-icons.css';
 // Vuex Store
 import store from './store/store'
+
 //Searchbar with Recomandations
 import Autocomplete from '@trevoreyre/autocomplete-vue'
 import '@trevoreyre/autocomplete-vue/dist/style.css'
 Vue.use(Autocomplete)
+
+//Vue Import CSV
+import VuePapaParse from 'vue-papa-parse'
+Vue.use(VuePapaParse)
+
 
 // Theme Configurations
 import 'prismjs'
