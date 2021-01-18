@@ -4,7 +4,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import entities.AssignedCompetencesProject;
 import entities.AssignedProjectsClient;
 
 import java.sql.SQLException;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
  * @version 02.01.2021
  */
 public class AssignedProjectsClientDatabase {
-    private final Dao<AssignedProjectsClient, Integer> assignedProjectsClients;
+    private final Dao<AssignedProjectsClient, Integer> assignedProjectsClientsDao;
 
     /**
      * creates an object from type DAO which will be used to manage the database.
@@ -31,7 +30,7 @@ public class AssignedProjectsClientDatabase {
      * @throws SQLException if the dao element cannot be created.
      */
     public AssignedProjectsClientDatabase(ConnectionSource connectionSource) throws SQLException {
-        assignedProjectsClients = DaoManager.createDao(connectionSource, AssignedProjectsClient.class);
+        assignedProjectsClientsDao = DaoManager.createDao(connectionSource, AssignedProjectsClient.class);
         TableUtils.createTableIfNotExists(connectionSource, AssignedProjectsClient.class);
     }
 
@@ -70,7 +69,7 @@ public class AssignedProjectsClientDatabase {
     public int addToDatabase(AssignedProjectsClient assignment) throws SQLException {
         int employeeToAddID = createID();
         assignment.setId(employeeToAddID);
-        assignedProjectsClients.create(assignment);
+        assignedProjectsClientsDao.create(assignment);
         return employeeToAddID;
     }
 
@@ -85,7 +84,7 @@ public class AssignedProjectsClientDatabase {
      */
     public void deleteFromDatabase(Integer assignmentID) {
         try {
-            assignedProjectsClients.deleteById(assignmentID);
+            assignedProjectsClientsDao.deleteById(assignmentID);
         } catch (SQLException e) {
             System.out.println("There is no employees with the ID " + assignmentID);
         }
@@ -101,7 +100,7 @@ public class AssignedProjectsClientDatabase {
      */
     public void modifyAssignedProjectsClient(final AssignedProjectsClient assignment) {
         try {
-            assignedProjectsClients.update(assignment);
+            assignedProjectsClientsDao.update(assignment);
         } catch (SQLException e) {
             System.out.println("there is no element in the database that matches the passed one. ");
 
@@ -118,7 +117,7 @@ public class AssignedProjectsClientDatabase {
      */
     public AssignedProjectsClient getAssignedProjectsClient(Integer assignmentID) {
         try {
-            return assignedProjectsClients.queryForId(assignmentID);
+            return assignedProjectsClientsDao.queryForId(assignmentID);
         } catch (SQLException e) {
             System.out.println("there is no element in the database with an ID that matches the passed one. ");
             return null;
@@ -133,13 +132,39 @@ public class AssignedProjectsClientDatabase {
      */
     public List<AssignedProjectsClient> getAllAssignedProjectsClient() {
         try {
-            return assignedProjectsClients.queryForAll();
+            return assignedProjectsClientsDao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("there is no elements in the database. ");
             return new ArrayList<>();
         }
     }
+
+    /**
+     * searches the table in the database and returns all projects whose client ID is equal to the given one
+     *
+     * @param clientID of the project
+     * @return list of the assignment of competences to this project
+     */
+    public List<AssignedProjectsClient> getAllProjectsByClient(Integer clientID) {
+        List<AssignedProjectsClient> allAssignedProjectsClients = getAllAssignedProjectsClient();
+        return allAssignedProjectsClients.stream().filter(assignment -> assignment.getClientID() == clientID).collect(Collectors.toList());
+    }
+
+    /**
+     * searches the table in the database and deletes all projects whose client ID is equal to the given one
+     *
+     * @param projectID of the project
+     * @throws SQLException if at least one assignment could not been deleted
+     */
+
+    public List<Integer> deleteAllProjectsByClient(Integer projectID) throws SQLException {
+        List<AssignedProjectsClient> assignedProjectsByClient = getAllProjectsByClient(projectID);
+        for (AssignedProjectsClient assignedProjectsClient : assignedProjectsByClient) {
+            assignedProjectsClientsDao.deleteById(assignedProjectsClient.getId());
+        }
+
+        return assignedProjectsByClient.stream().map(AssignedProjectsClient::getProjectID).collect(Collectors.toList());}
 
     /**
      * searches the database and then returns the list with the  IDs  of the

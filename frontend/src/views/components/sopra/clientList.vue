@@ -1,3 +1,4 @@
+npm run serve
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
@@ -19,7 +20,7 @@
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">EMAIL</th>
                 <th class="border-top-0" style="color: cornflowerblue">ADDRESS</th>
-<!--                <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>-->
+                <!--                <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>-->
                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
               </thead>
@@ -41,7 +42,7 @@
                 </td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.address }}</td>
-<!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
+                <!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
                 <td>
                   <div>
                     <vs-button @click="checkDeletePermission(client)" icon="delete" class="m-1" color="danger"
@@ -76,12 +77,9 @@
             <hr>
             <p><strong>Contact Person (ID): </strong>{{ currentClient.contactPersonID }}</p>
             <hr>
-            <p><strong>Projects Names: </strong></p>
-            <ul class="ml-3 mt-2">
-              <li v-for="projectnamedetail in currentClient.projectsNames" :key="projectnamedetail">{{projectnamedetail}}</li>
-            </ul>
+            <p><strong>Projects (IDs): </strong>{{ currentClient.projectsIDs }}</p>
             <hr>
-            <p><strong>Address: </strong>{{ currentClient.address}}</p>
+            <p><strong>Address: </strong>{{ currentClient.address }}</p>
 
 
           </div>
@@ -103,18 +101,22 @@
         <vs-input label-placeholder="Email" class="mb-4" v-model="inputValues.emailField"/>
         <vs-input label-placeholder="Address" class="mb-4" v-model="inputValues.addressField"/>
         <vs-input type="number" label-placeholder="Tel" class="mb-4" v-model="inputValues.numberField"/>
-        <autocomplete
-            ref="textSearchOfEmployeeAdd"
-            :search="filterEmployeeItemsAdd"
-            :get-result-value="getEmployeeResultValue"
-            @submit="handleEmployeeSubmitAdd"
-            placeholder="Choose contact person"
-            aria-label="Search for a employee"
-            auto-select
-        ></autocomplete>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
-          <div>Selected Employee:</div>
-          <div class="ml-1" style="color:royalblue;">{{this.selectedEmployeeName }}</div>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+          <div>Contact Person:</div>
+          <vs-dropdown class="ml-1">
+            <a class="a-icon" href="#">
+              {{ this.selectedEmployeeName }}
+              <vs-icon class="" icon="expand_more"></vs-icon>
+            </a>
+            <vs-dropdown-menu>
+              <vs-dropdown-item @click="selectedEmployeeID=employee.employeeID;selectedEmployeeName=employee.name"
+                                v-for="employee in employees" :key="employee.employeeID">
+                {{ employee.name }}
+              </vs-dropdown-item>
+            </vs-dropdown-menu>
+          </vs-dropdown>
+
+
         </div>
         <vs-alert
             :active="!validClient"
@@ -128,9 +130,9 @@
     <vs-prompt
         title="Edit Clients"
         color="warning"
-        @cancel='resetAllValues();notify("Closed","Edit was cancelled","warning")'
+        @cancel='resetAllValues;notify("Closed","Edit was cancelled","warning")'
         @accept="updateClient"
-        @close='resetAllValues();notify("Closed","Edit was cancelled","warning")'
+        @close='resetAllValues;notify("Closed","Edit was cancelled","warning")'
         :is-valid="validClientEdit"
         :active.sync="prompts.activeEditPromt"
     >
@@ -145,24 +147,26 @@
         <vs-input :placeholder="editValues.addressField" class="mb-3" v-model="editValues.addressField"/>
         Telephone Number
         <vs-input :placeholder="editValues.numberField" class="mb-3" v-model="editValues.numberField"/>
-        <autocomplete
-            ref="textSearchOfEmployeeAdd"
-            :search="filterEmployeeItemsAdd"
-            :get-result-value="getEmployeeResultValue"
-            @submit="handleEmployeeSubmitAdd"
-            placeholder="Choose contact person"
-            aria-label="Search for a employee"
-            auto-select
-        ></autocomplete>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
-          <div>Selected Employee:</div>
-          <div class="ml-1" style="color:royalblue;">{{this.selectedEmployeeName }}</div>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
+          <div>Contact Person:</div>
+          <vs-dropdown class="ml-1">
+            <a class="a-icon" href="#">
+              {{ this.selectedEmployeeName }}
+              <vs-icon class="" icon="expand_more"></vs-icon>
+            </a>
+            <vs-dropdown-menu>
+              <vs-dropdown-item @click="selectedEmployeeID=employee.employeeID;selectedEmployeeName=employee.name"
+                                v-for="employee in employees" :key="employee.employeeID">
+                {{ employee.name }}
+              </vs-dropdown-item>
+            </vs-dropdown-menu>
+          </vs-dropdown>
+
+
         </div>
-        <hr>
-        <h5>Projects of the Client</h5>
-        <ul class="ml-3 mt-2">
-          <li v-for="projectname in editValues.projectsField" :key="projectname">{{projectname}}</li>
-        </ul>
+
+
+        <div class="mb-3"><h5>{{ "Projects ID's: " + editValues.projectsField }}</h5></div>
         <vs-alert
             :active="!validClientEdit"
             color="warning"
@@ -188,7 +192,7 @@
   </div>
 </template>
 
- <script>
+<script>
 import axios from 'axios';
 import ExportInvoiceButton from "@/views/components/ExportInvoice/ExportInvoiceButton";
 
@@ -199,7 +203,7 @@ export default {
     return {
       employees: [],
       selectedEmployeeID: 0,
-      selectedEmployeeName: "None",
+      selectedEmployeeName: "Contact Person",
       clients: [],
       currentClient: {},
       showDetailedView: false,
@@ -214,15 +218,15 @@ export default {
         emailField: '',
         numberField: '',
         addressField: '',
-        projectsField: []
+        projectsField: ''
       },
       prompts: {
         activePrompt: false,
         activeEditPromt: false,
         activeDeletePrompt: false,
       },
-      map:null,
-      mapCenter:{lat:0,lng:0},
+      map: null,
+      mapCenter: {lat: 0, lng: 0},
     };
   },
 
@@ -248,7 +252,7 @@ export default {
       return (this.editValues.nameField.length > 0
           && 50 > this.editValues.emailField.length && this.editValues.emailField.length > 4
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length > 7
-          && this.editValues.addressField.length >0
+          && this.editValues.addressField.length > 0
           && re.test(this.editValues.emailField)
           && this.selectedEmployeeID != 0
       )
@@ -256,29 +260,6 @@ export default {
   },
 
   methods: {
-    /**Filters items for searchbar of employees on add form*/
-    async filterEmployeeItemsAdd(input) {
-
-      if (input.length < 1) { return [] }
-
-      return this.employees.filter(competence => {
-        // eslint-disable-next-line no-console
-        return (competence.name.toLowerCase()
-            .startsWith(input.toLowerCase()))
-      })
-    },
-    /**Returns name of the employee objects*/
-    getEmployeeResultValue(result){
-      return result.name
-    },
-    /**Handle function when employee is selected by searchbar add form*/
-    handleEmployeeSubmitAdd(result){
-      this.selectedEmployeeName = result.name
-      this.selectedEmployeeID = result.employeeID
-      this.$refs.textSearchOfEmployeeAdd.value = ""
-
-    },
-
 
     /**
      * Sets the editValues to the data of the current client
@@ -312,18 +293,17 @@ export default {
      * @return curreentClient with client data of DB
      */
     fetchCustomerAndUpdateCurrentClient: async function (id) {
-      var arrayProjectNames = []
-      await axios.get('http://localhost:8080/projectsByClient/' + id).then(async (response) => {
+      var projects = ""
+      await axios.get('http://localhost:8080/projectsByClient/' + id).then((response) => {
+        var string = ''
         var arr = response.data
         // eslint-disable-next-line no-console
         console.log(arr)
         // eslint-disable-next-line no-console
-        for(var i=0;i<arr.length;i++){
-          await axios.get('http://localhost:8080/projects/' + arr[i]).then((response) => {
-            arrayProjectNames.push(response.data.projectName)
-          })
-        }
-
+        arr.forEach(function (project) {
+          string = string.concat(", " + project.toString())
+        })
+        projects = string.substr(1)
       })
 
       await axios.get(`http://localhost:8080/clients/${id}`)
@@ -331,7 +311,7 @@ export default {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
             this.currentClient = response.data
-            this.currentClient.projectsNames = arrayProjectNames
+            this.currentClient.projectsIDs = projects
 
           }).catch((error) => {
             if (error.response) {
@@ -396,7 +376,7 @@ export default {
         'contactPersonID': this.selectedEmployeeID,
         'address': this.inputValues.addressField
       }).then(() => {
-        this.notify("Notification:", "Client was added.", "success")
+        this.notify("Notification:", "Employee was added.", "success")
       }).catch((error) => {
         if (error.response) {
           this.notify("Add Client Error", error.message, "danger")
@@ -415,7 +395,15 @@ export default {
      * @return updated clients
      */
     deleteClient: async function (id) {
-      await axios.delete(`http://localhost:8080/clients/` + id).then(() => {
+      await axios.delete(`http://localhost:8080/clients/` + id).then(async () => {
+        await axios.delete(`http://localhost:8080/allAssignedProjectsClient/${id}`).then(async (response1) => {
+          for (let i = 0; i < response1.data.length; i++) {
+            await axios.delete(`http://localhost:8080/projects/` + response1.data[i])
+            await axios.delete(`http://localhost:8080/assignmentsbyproject/${response1.data[i]}`);
+            await axios.delete(`http://localhost:8080/allAssignedCompetencesProject/${response1.data[i]}`);
+          }
+        });
+
         this.notify("Confirmation", "Client has been successfully deleted.", "danger")
 
       }).catch((error) => {
@@ -440,13 +428,13 @@ export default {
       this.editValues.emailField = this.currentClient.email
       this.editValues.numberField = this.currentClient.telephoneNumber
       this.selectedEmployeeID = this.currentClient.contactPersonID
-      for (var i = 0; i < this.employees.length; i++) {
-        if (this.employees[i].employeeID == this.currentClient.contactPersonID) {
+      for (let i = 0; i < this.employees.length; i++) {
+        if (this.employees[i].employeeID === this.currentClient.contactPersonID) {
           this.selectedEmployeeName = this.employees[i].name
         }
       }
       this.editValues.addressField = this.currentClient.address
-      this.editValues.projectsField = this.currentClient.projectsNames
+      this.editValues.projectsField = this.currentClient.projectsIDs
       this.prompts.activeEditPromt = true;
 
     },
@@ -471,9 +459,9 @@ export default {
       // eslint-disable-next-line no-console
       console.log(projects)
 
-      if(projects.length ==  0){
+      if (projects.length == 0) {
         return true
-      }else{
+      } else {
         return false
       }
 
@@ -495,13 +483,13 @@ export default {
 
     /** When delete button is pressed, checks if client is valid for deletion. If yes, shows delete prompt*/
     async checkDeletePermission(client) {
-      var valid = await this.validForDelete(client)
-      if (valid) {
+   /*   var valid = await this.validForDelete(client)
+      if (valid) {*/
         this.currentClient = client
         this.prompts.activeDeletePrompt = true
-      } else {
+  /*   } else {
         this.notify("Warning", "Client cannot be deleted because there are still projects associated to this client", "danger")
-      }
+      }*/
 
     },
 
@@ -520,14 +508,13 @@ export default {
       this.inputValues.emailField = '';
       this.inputValues.numberField = '';
       this.inputValues.addressField = '';
-      this.selectedEmployeeName = "None";
+      this.selectedEmployeeName = "Contact Person"
       this.selectedEmployeeID = 0;
       this.editValues.nameField = '';
       this.editValues.emailField = '';
       this.editValues.numberField = '';
       this.editValues.addressField = '';
       this.editValues.projectsField = '';
-      this.currentClient = {};
     }
 
   }

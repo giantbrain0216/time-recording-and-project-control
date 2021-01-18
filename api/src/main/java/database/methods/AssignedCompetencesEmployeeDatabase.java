@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import entities.AssignedCompetencesEmployee;
+import entities.AssignedCompetencesProject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -137,6 +138,31 @@ public class AssignedCompetencesEmployeeDatabase {
             e.printStackTrace();
             System.out.println("there is no elements in the database. ");
             return new ArrayList<>();
+        }
+    }
+
+    /**
+     * searches the table in the database and returns all assignments whose employee ID is equal to the given one
+     *
+     * @param employeeID of the project
+     * @return list of the assignment of competences to this project
+     */
+    public List<AssignedCompetencesEmployee> getAllAssignedCompetencesByEmployee(Integer employeeID) {
+        List<AssignedCompetencesEmployee> allAssignedCompetencesProject = getAllAssignedCompetencesEmployee();
+        return allAssignedCompetencesProject.stream().filter(competence -> competence.getEmployeeID() == employeeID).collect(Collectors.toList());
+    }
+
+    /**
+     * searches the table in the database and deletes all assignments whose emplyoee ID is equal to the given one
+     *
+     * @param employeeID of the project
+     * @throws SQLException if at least one assignment could not been deleted
+     */
+
+    public void deleteAllAssignedCompetencesByEmployee(Integer employeeID) throws SQLException {
+        List<AssignedCompetencesEmployee> allAssignedCompetencesProject = getAllAssignedCompetencesByEmployee(employeeID);
+        for (AssignedCompetencesEmployee assignedCompetencesEmployee : allAssignedCompetencesProject) {
+            assignedCompetencesEmployeeDao.deleteById(assignedCompetencesEmployee.getId());
         }
     }
 
