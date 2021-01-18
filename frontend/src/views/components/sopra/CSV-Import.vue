@@ -13,6 +13,38 @@
         </vs-button>
       </div>
     </vs-card>
+    <vs-card v-show="!this.selectedFile" class="cardx">
+      <div slot="header">
+        <h4 style="color:#007bff;">
+          Required Format
+        </h4>
+        <h6  class="mt-2" style="color:#dc3545;"> Check that your csv file has at least this format
+          !</h6>
+        <h6 style="color:#dc3545;">The headers of the CSV File must be identical to the format below !</h6>
+       </div>
+      <div class="table-responsive">
+        <table class="table v-middle border">
+          <thead>
+          <tr class="">
+            <th class="border-top-0">employee id</th>
+            <th class="border-top-0">project id</th>
+            <th class="border-top-0">work_ids/date</th>
+            <th class="border-top-0">work_ids/time</th>
+            <th class="border-top-0">work_ids/name</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+            <td>...</td>
+          </tr>          </tbody>
+        </table>
+      </div>
+    </vs-card>
+
 
     <vs-card v-show="this.selectedFile" class="cardx">
       <div slot="header">
@@ -21,6 +53,8 @@
         </h4>
         <h6 class="mt-2" style="color: #28a745">{{ numberOfTimeRegistrations() }} Time Registrations will be uploaded
           !</h6>
+        <h6 class="mt-2" style="color: red">{{ this.allTimeRegistrationFromCSV.length - numberOfTimeRegistrations() }} Time Registrations will not be uploaded
+          ! See  Remarks</h6>
       </div>
       <div class="table-responsive">
         <table class="table v-middle border">
@@ -74,7 +108,6 @@
             </td>
           </tr>
           </tbody>
-
         </table>
       </div>
     </vs-card>
@@ -203,10 +236,14 @@ export default {
       var file = event.target.files[0];
       this.$papa.parse(file, {
         header: true,
+        skipEmptyLines: true,
 
         complete: (results) => {
           let allTimeRegistrationFromCSV = [];
           for (let i = 0; i < results.data.length; i++) {
+
+            // eslint-disable-next-line no-console
+            console.log("Results " +i + results.data)
             let startTime = new Date(results.data[i]["work_ids/date"] + " " + results.data[i]["work_ids/time"]).getTime();
             let endtime = new Date(startTime + parseFloat(results.data[i]["work_ids/hours"]) * 60 * 60 * 1000)
             /*   let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
@@ -218,7 +255,7 @@ export default {
             let currentTimeRegistration = [];
 
             // only the data needed in the database will be parsed
-            currentTimeRegistration.push(results.data[i]["id"])
+            currentTimeRegistration.push(results.data[i]["employee id"])
             currentTimeRegistration.push(results.data[i]["project id"])
             currentTimeRegistration.push(starttime)
             currentTimeRegistration.push(endtime)
