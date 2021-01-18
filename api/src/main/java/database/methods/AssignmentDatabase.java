@@ -122,7 +122,7 @@ public class AssignmentDatabase {
      * @param projectID in which the employees are involved
      * @return list of employees involved in the project with given ID
      */
-    public List<Assignment> getAssignmentsByProject(int projectID) {
+    public List<Assignment> getAssignmentsByProject(Integer projectID) {
         List<Assignment> allAssignments = this.getAllAssignments();
         return allAssignments.stream().filter(assignment -> assignment.getProjectID().equals(projectID))
                 .collect(Collectors.toList());
@@ -139,6 +139,21 @@ public class AssignmentDatabase {
             e.printStackTrace();
             System.out.println("there is no elements in the database. ");
             return new ArrayList<>();
+        }
+    }
+
+    public void deleteAllAssignmentsEmployee(int employeeID) throws SQLException {
+        List<Assignment> assignmentsEmployee = getAssignmentsByEmployee(employeeID);
+        for (Assignment assignment : assignmentsEmployee) {
+            assignmentDAO.deleteById(assignment.getId());
+        }
+    }
+
+
+    public void deleteAllAssignmentsProject(int projectID) throws SQLException {
+        List<Assignment> assignmentsProject = getAssignmentsByProject(projectID);
+        for (Assignment assignment : assignmentsProject) {
+            assignmentDAO.deleteById(assignment.getId());
         }
     }
 

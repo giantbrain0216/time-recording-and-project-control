@@ -67,7 +67,16 @@ public class AssignedCompetencesEmployeeController {
         assignedCompetencesEmployeeDatabase.deleteFromDatabase(assignmentID);
         return assignedCompetencesEmployee;
     }
-
+    /**
+     * deletes all the assignments of one employee and competences
+     *
+     * @param employeeID of the project
+     * @throws SQLException when the deletion could not be done
+     */
+    @DeleteMapping("/allAssignedCompetencesEmployee/{id}")
+    public void deleteAllAssignmentsByProject(@PathVariable("id") Integer employeeID) throws SQLException {
+        assignedCompetencesEmployeeDatabase.deleteAllAssignedCompetencesByEmployee(employeeID);
+    }
     /**
      * REST METHOD POST TO ADD assignedCompetencesEmployee
      * <p>

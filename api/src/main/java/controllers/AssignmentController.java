@@ -8,6 +8,7 @@ import database.methods.TimeRegistrationDatabase;
 import entities.Assignment;
 import entities.Project;
 import entities.TimeRegistration;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+
 import static properties.Properties.*;
 
 @RestController
@@ -23,12 +25,12 @@ public class AssignmentController {
 
     private AssignmentDatabase assignmentDatabase;
 
-    public AssignmentController(){
+    public AssignmentController() {
         try {
             ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:mariadb://" + LINK, USERNAME,
                     PASSWORD);
             assignmentDatabase = new AssignmentDatabase(connectionSource);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
         }
     }
@@ -46,9 +48,9 @@ public class AssignmentController {
 
     /**
      * REST METHOD GET FOR ONE Assignment
-     *
-     *  precondition: the given id exists in the database
-     *  postcondition: correct assignment is returned
+     * <p>
+     * precondition: the given id exists in the database
+     * postcondition: correct assignment is returned
      *
      * @param assignmentID - The ID of the assignment
      * @return the assignment corresponding to the id
@@ -61,7 +63,7 @@ public class AssignmentController {
 
     /**
      * REST METHOD DELETE ASSIGNMENT
-     *
+     * <p>
      * precondition: the given id exists in the database
      * postcondition: assignment no longer exists in the database and the assignment is returned
      *
@@ -77,7 +79,7 @@ public class AssignmentController {
 
     /**
      * REST METHOD POST TO ADD ASSIGNMENT
-     *
+     * <p>
      * precondition: The request body corresponds to the Assignment Class
      * postcondition: The given assignment is added to the database
      *
@@ -85,10 +87,10 @@ public class AssignmentController {
      */
     @PostMapping("/assignments")
     @ResponseStatus(HttpStatus.CREATED)
-    public int addAssignment(@Valid @RequestBody Assignment requestBody){
+    public int addAssignment(@Valid @RequestBody Assignment requestBody) {
         try {
             return assignmentDatabase.addAssignment(requestBody);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             return 0;
         }
@@ -96,10 +98,9 @@ public class AssignmentController {
 
     /**
      * REST METHOD UPDATE ASSIGNMENT
-     *
+     * <p>
      * precondition: The request body corresponds to the Assignment Class and the id exists in the database
      * postcondition: The correct assignment has been updated
-     *
      */
     @PutMapping("/assignments")
     public void updateAssignment(@Valid @RequestBody Assignment requestBody) {
@@ -115,9 +116,9 @@ public class AssignmentController {
 
     /**
      * REST METHOD GET FOR ASSIGNMENTS BY EMPLOYEE
-     *
-     *  precondition: the given id exists in the database of employees
-     *  postcondition: correct list of assignments is returned
+     * <p>
+     * precondition: the given id exists in the database of employees
+     * postcondition: correct list of assignments is returned
      *
      * @param employeeID - The ID of the employee
      * @return the assignments corresponding to the id
@@ -128,16 +129,38 @@ public class AssignmentController {
     }
 
     /**
-     * REST METHOD GET FOR ASSIGNMENTS BY PROJECT
+     * deletes all the assignments of one employee
      *
-     *  precondition: the given id exists in the database of projects
-     *  postcondition: correct list of assignments is returned
+     * @param employeeID of the employee
+     * @throws SQLException when the deletion could not be done
+     */
+    @DeleteMapping("/assignmentsbyemployee/{id}")
+    public void deleteAllAssignmentsByEmployee(@PathVariable("id") Integer employeeID) throws SQLException {
+        assignmentDatabase.deleteAllAssignmentsEmployee(employeeID);
+    }
+
+    /**
+     * deletes all the assignments of one project
+     *
+     * @param projectID of the project
+     * @throws SQLException when the deletion could not be done
+     */
+    @DeleteMapping("/assignmentsbyproject/{id}")
+    public void deleteAllAssignmentsByProject(@PathVariable("id") Integer projectID) throws SQLException {
+        assignmentDatabase.deleteAllAssignmentsProject(projectID);
+    }
+
+    /**
+     * REST METHOD GET FOR ASSIGNMENTS BY PROJECT
+     * <p>
+     * precondition: the given id exists in the database of projects
+     * postcondition: correct list of assignments is returned
      *
      * @param projectID - The ID of the project
      * @return the assignments corresponding to the project id
      */
     @GetMapping("/assignmentsbyproject/{id}")
-    public List<Assignment> getAssignmentsByProject(@PathVariable("id") Integer projectID) throws SQLException {
+    public List<Assignment> getAssignmentsByProject(@PathVariable("id") Integer projectID) {
         return assignmentDatabase.getAssignmentsByProject(projectID);
     }
 }

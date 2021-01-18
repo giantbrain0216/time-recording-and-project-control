@@ -144,6 +144,31 @@ public class AssignedCompetencesProjectDatabase {
     }
 
     /**
+     * searches the table in the database and returns all assignments whose Project ID is equal to the given one
+     *
+     * @param projectID of the project
+     * @return list of the assignment of competences to this project
+     */
+    public List<AssignedCompetencesProject> getAllAssignedCompetencesByProject(Integer projectID) {
+        List<AssignedCompetencesProject> allAssignedCompetencesProject = getAllAssignedCompetencesProject();
+        return allAssignedCompetencesProject.stream().filter(competence -> competence.getProjectID() == projectID).collect(Collectors.toList());
+    }
+
+    /**
+     * searches the table in the database and deletes all assignments whose Project ID is equal to the given one
+     *
+     * @param projectID of the project
+     * @throws SQLException if at least one assignment could not been deleted
+     */
+
+    public void deleteAllAssignedCompetencesByProject(Integer projectID) throws SQLException {
+        List<AssignedCompetencesProject> allAssignedCompetencesProject = getAllAssignedCompetencesByProject(projectID);
+        for (AssignedCompetencesProject assignedCompetencesProject : allAssignedCompetencesProject) {
+            assignedCompetencesProjectDao.deleteById(assignedCompetencesProject.getId());
+        }
+    }
+
+    /**
      * searches the database and then returns the list with the competences IDs  of the
      * project whose ID was given
      *
@@ -156,8 +181,6 @@ public class AssignedCompetencesProjectDatabase {
                 .map(AssignedCompetencesProject::getCompetenceID)
                 .collect(Collectors.toList());
     }
-
-
 
 
 }

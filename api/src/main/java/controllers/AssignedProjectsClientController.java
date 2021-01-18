@@ -61,10 +61,22 @@ public class AssignedProjectsClientController {
      * @param assignmentID - id of the employee to be deleted
      */
     @DeleteMapping("/assignedProjectsClient/{id}")
-    public AssignedProjectsClient deleteassignedProjectsClient(@PathVariable("id") Integer assignmentID) {
+    public AssignedProjectsClient deleteAssignedProjectsClient(@PathVariable("id") Integer assignmentID) {
         AssignedProjectsClient assignedProjectsClient = assignedProjectsClientDatabase.getAssignedProjectsClient(assignmentID);
         assignedProjectsClientDatabase.deleteFromDatabase(assignmentID);
         return assignedProjectsClient;
+    }
+
+    /**
+     * deletes all the projects of one client
+     *
+     * @param clientID of the client
+     * @throws SQLException when the deletion could not be done
+     * @return list of the IDs of the deleted projects
+     */
+    @DeleteMapping("/allAssignedProjectsClient/{id}")
+    public List<Integer> deleteAllProjectsByClient(@PathVariable("id") Integer clientID) throws SQLException {
+       return assignedProjectsClientDatabase.deleteAllProjectsByClient(clientID);
     }
 
     /**

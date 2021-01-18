@@ -2,13 +2,8 @@ package controllers;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import database.methods.AssignedCompetencesEmployeeDatabase;
 import database.methods.AssignedCompetencesProjectDatabase;
-import database.methods.ClientDatabase;
-import entities.AssignedCompetencesEmployee;
 import entities.AssignedCompetencesProject;
-import entities.Assignment;
-import entities.Client;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +65,17 @@ public class AssignedCompetencesProjectController {
         AssignedCompetencesProject AssignedCompetencesProject = assignedCompetencesProjectDatabase.getAssignedCompetencesProject(assignmentID);
         assignedCompetencesProjectDatabase.deleteFromDatabase(assignmentID);
         return AssignedCompetencesProject;
+    }
+
+    /**
+     * deletes all the assignments of one project and competences
+     *
+     * @param projectID of the project
+     * @throws SQLException when the deletion could not be done
+     */
+    @DeleteMapping("/allAssignedCompetencesProject/{id}")
+    public void deleteAllAssignmentsByProject(@PathVariable("id") Integer projectID) throws SQLException {
+        assignedCompetencesProjectDatabase.deleteAllAssignedCompetencesByProject(projectID);
     }
 
     /**
