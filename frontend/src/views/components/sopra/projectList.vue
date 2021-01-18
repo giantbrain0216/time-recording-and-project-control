@@ -110,7 +110,9 @@
             <hr>
             <vs-list>
               <vs-list-header icon="build" title="Competences"></vs-list-header>
-              <vs-list-item :style='competencesAbgedeckt[competence.id] ? "color:#46c93a" : "color:#ff4757"' v-for="competence in currentProject.competences" :icon='competencesAbgedeckt[competence.id] ? "check" : "error"' :title="competence.name" :key="competence.id"></vs-list-item>
+              <vs-list-item :style='competencesAbgedeckt[competence.id] ? "color:#46c93a" : "color:#ff4757"'
+                            v-for="competence in currentProject.competences" :icon='competencesAbgedeckt[competence.id] ? "check" : "error"'
+                            :title="competence.name" :key="competence.id"></vs-list-item>
             </vs-list>
             <hr>
           </div>
