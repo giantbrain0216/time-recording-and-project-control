@@ -16,7 +16,7 @@
             <tr class="">
               <th class="border-top-0" style="color: cornflowerblue">ID</th>
               <th class="border-top-0" style="color: cornflowerblue">Name</th>
-              <th class="border-top-0" style="color: cornflowerblue">Competences</th>
+<!--              <th class="border-top-0" style="color: cornflowerblue">Competences</th>-->
               <th class="border-top-0" style="color: cornflowerblue">Remaining Working Hours Per Week</th>
               <th class="border-top-0" style="color: cornflowerblue">Actions</th>
             </tr>
@@ -38,7 +38,7 @@
                 </div>
               </td>
               <!--<td>{{employee.employeeID}}</td>-->
-              <td>{{ employee.competences }}</td>
+<!--              <td>{{ employee.competences }}</td>-->
               <td>{{ employee.remainingWorkingHoursPerWeek }}</td>
               <td>
                 <div>
