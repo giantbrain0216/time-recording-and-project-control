@@ -6,7 +6,7 @@
           Import Time Registrations from CSV File
         </h4>
         <div class="float-right mb-1">
-          <vs-button @click="download_csv"  icon="info" color="primary"  type="filled"> Get Template
+          <vs-button @click="download_csv" icon="info" color="primary" type="filled"> Get Template
           </vs-button>
         </div>
       </div>
@@ -14,7 +14,8 @@
 
       <div style="display:flex;">
         <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
-        <vs-button v-show="this.selectedFile" @click="submit()" class="float-right ml-2" color="success" type="filled">
+        <vs-button v-show="this.selectedFile" @click="submit()" v-bind:disabled="numberOfTimeRegistrations() === 0"
+                   class="float-right ml-2" color="success" type="filled">
           Submit
         </vs-button>
       </div>
@@ -27,8 +28,8 @@
         </h4>
         <h6 class="mt-2" style="color: #28a745">{{ numberOfTimeRegistrations() }} Time Registrations will be uploaded
           !</h6>
-        <h6 class="mt-2" style="color: red">{{ this.allTimeRegistrationFromCSV.length - numberOfTimeRegistrations() }} Time Registrations will not be uploaded
-          ! See  Remarks</h6>
+        <h6 class="mt-2" style="color: red">{{ this.allTimeRegistrationFromCSV.length - numberOfTimeRegistrations() }}
+          Time Registrations will not be uploaded. See Remarks !</h6>
       </div>
       <div class="table-responsive">
         <table class="table v-middle border">
@@ -60,7 +61,8 @@
             </td>
             <td>{{ registration[3] }}</td>
             <td>{{ registration[4] }}</td>
-            <td><p style="color:red;" v-show="!validTimeRegistration(index)"> This Time Registration will not be uploaded
+            <td><p style="color:red;" v-show="!validTimeRegistration(index)"> This Time Registration will not be
+              uploaded
               <br>Either the Employee ID or the Project ID does not exist
               or you may have deleted it. </p></td>
             <td>
@@ -110,14 +112,14 @@ export default {
   },
   methods: {
 
-    download_csv:async function () {
+    download_csv: async function () {
       var csv = 'employee id,project id,work_ids/date,work_ids/time,work_ids/hours,work_ids/name\n';
-            var hiddenElement = document.createElement('a');
+      var hiddenElement = document.createElement('a');
       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
       hiddenElement.target = '_blank';
       hiddenElement.download = 'template.csv';
       hiddenElement.click();
-     },
+    },
 
     fetchAllProjectIDs: async function () {
       await axios.get(`http://localhost:8080/projects`)
@@ -221,6 +223,8 @@ export default {
       this.$papa.parse(file, {
         header: true,
         skipEmptyLines: true,
+        //  preview: 2,,
+
 
         complete: (results) => {
           let allTimeRegistrationFromCSV = [];
