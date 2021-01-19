@@ -172,7 +172,7 @@ export default {
       for(var i=0;i<this.timeregistrations.length;i++){
         var workedHours =Math.abs(new Date(this.timeregistrations[i].end) - new Date(this.timeregistrations[i].start)) / 36e5
         var element = [this.timeregistrations[i].id, await this.getEmployeeName(this.timeregistrations[i].employeeID),
-          this.timeregistrations[i].start.substring(0,10),workedHours,this.timeregistrations[i].description, parseInt((workedHours * this.pricePerHour).toFixed(1)) + "€"]
+          this.timeregistrations[i].start.substring(0,10),workedHours,this.timeregistrations[i].description, parseInt((workedHours * this.pricePerHour).toFixed(1)) + " Euro"]
         this.dataForCSV.push(element)
         this.prices.push(parseInt((workedHours * this.pricePerHour).toFixed(1)))
       }
@@ -185,12 +185,12 @@ export default {
         csv += "\n";
       });
 
-      csv += ',,,,,' + this.prices.reduce(function(a,b){return a + b}, 0) + "€\n"
+      csv += ',,,,,' + this.prices.reduce(function(a,b){return a + b}, 0) + "Euro \n"
 
       // eslint-disable-next-line no-console
       console.log(csv);
       var hiddenElement = document.createElement('a');
-      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
       hiddenElement.target = '_blank';
       hiddenElement.download = 'Rechnung_Client_' + this.clientID + '.csv';
       hiddenElement.click();

@@ -1,15 +1,30 @@
 <template>
   <div>
-
+<div>
     <h2> Search Results of : <i>{{ searchKey }}</i></h2>
-    <h6 style="color: #28a745">
+     <ul class="list-inline mb-0 mt-2">
+      <li class="list-inline-item">
+        <vs-checkbox v-model="showEmployee">Employees</vs-checkbox>
+      </li>
+      <li class="list-inline-item">
+        <vs-checkbox v-model="showClient">Clients</vs-checkbox>
+      </li>
+      <li class="list-inline-item">
+        <vs-checkbox v-model="showProject">Projects</vs-checkbox>
+      </li>
+      <li class="list-inline-item">
+        <vs-checkbox v-model="showTimeRegistration">Time Registrations</vs-checkbox>
+      </li>
+    </ul>
+</div>
+    <h6  class="mt-2" style="color: #28a745">
       {{
         this.timeregistrationSearched.length + this.projectsSearched.length +
         this.clientsSearched.length + this.employeesSearched.length
       }} Results</h6>
 
     <div class="mt-3">
-      <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
+      <vs-row v-show="showProject" type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
@@ -49,7 +64,7 @@
         </vs-card>
       </vs-row>
 
-      <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
+      <vs-row v-show="showEmployee" type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
@@ -87,7 +102,7 @@
         </vs-card>
       </vs-row>
 
-      <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
+      <vs-row  v-show="showClient" type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
@@ -125,7 +140,7 @@
         </vs-card>
       </vs-row>
 
-      <vs-row type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
+      <vs-row v-show="showTimeRegistration" type="flex" vs-justify="center" vs-align="center" :vs-lg="12" vs-sm="6" vs-xs="12"
               code-toggler>
         <vs-card class="cardx">
           <div slot="header">
@@ -188,7 +203,12 @@ export default {
       clientsSearched: [],
       employeesSearched: [],
       searchKey: "",
-      buttonClicked: false
+      buttonClicked: false,
+      showClient:true,
+      showEmployee:true,
+      showProject:true,
+      showTimeRegistration:true
+
     };
   },
   /* watch: {

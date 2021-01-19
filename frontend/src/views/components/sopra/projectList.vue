@@ -108,7 +108,12 @@
             <hr>
             <p><strong>Performed Effort <i>(In Hours)</i>: </strong>{{ currentProject.performedEffort }}</p>
             <hr>
-            <p><strong>Competences: </strong>{{ currentProject.competences }}</p>
+            <vs-list>
+              <vs-list-header icon="build" title="Competences"></vs-list-header>
+              <vs-list-item :style='competencesAbgedeckt[competence.id] ? "color:#46c93a" : "color:#ff4757"'
+                            v-for="competence in currentProject.competences" :icon='competencesAbgedeckt[competence.id] ? "check" : "error"'
+                            :title="competence.name" :key="competence.id"></vs-list-item>
+            </vs-list>
             <hr>
           </div>
         </vs-card>
@@ -355,6 +360,7 @@ export default {
     return {
       projects: [],
       competences: [],
+      competencesAbgedeckt:{},
       clientsNamesForProjects: {},
       clients: [],
       employees: [],
@@ -1020,14 +1026,14 @@ export default {
      * @param id of project
      */
     fetchProject: async function (id) {
-      var competencesString = ""
+      var competences = []
       var clientID = 0
       await axios.get(`http://localhost:8080/competencesByProject/` + id).then(async response => {
         // JSON responses are automatically parsed.
         for(var i = 0; i<response.data.length;i++){
           await axios.get(`http://localhost:8080/competences/` + response.data[i]).then(response1 => {
 
-            competencesString = competencesString.concat(", " + response1.data.name)
+            competences.push(response1.data)
           })
         }
 
@@ -1055,12 +1061,42 @@ export default {
             }
           })
 
+      var arrayOfAllCompetences = []
+      await axios.get(`http://localhost:8080/assignmentsbyproject/` + id).then(async response => {
+        // JSON responses are automatically parsed.
+        for(var i = 0; i<response.data.length;i++){
+          await axios.get(`http://localhost:8080/competencesByEmployee/` + response.data[i].employeeID).then((response1) => {
+                for(var j=0; j<response1.data.length;j++ ){
+                  arrayOfAllCompetences.push(response1.data[j])
+                }
+          })
+        }
+
+
+
+      })
+          .catch((error) => {
+            if(error.response){
+              this.notify("Projects Database Error", error.message,"danger")
+            }
+          })
+
+      this.competencesAbgedeckt = {}
+
+      for(var i=0; i<competences.length;i++){
+        if(arrayOfAllCompetences.includes(competences[i].id)){
+          this.$set(this.competencesAbgedeckt,competences[i].id,true)
+        }else {
+          this.$set(this.competencesAbgedeckt,competences[i].id,false)
+        }
+      }
+
 
       await axios.get(`http://localhost:8080/projects/${id}`)
           .then(response => {
             // JSON responses are automatically parsed.
             this.currentProject = response.data
-            this.currentProject.competences = competencesString.toString().substr(1)
+            this.currentProject.competences = competences
             this.currentProject.clientID = clientID
           })
           .catch((error) => {
@@ -1071,13 +1107,14 @@ export default {
 
 
 
-      // eslint-disable-next-line no-console
-      console.log(competencesString)
 
 
 
 
     },
+
+
+
 
     /**
      * Gets all projects of a specific client
@@ -1161,6 +1198,7 @@ export default {
       this.editValues.tickBoxesForCompetences = {}
       this.editValues.performedEffortField = ''
       this.assignHours = 0
+      this.competencesAbgedeckt = {}
     },
 
 

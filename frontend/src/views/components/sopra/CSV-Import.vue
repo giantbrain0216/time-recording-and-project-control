@@ -5,47 +5,22 @@
         <h4 style="color:#007bff;">
           Import Time Registrations from CSV File
         </h4>
+        <div class="float-right mb-1">
+          <vs-button @click="download_csv" icon="info" color="primary" type="filled"> Get Template
+          </vs-button>
+        </div>
       </div>
+
+
       <div style="display:flex;">
         <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
-        <vs-button v-show="this.selectedFile" @click="submit()" class="float-right ml-2" color="success" type="filled">
+        <vs-button v-show="this.selectedFile" @click="submit()" v-bind:disabled="numberOfTimeRegistrations() === 0"
+                   class="float-right ml-2" color="success" type="filled">
           Submit
         </vs-button>
       </div>
-    </vs-card>
-    <vs-card v-show="!this.selectedFile" class="cardx">
-      <div slot="header">
-        <h4 style="color:#007bff;">
-          Required Format
-        </h4>
-        <h6  class="mt-2" style="color:#dc3545;"> Check that your csv file has at least this format
-          !</h6>
-        <h6 style="color:#dc3545;">The headers of the CSV File must be identical to the format below !</h6>
-       </div>
-      <div class="table-responsive">
-        <table class="table v-middle border">
-          <thead>
-          <tr class="">
-            <th class="border-top-0">employee id</th>
-            <th class="border-top-0">project id</th>
-            <th class="border-top-0">work_ids/date</th>
-            <th class="border-top-0">work_ids/time</th>
-            <th class="border-top-0">work_ids/name</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-            <td>...</td>
-          </tr>          </tbody>
-        </table>
-      </div>
-    </vs-card>
 
-
+    </vs-card>
     <vs-card v-show="this.selectedFile" class="cardx">
       <div slot="header">
         <h4 style="color:#007bff;">
@@ -53,8 +28,8 @@
         </h4>
         <h6 class="mt-2" style="color: #28a745">{{ numberOfTimeRegistrations() }} Time Registrations will be uploaded
           !</h6>
-        <h6 class="mt-2" style="color: red">{{ this.allTimeRegistrationFromCSV.length - numberOfTimeRegistrations() }} Time Registrations will not be uploaded
-          ! See  Remarks</h6>
+        <h6 class="mt-2" style="color: red">{{ this.allTimeRegistrationFromCSV.length - numberOfTimeRegistrations() }}
+          Time Registrations will not be uploaded. See Remarks !</h6>
       </div>
       <div class="table-responsive">
         <table class="table v-middle border">
@@ -86,7 +61,8 @@
             </td>
             <td>{{ registration[3] }}</td>
             <td>{{ registration[4] }}</td>
-            <td><p style="color:red;" v-show="!validTimeRegistration(index)"> This Time Registration will not be uploaded
+            <td><p style="color:red;" v-show="!validTimeRegistration(index)"> This Time Registration will not be
+              uploaded
               <br>Either the Employee ID or the Project ID does not exist
               or you may have deleted it. </p></td>
             <td>
@@ -135,6 +111,16 @@ export default {
     await this.fetchAllProjectIDs()
   },
   methods: {
+
+    download_csv: async function () {
+      var csv = 'employee id,project id,work_ids/date,work_ids/time,work_ids/hours,work_ids/name\n';
+      var hiddenElement = document.createElement('a');
+      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+      hiddenElement.target = '_blank';
+      hiddenElement.download = 'template.csv';
+      hiddenElement.click();
+    },
+
     fetchAllProjectIDs: async function () {
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {
@@ -237,13 +223,15 @@ export default {
       this.$papa.parse(file, {
         header: true,
         skipEmptyLines: true,
+        //  preview: 2,,
+
 
         complete: (results) => {
           let allTimeRegistrationFromCSV = [];
           for (let i = 0; i < results.data.length; i++) {
 
             // eslint-disable-next-line no-console
-            console.log("Results " +i + results.data)
+            console.log("Results " + results.data[i]["work_ids/date"] + " " + results.data[i]["work_ids/time"])
             let startTime = new Date(results.data[i]["work_ids/date"] + " " + results.data[i]["work_ids/time"]).getTime();
             let endtime = new Date(startTime + parseFloat(results.data[i]["work_ids/hours"]) * 60 * 60 * 1000)
             /*   let sumOfStartAndDuration = parseFloat(results.data[i]["work_ids/time"]) + parseFloat(results.data[i]["work_ids/hours"])
