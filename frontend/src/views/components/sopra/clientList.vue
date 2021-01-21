@@ -1,4 +1,4 @@
-npm run serve
+
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
@@ -80,6 +80,7 @@ npm run serve
             <p><strong>Projects (IDs): </strong>{{ currentClient.projectsIDs }}</p>
             <hr>
             <p><strong>Address: </strong>{{ currentClient.address }}</p>
+            <div><Map :address="currentClient.address" :name="currentClient.name"/></div>
 
 
           </div>
@@ -195,10 +196,11 @@ npm run serve
 <script>
 import axios from 'axios';
 import ExportInvoiceButton from "@/views/components/ExportInvoice/ExportInvoiceButton";
+import Map from "@/views/components/LeafletMap/Map";
 
 export default {
   name: "clientList",
-  components: {ExportInvoiceButton},
+  components: {ExportInvoiceButton, Map},
   data: () => {
     return {
       employees: [],
@@ -240,7 +242,7 @@ export default {
     validClient() {
       var re = /\S+@\S+\.\S+/;
       return (this.inputValues.nameField.length > 0
-          && 50 > this.inputValues.emailField.length && this.inputValues.emailField.length > 4
+          && 100 > this.inputValues.emailField.length && this.inputValues.emailField.length > 1
           && 41 > this.inputValues.numberField.length && this.inputValues.numberField.length > 7 && this.inputValues.addressField.length > 0
           && re.test(this.inputValues.emailField)
           && this.selectedEmployeeID !== 0 && this.inputValues.numberField > 0
