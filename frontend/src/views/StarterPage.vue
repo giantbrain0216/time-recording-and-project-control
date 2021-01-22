@@ -1,22 +1,24 @@
 <template>
- <div>
-  <States/>
-   <News/>
-
-</div>  
+  <div>
+    <States/>
+    <SalesSummary/>
+    <News/>
+  </div>
 </template>
 
 <script>
 
 import States from './components/dashboard/States.vue';
 import News from "@/views/components/NewsCards/News";
+import SalesSummary from './components/dashboard/SalesSummary.vue';
 
 
 export default {
-	name: 'StarterPage',
+  name: 'StarterPage',
   components: {
     States,
-    News
+    SalesSummary,
+    News,
   }
 }
 </script>

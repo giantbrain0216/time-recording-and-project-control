@@ -41,6 +41,9 @@ public class Project {
     @DatabaseField(columnName = "Performed Effort")
     private float performedEffort;
 
+    @DatabaseField(columnName = "Price Per Hour")
+    private double pricePerHour;
+
     public Project() {
     }
 
@@ -52,14 +55,16 @@ public class Project {
      * @param plannedStart  date of start
      * @param plannedEnd    date of end
      * @param plannedEffort effort to achieve
+     * @param pricePerHour  the price that should be paid per Hour
      */
     public Project(final String projectName, final Date plannedStart,
-                   final Date plannedEnd, final Integer plannedEffort) {
+                   final Date plannedEnd, final Integer plannedEffort, final double pricePerHour) {
         this.setProjectName(projectName);
         this.setPerformedEffort(0);
         this.setPlannedStart(plannedStart);
         this.setPlannedEffort(plannedEffort);
         this.setPlannedEnd(plannedEnd);
+        this.setPricePerHour(pricePerHour);
     }
 
     public Integer getProjectNumber() {
@@ -108,5 +113,13 @@ public class Project {
 
     public void setPerformedEffort(float performedEffort) {
         this.performedEffort = performedEffort;
+    }
+
+    public double getPricePerHour() {
+        return pricePerHour;
+    }
+
+    public void setPricePerHour(double pricePerHour) {
+        this.pricePerHour = pricePerHour;
     }
 }

@@ -29,7 +29,7 @@ public class ProjectControllerTest {
 
         String requestBody = " {\"projectName\":\"Mock Project\", \"plannedStart\": " +
                 "\"2012-04-23 18:25:00\" ,"+
-                " \"plannedEnd\": \"2012-08-23 18:25:00\", \"plannedEffort\": 1000, \"performedEffort\":0 } ";
+                " \"plannedEnd\": \"2012-08-23 18:25:00\", \"plannedEffort\": 1000, \"performedEffort\":0, \"pricePerHour\": 10}\" ";
 
         try {
             MvcResult result =
@@ -121,7 +121,8 @@ public class ProjectControllerTest {
         int id = createMockObject();
         String requestBody = " {\"projectName\":\"Mock Project\",\"projectNumber\":" + String.valueOf(id) + ", \"plannedStart\": " +
                 "\"2012-04-23 18:25:43\" ,"+
-                " \"plannedEnd\": \"2012-08-23 18:25:43\", \"plannedEffort\": 1000, \"performedEffort\":0} ";
+                " \"plannedEnd\": \"2012-08-23 18:25:43\", \"plannedEffort\": 1000, \"performedEffort\":0," +
+                " \"pricePerHour\": 10}";
         this.mockMvc.perform(put("/projects").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/projects")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("Mock Project")));

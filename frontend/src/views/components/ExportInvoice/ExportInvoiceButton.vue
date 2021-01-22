@@ -9,7 +9,7 @@
         @cancel='activePrompt=false;resetValues()'
         @accept='download'
         @close='activePrompt=false;resetValues()'
-        :is-valid="validInput(startDateInput,endDateInput,currentSelectedProject,pricePerHour)"
+        :is-valid="validInput(startDateInput,endDateInput,currentSelectedProject)"
         :active.sync="activePrompt"
     >
       <div class="con-exemple-prompt">
@@ -43,10 +43,10 @@
                                                               min="2018-01-01" :max="endDateMaximum"></div>
       </div>
       <hr/>
-      <vs-input type="number" label-placeholder="Price per Hour in €" class="mt-4"
-                v-model="pricePerHour"/>
+        <h6 class="mb-2 mt-2" >Price Per Hour : <strong style="color: red"> {{ currentSelectedProject.pricePerHour }} € </strong></h6>
 
-      <vs-alert class="mt-3"
+
+        <vs-alert class="mt-3"
           :active="!validInput(startDateInput,endDateInput,currentSelectedProject,pricePerHour)"
           color="success"
           icon="new_releases"
@@ -154,7 +154,7 @@ export default {
       await axios.get(`http://localhost:8080/timeregistrations`)
           .then(response => {
               for(var i =0;i<response.data.length;i++){
-                if(response.data[i].projectID == this.currentSelectedProject.projectNumber){
+                if(response.data[i].projectID === this.currentSelectedProject.projectNumber){
                   if(this.compareDates(new Date(this.startDateInput),new Date(response.data[i].start)) && this.compareDates(new Date(response.data[i].end),new Date(this.endDateInput))){
                     this.timeregistrations.push(response.data[i])
                   }
@@ -172,9 +172,10 @@ export default {
       for(var i=0;i<this.timeregistrations.length;i++){
         var workedHours =Math.abs(new Date(this.timeregistrations[i].end) - new Date(this.timeregistrations[i].start)) / 36e5
         var element = [this.timeregistrations[i].id, await this.getEmployeeName(this.timeregistrations[i].employeeID),
-          this.timeregistrations[i].start.substring(0,10),workedHours,this.timeregistrations[i].description, parseInt((workedHours * this.pricePerHour).toFixed(1)) + " Euro"]
+          this.timeregistrations[i].start.substring(0,10),workedHours,this.timeregistrations[i].description,
+          parseInt((workedHours * this.currentSelectedProject.pricePerHour).toFixed(1)) + " Euro"]
         this.dataForCSV.push(element)
-        this.prices.push(parseInt((workedHours * this.pricePerHour).toFixed(1)))
+        this.prices.push(parseInt((workedHours * this.currentSelectedProject.pricePerHour).toFixed(1)))
       }
     },
 
@@ -234,8 +235,9 @@ export default {
       return smallerDate.getTime() < biggerDate.getTime();
     },
 
-    validInput: function(startDateInput,endDateInput,currentSelectedProject,pricePerHour){
-      return (this.compareDates(new Date(startDateInput),new Date(endDateInput)) && currentSelectedProject.hasOwnProperty("projectNumber") && pricePerHour !== "")
+    validInput: function(startDateInput,endDateInput,currentSelectedProject){
+      return (this.compareDates(new Date(startDateInput),new Date(endDateInput)) &&
+          currentSelectedProject.hasOwnProperty("projectNumber"))
     },
 
     /** Shows prompt with title, message and selected color*/
