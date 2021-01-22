@@ -59,10 +59,10 @@ export default {
 
     setTimeRegistrationsMonth() {
       let month = new Date().getMonth()
-      let previousYear = new Date().getFullYear()
+      let year = new Date().getFullYear()
       // get only time registration from this year or previous one
-      this.allTimeRegistrations = this.allTimeRegistrations.filter(time => new Date(time.start).getFullYear() === previousYear ||
-          new Date(time.start).getFullYear() === previousYear-1)
+      this.allTimeRegistrations = this.allTimeRegistrations.filter(time => new Date(time.start).getFullYear() === year ||
+          new Date(time.start).getFullYear() === year-1)
       for (let i = 0; i < this.allTimeRegistrations.length; i++) {
         this.allTimeRegistrationsPerMonth[parseInt(this.allTimeRegistrations[i].start.slice(5, 7)) - 1].push(this.allTimeRegistrations[i])
       }
@@ -79,7 +79,7 @@ export default {
           summe += price;
         }
         if (month>11) month = 0;
-        this.sum.splice(month-1, 0, summe)
+        this.sum.splice(this.orderOfMonthsToDisplay.indexOf(this.months[i]), 0, summe)
         month ++;
       }
     },
