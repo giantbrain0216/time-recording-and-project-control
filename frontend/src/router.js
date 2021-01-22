@@ -4,12 +4,12 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
-	routes: [
-    {
-    // ======================
-    // Full Layout
-    // ======================
-			path: '',
+    routes: [
+        {
+            // ======================
+            // Full Layout
+            // ======================
+            path: '',
             component: () => import('./layout/full/MainContainer.vue'),
             // ======================
             // Theme routes / pages
@@ -66,14 +66,20 @@ export default new Router({
                     component: () => import('./views/components/sopra/CSV-Import')
                 },
 
+                {
+                    path: '/CSV-Import-ticket-system',
+                    name: 'CSV Import Ticket System',
+                    index: 6,
+                    component: () => import('./views/components/sopra/TicketSystem')
+                },
 
 
             ]
-		},
-    // Redirect to starterkit page, if no match found
+        },
+        // Redirect to starterkit page, if no match found
         {
             path: '*',
             redirect: '/starterkit'
         }
-	]
+    ]
 })

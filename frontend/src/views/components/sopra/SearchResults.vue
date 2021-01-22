@@ -38,7 +38,6 @@
               <tr class="">
                 <th class="border-top-0" style="color: cornflowerblue">ID</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
-                <th class="border-top-0" style="color: cornflowerblue">ID of the Client</th>
                 <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
                 <th class="border-top-0" style="color: cornflowerblue">Progress</th>
                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
@@ -49,8 +48,6 @@
                 <td>{{ project.projectNumber }}</td>
                 <td class="m-b-0" style="font-weight: bold; font-size: 15px; cursor:pointer">{{ project.projectName }}
                 </td>
-                <td>{{ project.clientID }}</td>
-                <!-- <td>{{ project.projectName }}</td> -->
                 <td> {{ project.plannedEnd.substring(0, 10) }}</td>
                 <td style="text-align: center">
                   <vs-progress :percent="project.performedEffort * 100 / project.plannedEffort" color="success">primary

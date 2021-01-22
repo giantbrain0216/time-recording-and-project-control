@@ -74,11 +74,21 @@
           </div>
 
         </vs-card>
-          <h4 style="text-align: center">Or</h4>
-        <vs-card class="cardx mt-3">
+        <vs-divider>
+          <h4 style="text-align: center">Or</h4> </vs-divider>        <vs-card class="cardx mt-3">
           <div  slot="header">
             <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import", params: {}});'>
               Import Time Registrations From CSV File
+            </h4>
+          </div>
+        </vs-card>
+
+        <vs-divider>
+        <h4 style="text-align: center">Or</h4> </vs-divider>
+        <vs-card class="cardx mt-3">
+          <div  slot="header">
+            <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import Ticket System", params: {}});'>
+              Import Time Registrations From Ticket System
             </h4>
           </div>
         </vs-card>
