@@ -1,6 +1,7 @@
 <template>
-  <div>
-  <vs-row v-if="finishedFetching">
+  <div class="mt-4">
+    <hr>
+  <vs-row class="mt-5" v-if="finishedFetching">
     <vs-col vs-lg="3" vs-sm="6" vs-xs="12">
       <vs-card actionable >
         <div slot="header">
