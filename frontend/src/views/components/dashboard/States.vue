@@ -13,8 +13,6 @@
             </li>
           </ul>
         </vs-card>
-      </vs-col>
-      <vs-col vs-lg="4" vs-xs="12">
         <vs-card>
           <h4 class="mb-1">{{ Math.round(percentageOverloadedEmployees) + "%" }}</h4>
           <span>Overloaded Employees</span>
@@ -36,6 +34,18 @@
               <b-card class="text-warning">{{ employee.name }}</b-card>
             </li>
           </ul>
+        </vs-card>
+      </vs-col>
+      <vs-col vs-lg="4" vs-xs="12">
+        <vs-card>
+          <h4 class="mb-1">{{ Math.round(calculateCancelled()) }}%</h4>
+          <span>Projects are finished</span>
+          <vs-progress :percent="calculateCancelled()" color="success">primary</vs-progress>
+        </vs-card>
+        <vs-card>
+          <h4 class="mb-1">{{ Math.round(getProgressOfAll()) }}% Done</h4>
+          <span>Total Poject progress</span>
+          <vs-progress :percent="(getPerformedEffort()/getPlannedEffort())*100" color="primary">primary</vs-progress>
         </vs-card>
       </vs-col>
    <!--   <vs-col vs-lg="3" vs-xs="12">
