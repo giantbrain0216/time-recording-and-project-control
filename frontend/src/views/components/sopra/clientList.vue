@@ -44,11 +44,11 @@
                 <!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
                 <td>
                   <div>
-                    <vs-button @click="checkDeletePermission(client)" icon="delete" class="m-1" color="danger"
+                    <vs-button style="width:80px" @click="checkDeletePermission(client)" icon="delete" class="m-1" color="danger"
                                type="filled">
                       Delete
                     </vs-button>
-                    <vs-button @click="updateEditID(client.clientID)" icon="edit" class="m-1" color="warning"
+                    <vs-button style="width:80px"  @click="updateEditID(client.clientID)" icon="edit" class="m-1" color="warning"
                                type="filled"> Edit
                     </vs-button>
                     <ExportInvoiceButton :client-i-d="client.clientID"/>

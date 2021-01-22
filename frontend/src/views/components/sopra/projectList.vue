@@ -74,17 +74,17 @@
                   <i>{{ (project.performedEffort * 100 / project.plannedEffort).toFixed(2) }} %</i></td>
                 <td>
                   <div>
-                    <vs-button @click="fetchProject(project.projectNumber);prompts.activeDeletePrompt=true "
+                    <vs-button style="width:80px" @click="fetchProject(project.projectNumber);prompts.activeDeletePrompt=true "
                                class="m-1 btn-bloc" color="danger"
                                icon="delete" type="filled">
                       Delete
 
                     </vs-button>
-                    <vs-button @click="updateProjectIDBeforeEdit(project.projectNumber)" class=" m-1 btn-bloc
+                    <vs-button style="width:80px" @click="updateProjectIDBeforeEdit(project.projectNumber)" class=" m-1 btn-bloc
                   " color="warning" icon="edit" type="filled">
                       Edit
                     </vs-button>
-                    <vs-button class=" m-1 btn-bloc"
+                    <vs-button style="width:80px" class=" m-1 btn-bloc"
                                @click="fetchCurrentProjectAssignments(project.projectNumber);fetchProject(project.projectNumber);prompts.activeAssignPrompt = true"
                                color="success" icon="add"
                                type="filled">
@@ -175,12 +175,12 @@
             <div class="ml-1" style="color:royalblue;">{{ currentClient.name }}</div>
           </div>
           <hr>
-          <div class="mb-3">
-            Planned Start  <input class="ml-2" type="date" id="start" name="plannedStart"
+          <div class="mb-3" style="width: 55%">
+            Planned Start  <input style="width: 60%" class="float-right" type="date" id="start" name="plannedStart"
                                                 v-model="inputValues.plannedStartField"
                                                 :min="dateToday" max="2030-12-31" required></div>
-          <div class="mb-3">
-            Planned End  <input class="ml-2" type="date" id="end" name="plannedEnd"
+          <div class="mb-3" style="width: 55%">
+            Planned End  <input style="width: 60%" class="float-right" type="date" id="end" name="plannedEnd"
                                               v-model="inputValues.plannedEndField"
                                               :min="inputValues.plannedStartField" max="2030-12-31" required></div>
           <hr>

@@ -42,9 +42,9 @@
               <td>{{ employee.remainingWorkingHoursPerWeek }}</td>
               <td>
                 <div>
-                  <vs-button @click="fetchEmployeeUpdateCurrentEmployee(employee.employeeID);prompts.activeDeletePrompt = true"  icon="delete" class="m-1" color="danger" type="filled">
+                  <vs-button style="width:80px" @click="fetchEmployeeUpdateCurrentEmployee(employee.employeeID);prompts.activeDeletePrompt = true"  icon="delete" class="m-1" color="danger" type="filled">
                   Delete</vs-button>
-                  <vs-button @click="updateEditID(employee.employeeID)" icon="edit" class="m-1" color="warning" type="filled">
+                  <vs-button style="width:80px" @click="updateEditID(employee.employeeID)" icon="edit" class="m-1" color="warning" type="filled">
                 Edit  </vs-button>
                 </div>
               </td>
