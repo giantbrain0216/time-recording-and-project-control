@@ -22,6 +22,14 @@ import 'prismjs/themes/prism.css'
 import VsPrism from './components/prism/VsPrism.vue';
 Vue.component(VsPrism.name, VsPrism);
 
+// Leaflet Map
+import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+Vue.component('l-map', LMap);
+Vue.component('l-tile-layer', LTileLayer);
+Vue.component('l-marker', LMarker);
+
 // Vue Router
 import router from './router'
 Vue.config.productionTip = false

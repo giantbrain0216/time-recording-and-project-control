@@ -283,16 +283,16 @@ export default {
       if(!this.inputValues.workingHoursField){
         return false;
       }else {
-        return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 26
-            && this.inputValues.domicileField.length > 4 && this.inputValues.domicileField.length < 26
+        return (this.inputValues.nameField.length > 0 && this.inputValues.nameField.length < 100
+            && this.inputValues.domicileField.length > 1 && this.inputValues.domicileField.length < 100
             && this.inputValues.workingHoursField > 0 && this.inputValues.workingHoursField < 41
         )
       }
     },
     /**Checks if the input is valid for the edit prompt */
     validEmployeeEdit() {
-      return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 26
-          && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 26
+      return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 100
+          && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 100
       )
     }
   },

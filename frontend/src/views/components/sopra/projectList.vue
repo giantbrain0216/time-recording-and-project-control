@@ -635,6 +635,7 @@ export default {
       this.resetAllValues();
       await this.fetchAllProjects()
       await this.fetchAllEmployees()
+      await this.fetchProject(this.currentProject.projectNumber)
 
     },
 
@@ -841,6 +842,7 @@ export default {
 
       await this.fetchAllProjects();
       await this.resetAllValues();
+      await this.fetchProject(this.currentProject.projectNumber)
     },
 
     /**
