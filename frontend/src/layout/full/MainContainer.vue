@@ -29,7 +29,7 @@ SideBar
 },
 data:() => ({
 	topbarColor: "#2962ff",
-	logotitle: "Itestra",
+	logotitle: "itestra",
 	sidebarLinks: sidebarLinks,
 }),
 methods: {
