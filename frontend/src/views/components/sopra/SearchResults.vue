@@ -3,15 +3,16 @@
 <div>
     <h2> Search Results of : <i>{{ searchKey }}</i></h2>
      <ul class="list-inline mb-0 mt-2">
+       <li class="list-inline-item">
+         <vs-checkbox v-model="showProject">Projects</vs-checkbox>
+       </li>
       <li class="list-inline-item">
         <vs-checkbox v-model="showEmployee">Employees</vs-checkbox>
       </li>
       <li class="list-inline-item">
         <vs-checkbox v-model="showClient">Clients</vs-checkbox>
       </li>
-      <li class="list-inline-item">
-        <vs-checkbox v-model="showProject">Projects</vs-checkbox>
-      </li>
+
       <li class="list-inline-item">
         <vs-checkbox v-model="showTimeRegistration">Time Registrations</vs-checkbox>
       </li>
@@ -77,8 +78,7 @@
               <tr class="">
                 <th class="border-top-0" style="color: cornflowerblue">ID</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
-                <th class="border-top-0" style="color: cornflowerblue">Competences</th>
-                <th class="border-top-0" style="color: cornflowerblue">Remaining Working Hours Per Week</th>
+                 <th class="border-top-0" style="color: cornflowerblue">Remaining Working Hours Per Week</th>
                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
               </thead>
@@ -91,8 +91,7 @@
                   </div>
                   {{ employee.name }}
                 </td>
-                <td>{{ employee.competences }}</td>
-                <td>{{ employee.remainingWorkingHoursPerWeek }}</td>
+                 <td>{{ employee.remainingWorkingHoursPerWeek }}</td>
                 <td><i>You need to go to the employee list view. You can there edit or delete
                   employees !</i></td>
               </tr>
@@ -151,8 +150,8 @@
             <table class="table v-middle border">
               <thead>
               <tr class="">
-                <th class="border-top-0" style="color: cornflowerblue">Project ID</th>
-                <th class="border-top-0" style="color: cornflowerblue">Employee ID</th>
+                <th class="border-top-0" style="color: cornflowerblue">Project</th>
+                <th class="border-top-0" style="color: cornflowerblue">Employee</th>
                 <th class="border-top-0" style="color: cornflowerblue">From</th>
                 <th class="border-top-0" style="color: cornflowerblue">To</th>
                 <th class="border-top-0" style="color: cornflowerblue">Duration</th>
@@ -162,8 +161,8 @@
               </thead>
               <tbody>
               <tr v-for="registration in timeregistrationSearched" :key="registration.id">
-                <td >{{ registration.projectID }}</td>
-                <td >{{ registration.employeeID }}</td>
+                <td >{{ getProjectName(registration.projectID) }}</td>
+                <td >{{ getEmployeeName(registration.employeeID) }}</td>
                 <td >{{ registration.start }}</td>
                 <td >{{ registration.end }}</td>
                 <td >  {{ ((new Date(registration.end) - new Date(registration.start)) / 36e5).toFixed(2) }} Hours</td>
@@ -195,6 +194,7 @@ export default {
   data: () => {
     return {
       allProjects: [],
+      employeeNames:[],
       allClients: [],
       allEmployees: [],
       allTimeRegistrations: [],
@@ -239,6 +239,7 @@ export default {
           .then(response => {
             // JSON responses are automatically parsed.
             this.allEmployees = response.data
+            this.employeeNames = response.data.map(employee => employee.name)
           })
     },
 
@@ -273,6 +274,24 @@ export default {
               this.projectsSearched.push(this.allProjects[i])
           }
         }
+      }
+    },
+
+    getProjectName: function (id){
+      // eslint-disable-next-line no-console
+      console.log("YES I MA ER")
+      for (let i=0;i<this.allProjects.length;i++){
+        if (this.allProjects[i].projectNumber === id)
+          return this.allProjects[i].projectName
+      }
+    },
+
+    getEmployeeName: function (id){
+      // eslint-disable-next-line no-console
+      console.log("YES I MA ER")
+      for (let i=0;i<this.allEmployees.length;i++){
+        if (this.allEmployees[i].employeeID === id)
+          return this.allEmployees[i].name
       }
     },
 
@@ -313,7 +332,8 @@ export default {
       this.timeregistrationSearched = []
       if (this.searchKey.length !== 0) {
         for (let i = 0; i < this.allTimeRegistrations.length; i++) {
-          if (this.allTimeRegistrations[i].description.toLowerCase().includes(this.searchKey.toLowerCase())) {
+          if ( this.getProjectName(this.allTimeRegistrations[i].projectID).toLowerCase().includes(this.searchKey.toLowerCase())||
+              this.getEmployeeName(this.allTimeRegistrations[i].employeeID).toLowerCase().includes(this.searchKey.toLowerCase())) {
             if (!this.timeregistrationSearched.includes(this.allTimeRegistrations[i]))
               this.timeregistrationSearched.push(this.allTimeRegistrations[i])
           }

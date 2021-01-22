@@ -65,7 +65,7 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ "" + clientsNamesForProjects[project.projectNumber] }}</td>
+                <td> <i><strong>{{ "" + clientsNamesForProjects[project.projectNumber] }}</strong></i></td>
                 <!-- <td>{{ project.projectName }}</td> -->
                 <td> {{ project.plannedEnd.substring(0, 10) }}</td>
                 <td style="text-align: center">
@@ -176,11 +176,11 @@
           </div>
           <hr>
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="start" name="plannedStart"
+            Planned Start  <input class="ml-2" type="date" id="start" name="plannedStart"
                                                 v-model="inputValues.plannedStartField"
                                                 :min="dateToday" max="2030-12-31" required></div>
           <div class="mb-3">
-            <small>Planned End</small> <input class="ml-2" type="date" id="end" name="plannedEnd"
+            Planned End  <input class="ml-2" type="date" id="end" name="plannedEnd"
                                               v-model="inputValues.plannedEndField"
                                               :min="inputValues.plannedStartField" max="2030-12-31" required></div>
           <hr>
@@ -233,28 +233,25 @@
       >
         <h5>Project Name : {{ currentProject.projectName }}</h5>
         <h6 class="mb-2 mt-2">ID of the Client : {{ currentProject.clientID }}</h6>
+        <h6 class="mb-2 mt-2" >Price Per Hour : <strong style="color: red"> {{ currentProject.pricePerHour }} € </strong></h6>
+
         <hr>
         <div class="con-exemple-prompt">
           <div class="mb-3">
-            <small>Planned Start</small> <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
+            Planned Start <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
                                                 v-model="editValues.plannedStartField"
                                                 :min="editValues.plannedStartField" max="2030-12-31"></div>
           <div class="mb-3">
-            <small>Planned End</small> <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
+            Planned End <input class="ml-2" type="date" id="endedit" name="plannedEndEdit"
                                               v-model="editValues.plannedEndField"
                                               :min="editValues.plannedStartField" max="2030-12-31">
           </div>
-          <vs-input type="number" label="Planned Effort" :placeholder="currentProject.plannedEffort" class="mb-3"
-                    v-model="editValues.plannedEffortField"/>
-          <vs-input disabled="true" type="number" label="Performed Effort" :placeholder="currentProject.performedEffort"
-                    class="mb-3"
-          />
-          <vs-input disabled="true" type="number" label="Price Per Hour" :placeholder="currentProject.pricePerHour"
-                    class="mb-3"
-          />
+          <div class="centerx">
+            <vs-input-number :placeholder="currentProject.plannedEffort" class="mb-3" :min="currentProject.performedEffort"
+                             v-model="editValues.plannedEffortField" label="Planned Effort In Hours:"/>
+          </div>
+          <h6 class="mb-2 mt-2" >Performed Effort : <strong style="color: red"> {{ currentProject.performedEffort }} Hours </strong></h6>
 
-          <!--          <vs-input label="Competences" :placeholder="currentProject.competences" class="mb-3"-->
-          <!--                    v-model="editValues.competencesField"/>-->
           <autocomplete
               ref="textSearchOfCompetencesEdit"
               :search="filterCompetenceItemsEdit"
@@ -1227,6 +1224,8 @@ export default {
 
 }
 </script>
-
+label {
+vertical-align: top;
+}
 <style>
 </style>

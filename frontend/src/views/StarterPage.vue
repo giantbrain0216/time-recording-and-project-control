@@ -1,12 +1,9 @@
 <template>
- <div>
-  <States/>
-   <div class="mt-3 mt-4"></div>
-   <SalesSummary/>
-   <News/>
-
-
-</div>  
+  <div>
+    <States/>
+    <SalesSummary/>
+    <News/>
+  </div>
 </template>
 
 <script>
@@ -17,7 +14,7 @@ import SalesSummary from './components/dashboard/SalesSummary.vue';
 
 
 export default {
-	name: 'StarterPage',
+  name: 'StarterPage',
   components: {
     States,
     SalesSummary,
