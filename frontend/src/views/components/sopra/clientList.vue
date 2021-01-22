@@ -1,4 +1,3 @@
-npm run serve
 <template>
   <div class="table-responsive">
     <vs-row vs-justify="center">
@@ -179,14 +178,31 @@ npm run serve
     <vs-prompt
         title="Delete Client"
         color="danger"
-        @cancel='prompts.activeDeletePrompt = false;notify("Closed","Client has not been deleted","warning")'
+        @cancel='prompts.activeDeletePrompt = false; projectsCurrentClient=[];notify("Closed","Client has not been deleted","warning")'
         @accept="deleteClient(currentClient.clientID)"
-        @close='prompts.activeDeletePrompt = false;notify("Closed","Client has not been deleted","warning")'
-        :is-valid="true"
+        @close='prompts.activeDeletePrompt = false; projectsCurrentClient=[];notify("Closed","Client has not been deleted","warning")'
+        :is-valid="projectsCurrentClient.length===0"
         :active.sync="prompts.activeDeletePrompt"
     >
       <div class="con-exemple-prompt">
-        <h4>Are you sure to delete the client :</h4>  <h5>{{ currentClient.name }}</h5>
+        <div v-show="projectsCurrentClient.length===0">
+        <h4>Are you sure to delete the client :</h4>  <h5>{{ currentClient.name }}</h5> </div>
+        <div  v-show="projectsCurrentClient.length!==0" class="mt-2">
+          <h6 style="color: red">You cannot delete {{currentClient.name }}, because he has running projects.</h6>
+
+          <div>
+          <vs-list class="mb-2" >
+          <vs-list-header title="Project of this Client" > </vs-list-header>
+          <h6></h6>
+          <vs-list-item class="ml-2" v-for="project in projectsCurrentClient" :key="project.projectNumber"
+                         :title="project.projectName"  >
+          </vs-list-item>
+        </vs-list>
+            <vs-button v-show="projectsCurrentClient.length!==0"  class="mt-4" style="width: 100%;"
+                       @click="projectsCurrentClient=[]"  color="danger">Delete All Running Projects</vs-button>
+          </div>
+        </div>
+
       </div>
     </vs-prompt>
   </div>
@@ -202,6 +218,7 @@ export default {
   data: () => {
     return {
       employees: [],
+      projectsCurrentClient: [],
       selectedEmployeeID: 0,
       selectedEmployeeName: "Contact Person",
       clients: [],
@@ -254,8 +271,7 @@ export default {
           && 41 > this.editValues.numberField.length && this.editValues.numberField.length > 7
           && this.editValues.addressField.length > 0
           && re.test(this.editValues.emailField)
-          && this.selectedEmployeeID != 0
-      )
+          && this.selectedEmployeeID !== 0)
     }
   },
 
@@ -487,6 +503,17 @@ export default {
       if (valid) {*/
         this.currentClient = client
         this.prompts.activeDeletePrompt = true
+      await axios.get('http://localhost:8080/projectsByClient/' + client.clientID).then( async response => {
+        for (let i=0;i<response.data.length;i++){
+          await axios.get('http://localhost:8080/projects/' + response.data[i]).then(response1 => {
+            this.projectsCurrentClient.push(response1.data)
+          })
+        }
+      }).catch((error) => {
+        if(error.response){
+          this.notify("Assignment Database Error", error.message,"danger")
+        }
+      })
   /*   } else {
         this.notify("Warning", "Client cannot be deleted because there are still projects associated to this client", "danger")
       }*/
