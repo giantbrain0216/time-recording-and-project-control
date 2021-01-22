@@ -10,6 +10,12 @@ export default {
       gradient: null,
       gradient2: null,
       projects: [],
+      months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+        "November", "December"],
+      orderOfMonthsToDisplay: [],
+      allTimeRegistrations: [],
+      allTimeRegistrationsPerMonth: [[], [], [], [], [], [], [], [], [], [], [], []],
+      sum: [],
       projectName: [],
       progress: [],
 
@@ -42,12 +48,66 @@ export default {
             }
           })
     },
-  }
-  ,
+    async fetchAllTimeRegistrations() {
+      await axios.get(`http://localhost:8080/timeregistrations/`)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.allTimeRegistrations = response.data
+
+          })
+    },
+
+    setTimeRegistrationsMonth() {
+      let month = new Date().getMonth()
+      let previousYear = new Date().getFullYear()
+      // get only time registration from this year or previous one
+      this.allTimeRegistrations = this.allTimeRegistrations.filter(time => new Date(time.start).getFullYear() === previousYear ||
+          new Date(time.start).getFullYear() === previousYear-1)
+      for (let i = 0; i < this.allTimeRegistrations.length; i++) {
+        this.allTimeRegistrationsPerMonth[parseInt(this.allTimeRegistrations[i].start.slice(5, 7)) - 1].push(this.allTimeRegistrations[i])
+      }
+
+      for (let i = 0; i < this.allTimeRegistrationsPerMonth.length; i++) {
+        let summe = 0;
+        for (let j = 0; j < this.allTimeRegistrationsPerMonth[i].length; j++) {
+          // eslint-disable-next-line no-console
+          console.log("TEST1")
+          let startDate = Date.parse(this.allTimeRegistrationsPerMonth[i][j].start);
+          let endDate = Date.parse(this.allTimeRegistrationsPerMonth[i][j].end);
+          let hours = Math.abs(endDate - startDate) / 36e5;
+          let price = hours * this.getPricePerHour(this.allTimeRegistrationsPerMonth[i][j].projectID)
+          summe += price;
+        }
+        if (month>11) month = 0;
+        this.sum.splice(month-1, 0, summe)
+        month ++;
+      }
+    },
+
+    getPricePerHour(projectID) {
+      for (let i = 0; i < this.projects.length; i++) {
+        if (this.projects[i].projectNumber === projectID)
+          return parseFloat(this.projects[i].pricePerHour)
+      }
+    },
+
+
+  },
 
 
   async mounted() {
     await this.fetchAllProjects()
+    await this.fetchAllTimeRegistrations()
+    let month = new Date().getMonth() + 1
+    for (let i = 0; i < this.months.length; i++) {
+      if (month > 11) month = 0
+      this.orderOfMonthsToDisplay.splice(i, 0, this.months[month])
+      month = month + 1;
+    }
+
+    this.setTimeRegistrationsMonth()
+
+
     await this.getProgress()
     this.gradient = this.$refs.canvas
         .getContext("2d")
@@ -67,15 +127,15 @@ export default {
 
     this.renderChart(
         {
-          labels: this.projectName,
+          labels: this.orderOfMonthsToDisplay,
           datasets: [
             {
-              label: "Progress",
+              label: "Price",
               borderColor: "#2962ff",
               pointBackgroundColor: "white",
               borderWidth: 2,
               backgroundColor: this.gradient,
-              data: this.progress
+              data: this.sum
             },
 
           ]

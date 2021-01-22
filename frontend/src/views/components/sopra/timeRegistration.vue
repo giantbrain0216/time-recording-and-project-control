@@ -372,7 +372,8 @@ export default {
       var startdate = new Date("1970-01-01 " + starttime);
       var enddate = new Date("1970-01-01 " + endtime);
       return (startdate.getTime() < enddate.getTime() && !this.counterDanger && this.textarea !== '' && 'projectNumber'
-          in this.currentProject && this.currentEmployee.name !== "None")
+          in this.currentProject && this.currentEmployee.name !== "None" &&
+          new Date(this.currentProject.plannedStart).getTime()<=new Date(this.dateInput).getTime())
     },
 
     /**Checks if a project has not started yet*/
