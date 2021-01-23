@@ -113,7 +113,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="registration in timeregistrations" :key="registration.id">
+              <tr v-for="registration in pagination.viewableRegistrations" :key="registration.id">
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="mr-2">{{projectNames[registration.projectID] }}</div>
@@ -137,6 +137,7 @@
               </tr>
               </tbody>
             </table>
+            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" color="danger" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
           </div>
         </vs-card>
       </vs-col>
@@ -179,9 +180,26 @@ export default {
       currentRegistration: 0,
       textarea: '',
       counterDanger: false,
-      csv: ''
+      csv: '',
+      pagination: {maxPages:0,currentPage:1,viewableRegistrations:[]}
 
     };
+  },
+  computed: {
+    returnCurrentPage(){
+      return this.pagination.currentPage
+    }
+  },
+  watch: {
+    returnCurrentPage(){
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.timeregistrations.length){
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,this.timeregistrations.length)
+      }
+
+    }
   },
 
   async created() {
@@ -215,6 +233,23 @@ export default {
   },
 
   methods: {
+    updatePages(){
+      var maxPages = Math.ceil(this.timeregistrations.length / 7)
+      if(maxPages < this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }else if(maxPages > this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.timeregistrations.length){
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,this.timeregistrations.length)
+      }
+
+    },
 
     /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
@@ -235,6 +270,7 @@ export default {
     async handleEmployeeSubmitAdd(result){
       await this.fetchProjectsByEmployee(result.employeeID);
       await this.fetchTimeRegistrationsByEmployee(result.employeeID);
+      this.updatePages()
       this.currentEmployee=result
       this.$refs.textSearchOfEmployeeAdd.value = ""
 
@@ -434,6 +470,7 @@ export default {
         }
       })
       await this.fetchTimeRegistrationsByEmployee(this.currentEmployeeID)
+      this.updatePages()
     },
 
     /** Shows prompt with title, message and selected color*/
