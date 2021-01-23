@@ -8,7 +8,7 @@
           <div slot="header">
             <h2 class="float-left" style="color: cornflowerblue">Client List</h2>
             <div class="float-right mb-1">
-              <vs-button @click="prompts.activePrompt = true" color="primary" icon="add" type="filled">Add New Client
+              <vs-button @click="prompts.activePrompt = true" color="primary" icon="person_add" type="filled">Add New Client
               </vs-button>
             </div>
           </div>
@@ -40,7 +40,8 @@
                     </div>
                   </div>
                 </td>
-                <td> <a :href=" `mailto:${client.email}` "></a> </td>
+                 <td>
+                  <i><a :href="`mailto:${client.email}`">{{ client.email }}</a></i></td>
                 <td>{{ client.address }}</td>
                 <!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
                 <td>

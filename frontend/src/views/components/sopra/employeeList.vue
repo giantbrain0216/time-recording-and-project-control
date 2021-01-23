@@ -7,7 +7,7 @@
           <div slot="header">
             <h2  class="float-left" style="color: cornflowerblue">Employee List</h2>
             <div class="float-right mb-1">
-            <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="add" type="filled">Add New Employee</vs-button>
+            <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="person_add" type="filled">Add New Employee</vs-button>
             </div>
           </div>
           <div class="table-responsive">

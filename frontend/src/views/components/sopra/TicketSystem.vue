@@ -11,7 +11,7 @@
       <div style="display:flex;">
         <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
         <vs-button v-show="this.selectedFile" @click="submit()" v-bind:disabled="numberOfTimeRegistrations() === 0"
-                   class="float-right ml-2" color="success" type="filled">
+                   class="float-right ml-2" color="success" icon="cloud_upload" type="filled">
           Submit
         </vs-button>
       </div>
@@ -31,8 +31,8 @@
         <table class="table v-middle border">
           <thead>
           <tr class="">
-            <th class="border-top-0">Employee ID</th>
-            <th class="border-top-0">Project ID</th>
+            <th class="border-top-0">Employee </th>
+            <th class="border-top-0">Project </th>
             <th class="border-top-0">From</th>
             <th class="border-top-0">To</th>
             <th class="border-top-0">Link</th>
@@ -47,17 +47,17 @@
           >
             <td>
               <div class="d-flex align-items-center">
-                <div class="mr-2">{{ registration[0] }}</div>
+                <div class="mr-2">{{ getEmployeeName(registration[0]) }}</div>
               </div>
             </td>
             <td>
-              <div class="mr-2">{{ registration[1] }}</div>
+              <div class="mr-2">{{ getProjectName(registration[1]) }}</div>
             </td>
             <td>
               <div class="d-flex align-items-center">{{ registration[2] }}</div>
             </td>
             <td>{{ registration[3] }}</td>
-            <td>{{ registration[4] }}</td>
+            <td><a :href="registration[4]"> {{ registration[4] }}</a></td>
             <td>{{ registration[5] }}</td>
             <td><p style="color:red;" v-show="!validTimeRegistration(index)"> This Time Registration will not be
               uploaded
@@ -71,7 +71,7 @@
                   Delete
                 </vs-button>
 
-                <vs-button @click="undo(index)" v-show="!deletedRegistrations(index)" icon="cancel" class="m-1"
+                <vs-button @click="undo(index)" v-show="!deletedRegistrations(index)" icon="undo" class="m-1"
                            color="warning"
                            type="filled">
                   Undo
@@ -97,6 +97,8 @@ export default {
   data: () => {
     return {
       allProjectIDs: [],
+      allProjects:[],
+      allEmployees: [],
       allEmployeeIDs: [],
       allTimeRegistrationFromCSV: [],
       timeRegistrationsToUpload: [],
@@ -119,10 +121,25 @@ export default {
       hiddenElement.click();
     },
 
+    getProjectName: function (id){
+      for (let i=0;i<this.allProjects.length;i++){
+        if (this.allProjects[i].projectNumber === parseInt(id))
+          return this.allProjects[i].projectName
+      }
+    },
+
+    getEmployeeName: function (id){
+      for (let i=0;i<this.allEmployees.length;i++){
+        if (this.allEmployees[i].employeeID === parseInt(id))
+          return this.allEmployees[i].name
+      }
+    },
+
     fetchAllProjectIDs: async function () {
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {
             // JSON responses are automatically parsed.
+            this.allProjects = response.data
             this.allProjectIDs = response.data.map(project => project.projectNumber)
           })
           .catch((error) => {
@@ -137,7 +154,8 @@ export default {
       await axios.get(`http://localhost:8080/employees`)
           .then(response => {
             // JSON responses are automatically parsed.
-            this.allEmployeeIDs = response.data
+            this.allEmployees = response.data
+            this.allEmployeeIDs = response.data.map(employee => employee.employeeID)
           })
           .catch((error) => {
             if (error.response) {
@@ -241,14 +259,14 @@ export default {
             // only the data needed in the database will be parsed
             let employeeID = 0;
             //this.allProjectIDs = this.allProjectIDs.filter(x => x.name === results.data[i]["Author"])
-            for (let j=0;j<this.allEmployeeIDs;j++){
-              if (this.allProjectIDs[j].name === results.data[i]["Author"])
-                employeeID = this.allProjectIDs[j].employeeID
+            for (let j=0;j<this.allEmployees.length;j++){
+              if (this.allEmployees[j].name === results.data[i]["Author"])
+                employeeID = this.allEmployees[j].employeeID
             }
 
             // eslint-disable-next-line no-console
             console.log(employeeID.toString() )
-            currentTimeRegistration.push(this.allProjectIDs[0])
+            currentTimeRegistration.push(employeeID)
             currentTimeRegistration.push(results.data[i]["project id"])
             currentTimeRegistration.push(starttime)
             currentTimeRegistration.push(endtime)

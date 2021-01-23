@@ -8,7 +8,7 @@
           <div slot="header">
             <h2 class="float-left" style="color: cornflowerblue">Project List </h2>
             <div class="float-right mb-1">
-              <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="add" type="filled">Add New
+              <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="note_add" type="filled">Add New
                 Project
               </vs-button>
             </div>
@@ -93,7 +93,7 @@
                     </vs-button>
                     <vs-button style="width:80px" class=" m-1 btn-bloc"
                                @click="fetchCurrentProjectAssignments(project.projectNumber);fetchProject(project.projectNumber);prompts.activeAssignPrompt = true"
-                               color="success" icon="add"
+                               color="success" icon="assignment_ind"
                                type="filled">
                       Assign
                     </vs-button>
