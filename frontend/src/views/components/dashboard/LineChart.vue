@@ -14,8 +14,10 @@ export default {
         "November", "December"],
       orderOfMonthsToDisplay: [],
       allTimeRegistrations: [],
-      allTimeRegistrationsPerMonth: [[], [], [], [], [], [], [], [], [], [], [], []],
+      allTimeRegistrationsPerMonthThisYear: [[], [], [], [], [], [], [], [], [], [], [], []],
+      allTimeRegistrationsPerMonthLastYear: [[], [], [], [], [], [], [], [], [], [], [], []],
       sum: [],
+      sumLastYear: [],
       projectName: [],
 
     };
@@ -52,7 +54,7 @@ export default {
           })
     },
 
-    setTimeRegistrationsMonth() {
+    setTimeRegistrationsMonthYear() {
       let month = new Date().getMonth()
       let year = new Date().getFullYear()
       // get only time registration from this year
@@ -65,23 +67,54 @@ export default {
           &&(new Date(time.start).getMonth()>month)))
       let allTimeRegistrationsToDisplay = timeRegistrationsPreviousYearToDisplay.concat(timeRegistrationsThisYear)
       for (let i = 0; i < allTimeRegistrationsToDisplay.length; i++) {
-        this.allTimeRegistrationsPerMonth[parseInt(allTimeRegistrationsToDisplay[i].start.slice(5, 7)) - 1]
+        this.allTimeRegistrationsPerMonthThisYear[parseInt(allTimeRegistrationsToDisplay[i].start.slice(5, 7)) - 1]
             .push(allTimeRegistrationsToDisplay[i])
       }
 
-      for (let i = 0; i < this.allTimeRegistrationsPerMonth.length; i++) {
+      for (let i = 0; i < this.allTimeRegistrationsPerMonthThisYear.length; i++) {
         let summe = 0;
-        for (let j = 0; j < this.allTimeRegistrationsPerMonth[i].length; j++) {
-          // eslint-disable-next-line no-console
-          console.log("TEST1")
-          let startDate = Date.parse(this.allTimeRegistrationsPerMonth[i][j].start);
-          let endDate = Date.parse(this.allTimeRegistrationsPerMonth[i][j].end);
+        for (let j = 0; j < this.allTimeRegistrationsPerMonthThisYear[i].length; j++) {
+          let startDate = Date.parse(this.allTimeRegistrationsPerMonthThisYear[i][j].start);
+          let endDate = Date.parse(this.allTimeRegistrationsPerMonthThisYear[i][j].end);
           let hours = Math.abs(endDate - startDate) / 36e5;
-          let price = hours * this.getPricePerHour(this.allTimeRegistrationsPerMonth[i][j].projectID)
+          let price = hours * this.getPricePerHour(this.allTimeRegistrationsPerMonthThisYear[i][j].projectID)
           summe += price;
         }
         if (month>11) month = 0;
         this.sum.splice(this.orderOfMonthsToDisplay.indexOf(this.months[i]), 0, summe)
+        month ++;
+      }
+    },
+
+    setTimeRegistrationsMonthLastYear() {
+      let month = new Date().getMonth()
+      let year = new Date().getFullYear()
+      // get only time registration from this year
+      let timeRegistrationsThisYear = this.allTimeRegistrations.filter(time => new Date(time.start).getFullYear() === year -1)
+      /* get only time registrations from last year, that have been done in the actual month to not show them
+        for example : the time registrations in march 2020 should not be showed when the time registrations
+        from 2021 are being displayed
+       */
+      let timeRegistrationsPreviousYearToDisplay = this.allTimeRegistrations.filter(time =>((new Date(time.start).getFullYear()
+          === year-2)
+          &&(new Date(time.start).getMonth()>month)))
+      let allTimeRegistrationsToDisplay = timeRegistrationsPreviousYearToDisplay.concat(timeRegistrationsThisYear)
+      for (let i = 0; i < allTimeRegistrationsToDisplay.length; i++) {
+        this.allTimeRegistrationsPerMonthLastYear[parseInt(allTimeRegistrationsToDisplay[i].start.slice(5, 7)) - 1]
+            .push(allTimeRegistrationsToDisplay[i])
+      }
+
+      for (let i = 0; i < this.allTimeRegistrationsPerMonthLastYear.length; i++) {
+        let summe = 0;
+        for (let j = 0; j < this.allTimeRegistrationsPerMonthLastYear[i].length; j++) {
+          let startDate = Date.parse(this.allTimeRegistrationsPerMonthLastYear[i][j].start);
+          let endDate = Date.parse(this.allTimeRegistrationsPerMonthLastYear[i][j].end);
+          let hours = Math.abs(endDate - startDate) / 36e5;
+          let price = hours * this.getPricePerHour(this.allTimeRegistrationsPerMonthLastYear[i][j].projectID)
+          summe += price;
+        }
+        if (month>11) month = 0;
+        this.sumLastYear.splice(this.orderOfMonthsToDisplay.indexOf(this.months[i]), 0, summe)
         month ++;
       }
     },
@@ -108,7 +141,8 @@ export default {
       month = month + 1;
     }
 
-    this.setTimeRegistrationsMonth()
+    this.setTimeRegistrationsMonthYear()
+    this.setTimeRegistrationsMonthLastYear()
 
     this.gradient = this.$refs.canvas
         .getContext("2d")
@@ -131,12 +165,20 @@ export default {
           labels: this.orderOfMonthsToDisplay,
           datasets: [
             {
-              label: "Price",
+              label: "Revenue This Year",
               borderColor: "#2962ff",
               pointBackgroundColor: "white",
               borderWidth: 2,
               backgroundColor: this.gradient,
               data: this.sum
+            },
+            {
+              label: "Revenue Last Year",
+              borderColor: "#05CBE1",
+              pointBackgroundColor: "white",
+              borderWidth: 2,
+              backgroundColor: this.gradient2,
+              data: this.sumLastYear
             },
 
           ]

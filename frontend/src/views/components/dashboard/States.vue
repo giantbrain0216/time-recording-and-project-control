@@ -61,7 +61,7 @@
         </vs-card>
       </vs-col> -->
     </vs-row>
-    <hr>
+
   </div>
 </template>
 <script>

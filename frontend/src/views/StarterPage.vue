@@ -3,8 +3,9 @@
     <States/>
     <vs-card class="cardx">
       <div slot="header">
-        <h3 class="float-left" >Earnings Summary </h3></div>
-      <SalesSummary/> </vs-card>
+        <h3 class="float-left">Earnings Summary </h3></div>
+      <SalesSummary/>
+    </vs-card>
     <News/>
   </div>
 </template>
