@@ -372,14 +372,12 @@ export default {
       var startdate = new Date("1970-01-01 " + starttime);
       var enddate = new Date("1970-01-01 " + endtime);
       return (startdate.getTime() < enddate.getTime() && !this.counterDanger && this.textarea !== '' && 'projectNumber'
-          in this.currentProject && this.currentEmployee.name !== "None" &&
-          new Date(this.currentProject.plannedStart).getTime()<=new Date(this.dateInput).getTime())
+          in this.currentProject && this.currentEmployee.name !== "None"  &&
+          new Date(this.currentProject.plannedStart).getTime()<=new Date(this.dateInput + " 00:00").getTime())
     },
 
     /**Checks if a project has not started yet*/
     projectNotStarted(project) {
-
-
       return (new Date(project.plannedStart).getTime() > new Date(this.dateToday + " 00:00").getTime())
 
     },

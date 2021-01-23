@@ -17,19 +17,14 @@ export default {
       allTimeRegistrationsPerMonth: [[], [], [], [], [], [], [], [], [], [], [], []],
       sum: [],
       projectName: [],
-      progress: [],
 
     };
   },
 
   methods: {
 
-    getProgress: function () {
-      for (let i = 0; i < this.projects.length; i++) {
-        let progress = (this.projects[i].performedEffort * 100 / this.projects[i].plannedEffort).toFixed(2)
-        this.progress.push(progress)
-      }
-    },
+
+
     /**
      * Gets all projects from DB
      */
@@ -60,11 +55,18 @@ export default {
     setTimeRegistrationsMonth() {
       let month = new Date().getMonth()
       let year = new Date().getFullYear()
-      // get only time registration from this year or previous one
-      this.allTimeRegistrations = this.allTimeRegistrations.filter(time => new Date(time.start).getFullYear() === year ||
-          new Date(time.start).getFullYear() === year-1)
-      for (let i = 0; i < this.allTimeRegistrations.length; i++) {
-        this.allTimeRegistrationsPerMonth[parseInt(this.allTimeRegistrations[i].start.slice(5, 7)) - 1].push(this.allTimeRegistrations[i])
+      // get only time registration from this year
+      let timeRegistrationsThisYear = this.allTimeRegistrations.filter(time => new Date(time.start).getFullYear() === year )
+      /* get only time registrations from last year, that have been done in the actual month to not show them
+        for example : the time registrations in march 2020 should not be showed when the time registrations
+        from 2021 are being displayed
+       */
+      let timeRegistrationsPreviousYearToDisplay = this.allTimeRegistrations.filter(time =>((new Date(time.start).getFullYear() === year-1)
+          &&(new Date(time.start).getMonth()>month)))
+      let allTimeRegistrationsToDisplay = timeRegistrationsPreviousYearToDisplay.concat(timeRegistrationsThisYear)
+      for (let i = 0; i < allTimeRegistrationsToDisplay.length; i++) {
+        this.allTimeRegistrationsPerMonth[parseInt(allTimeRegistrationsToDisplay[i].start.slice(5, 7)) - 1]
+            .push(allTimeRegistrationsToDisplay[i])
       }
 
       for (let i = 0; i < this.allTimeRegistrationsPerMonth.length; i++) {
@@ -98,6 +100,7 @@ export default {
   async mounted() {
     await this.fetchAllProjects()
     await this.fetchAllTimeRegistrations()
+    // it has been incremented by 1 so that the actual month will be the last displayed in the chart
     let month = new Date().getMonth() + 1
     for (let i = 0; i < this.months.length; i++) {
       if (month > 11) month = 0
@@ -107,8 +110,6 @@ export default {
 
     this.setTimeRegistrationsMonth()
 
-
-    await this.getProgress()
     this.gradient = this.$refs.canvas
         .getContext("2d")
         .createLinearGradient(0, 0, 0, 450);
