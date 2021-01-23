@@ -80,7 +80,7 @@
             <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import", params: {}});'>
               Import Time Registrations From CSV File
             </h4>
-          </div>
+           </div>
         </vs-card>
 
         <vs-divider>

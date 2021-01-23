@@ -40,7 +40,7 @@
                     </div>
                   </div>
                 </td>
-                <td>{{ client.email }}</td>
+                <td> <a :href=" `mailto:${client.email}` "></a> </td>
                 <td>{{ client.address }}</td>
                 <!--                <td>{{ fetchProjectsByClient(client.clientID) }}</td>-->
                 <td>
@@ -60,7 +60,9 @@
             </table>
 
           </div>
-          <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
+          <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination
+              :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back"
+              next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
         </vs-card>
       </vs-col>
       <vs-col v-if="showDetailedView" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
