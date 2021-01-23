@@ -54,11 +54,18 @@
                          class="m-b-0"
                          style="font-weight: bold; font-size: 15px; cursor:pointer">
                         {{ project.projectName }}
+
                         <b-card style="font-size:10px;" class="text-success"
-                                v-if="calculateStatus(project.projectNumber)">running
+                                v-if="calculateStatus(project.projectNumber) == 2">running
                         </b-card>
                         <b-card style="font-size:10px;" class="text-secondary"
-                                v-else-if="!calculateStatus(project.projectNumber)">finished
+                                v-else-if="calculateStatus(project.projectNumber) == 1">finished
+                        </b-card>
+                        <b-card style="font-size:10px;" class="text-secondary"
+                                v-else-if="calculateStatus(project.projectNumber) == 0">unbegun
+                        </b-card>
+                        <b-card style="font-size:10px;" class="text-danger"
+                                v-else-if="calculateStatus(project.projectNumber) == 3">overdue
                         </b-card>
 
                       </a>
@@ -1174,14 +1181,20 @@ export default {
       for (var i = 0; i < this.projects.length; i++) {
         if (this.projects[i].projectNumber === id) {
           let deadline = new Date(this.projects[i].plannedEnd)
-          if (today.getTime() > deadline.getTime()) {
-            // eslint-disable-next-line no-console
-            //console.log("Returning false")
-            return false;
+          let start = new Date(this.projects[i].plannedStart)
+          if(today.getTime() < start.getTime()){
+            return 0;
+          }
+          if ((today.getTime() > deadline.getTime())) {
+            if((this.projects[i].performedEffort/this.projects[i].plannedEffort) > 0.8){
+              return 1;
+            }else{
+              return 3;
+            }
           } else {
             // eslint-disable-next-line no-console
             //console.log("Returning true")
-            return true;
+            return 2;
           }
         }
       }

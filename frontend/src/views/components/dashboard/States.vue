@@ -4,8 +4,13 @@
 
       <vs-col vs-lg="4" vs-xs="12">
         <vs-card>
-          <h4 class="mb-1">{{ Math.round(percentageProjectsNeedEmployees) + "%" }}</h4>
-          <span>Projects need more Employees</span>
+          <h4 class="mb-1"><number
+              ref="numberExample"
+              :to= Math.round(percentageProjectsNeedEmployees)
+              :duration="animationDuration"
+              :format='(num) => {return num.toFixed(0) + "%"}'
+          />{{" Projects need more Employees" }}</h4>
+          <span></span>
           <vs-progress :percent="percentageProjectsNeedEmployees" color="danger">primary</vs-progress>
           <ul class="list-group list-group-flush">
             <li class="list-group-item" v-for="project in projectsNeedMoreEmployees" :key="project.id">
@@ -14,8 +19,13 @@
           </ul>
         </vs-card>
         <vs-card>
-          <h4 class="mb-1">{{ Math.round(percentageOverloadedEmployees) + "%" }}</h4>
-          <span>Overloaded Employees</span>
+          <h4 class="mb-1"><number
+              ref="numberExample"
+              :to= Math.round(percentageOverloadedEmployees)
+              :duration="animationDuration"
+              :format='(num) => {return num.toFixed(0) + "%"}'
+          />{{" Overloaded Employees" }}</h4>
+          <span></span>
           <vs-progress :percent="percentageOverloadedEmployees" color="danger">primary</vs-progress>
           <ul class="list-group list-group-flush">
             <li class="list-group-item" v-for="employee in employeesOverloaded" :key="employee.employeeID">
@@ -26,26 +36,51 @@
       </vs-col>
       <vs-col vs-lg="4" vs-xs="12">
         <vs-card>
-          <h4 class="mb-1">{{ Math.round(percentageUnderloadedEmployees) + "%" }}</h4>
-          <span>Underloaded Employees</span>
-          <vs-progress :percent="percentageUnderloadedEmployees" color="warning">primary</vs-progress>
+          <h4 class="mb-1"><number
+              ref="numberExample"
+              :to=Math.round(percentageUnderloadedEmployees)
+              :duration="animationDuration"
+              :format='(num) => {return num.toFixed(0) + "%"}'
+          />{{" Underloaded Employees" }}</h4>
+          <span></span>
+          <vs-progress :percent="percentageUnderloadedEmployees" color="success">primary</vs-progress>
           <ul class="list-group list-group-flush">
             <li class="list-group-item" v-for="employee in employeesUnderloaded" :key="employee.employeeID">
-              <b-card class="text-warning">{{ employee.name }}</b-card>
+              <b-card class="text-success">{{ employee.name }}</b-card>
             </li>
           </ul>
         </vs-card>
       </vs-col>
       <vs-col vs-lg="4" vs-xs="12">
         <vs-card>
-          <h4 class="mb-1">{{ Math.round(calculateCancelled()) }}%</h4>
-          <span>Projects are finished</span>
-          <vs-progress :percent="calculateCancelled()" color="success">primary</vs-progress>
+          <h4 class="mb-1"><number
+              ref="numberExample"
+              :to=Math.round(calculateCancelled())
+              :duration="animationDuration"
+              :format='(num) => {return num.toFixed(0) + "%"}'
+          />  {{ " projects are finished for this year" }}</h4>
+          <span></span>
+          <vs-progress :percent="calculateCancelled()" color="primary">primary</vs-progress>
         </vs-card>
         <vs-card>
-          <h4 class="mb-1">{{ Math.round(getProgressOfAll()) }}% Done</h4>
-          <span>Total Poject progress</span>
+          <h4 class="mb-1"><number
+              ref="numberExample"
+              :to=Math.round(getProgressOfAll())
+              :duration="animationDuration"
+              :format='(num) => {return num.toFixed(0) + "%"}'
+          /> {{"progress in running projects" }}</h4>
+          <span></span>
           <vs-progress :percent="(getPerformedEffort()/getPlannedEffort())*100" color="primary">primary</vs-progress>
+        </vs-card>
+        <vs-card>
+
+          <h4 class="mb-1"><number
+              ref="numberExample"
+              :to=LOC
+              :duration="animationDuration"
+          />{{" LOC written" }}</h4>
+          <span></span>
+          <vs-progress :percent="(LOC/100000)*100" color="primary">primary</vs-progress>
         </vs-card>
       </vs-col>
    <!--   <vs-col vs-lg="3" vs-xs="12">
@@ -71,6 +106,7 @@ export default {
   name: "States",
   data: () => {
     return {
+      animationDuration:1.75,
       projects: [],
       employees: [],
       percentageProjectsNeedEmployees: null,
@@ -78,7 +114,8 @@ export default {
       percentageOverloadedEmployees: null,
       employeesOverloaded: [],
       percentageUnderloadedEmployees: null,
-      employeesUnderloaded: []
+      employeesUnderloaded: [],
+      LOC:0
     }
   },
 
@@ -87,6 +124,7 @@ export default {
     await this.fetchAllEmployees()
     this.calculatePercentageOfProjectsNeedMoreEmployees()
     this.calculatePercentageOfOverloadedEmployees()
+    this.calculateLOC()
   },
 
   methods: {
@@ -112,18 +150,32 @@ export default {
           })
     },
     getPlannedEffort: function () {
-      let plannedEffort = 0;
-      this.projects.forEach((project) => plannedEffort += parseInt(project.plannedEffort))
-      return plannedEffort;
+      let plannedEffort = 0
+      for(var i=0;i< this.projects.length;i++){
+        var status = this.ProjectFinished(i)
+        if(status == 2 || status == 3){
+          plannedEffort += parseInt(this.projects[i].plannedEffort)
+        }
+      }
+      return plannedEffort
     },
 
     getPerformedEffort: function () {
       let performedEffort = 0
-      this.projects.forEach((project) => performedEffort += parseInt(project.performedEffort))
+      for(var i=0;i< this.projects.length;i++){
+        var status = this.ProjectFinished(i)
+        if(status == 2 || status == 3){
+          performedEffort += parseInt(this.projects[i].performedEffort)
+        }
+      }
       return performedEffort
     },
 
     getProgressOfAll: function () {
+      // eslint-disable-next-line no-console
+      console.log(this.getPerformedEffort())
+      // eslint-disable-next-line no-console
+      console.log(this.getPlannedEffort)
       return this.getPerformedEffort() / this.getPlannedEffort() * 100
     },
 
@@ -200,10 +252,16 @@ export default {
       let countCancelled = 0
       for (let i = 0; i < this.projects.length; i++) {
         let deadline = new Date(this.projects[i].plannedEnd)
-        if (today.getTime() > deadline.getTime()) {
-          countCancelled += 1
-        } else {
-          countRunning += 1
+        if (today.getFullYear() == deadline.getFullYear()) {
+          var status = this.ProjectFinished(i)
+          if(status == 1){
+
+            countCancelled += 1
+          }
+          else if(status == 2 || status == 3) {
+            countRunning += 1
+          }
+
         }
       }
       return countCancelled / (countRunning + countCancelled) * 100
@@ -213,6 +271,27 @@ export default {
       let startDate = Date.parse(timeRegistration.start);
       let endDate = Date.parse(timeRegistration.end);
       return Math.abs(endDate - startDate) / 36e5;
+    },
+
+    ProjectFinished: function (i) {
+      let today = new Date()
+      let deadline = new Date(this.projects[i].plannedEnd)
+      let start = new Date(this.projects[i].plannedStart)
+      if(today.getTime() < start.getTime()){
+        return 0;
+      }
+      if ((today.getTime() > deadline.getTime())) {
+        if((this.projects[i].performedEffort/this.projects[i].plannedEffort) > 0.8){
+          return 1;
+        }else{
+          return 3;
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        //console.log("Returning true")
+        return 2;
+      }
+
     },
 
     async getWorkedHoursInLastMonth(employeeID) {
@@ -266,6 +345,24 @@ export default {
       this.percentageUnderloadedEmployees = (nrOfUnderloadedEmployees / nrOfEmployees) * 100
 
 
+    },
+
+    async calculateLOC(){
+      var totalHours = 0
+      await axios.get(`http://localhost:8080/timeregistrations/`)
+          .then(response => {
+            for (var i = 0; i < response.data.length; i++) {
+              var start = new Date(response.data[i].start).getTime()
+              var end = new Date(response.data[i].end).getTime()
+              let hours = Math.abs(end - start) / 36e5;
+              totalHours += hours
+            }
+          })
+          .catch(e => {
+
+            this.errors.push(e)
+          })
+      this.LOC = Math.round(totalHours * 2)
     }
 
   }
