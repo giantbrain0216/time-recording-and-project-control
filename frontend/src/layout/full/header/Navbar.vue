@@ -3,7 +3,10 @@
 		<vs-navbar
       v-model="indexActive"
       :color="topbarColor"
-      class="topnavbar"  >
+      class="topnavbar"
+      style="z-index: 1000"
+    >
+
       <!---
       Template logo
       --> 
