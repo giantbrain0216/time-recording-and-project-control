@@ -90,14 +90,14 @@ export default {
       let month = new Date().getMonth()
       let year = new Date().getFullYear()
       // get only time registration from this year
-      let timeRegistrationsThisYear = this.allTimeRegistrations.filter(time => new Date(time.start).getFullYear() === year -1)
+      let timeRegistrationsThisYear = this.allTimeRegistrations.filter(time => ((
+          new Date(time.start).getFullYear() === year -1) &&(new Date(time.start).getMonth()<=month)))
       /* get only time registrations from last year, that have been done in the actual month to not show them
         for example : the time registrations in march 2020 should not be showed when the time registrations
         from 2021 are being displayed
        */
       let timeRegistrationsPreviousYearToDisplay = this.allTimeRegistrations.filter(time =>((new Date(time.start).getFullYear()
-          === year-2)
-          &&(new Date(time.start).getMonth()>month)))
+          === year-2)) &&(new Date(time.start).getMonth()>month))
       let allTimeRegistrationsToDisplay = timeRegistrationsPreviousYearToDisplay.concat(timeRegistrationsThisYear)
       for (let i = 0; i < allTimeRegistrationsToDisplay.length; i++) {
         this.allTimeRegistrationsPerMonthLastYear[parseInt(allTimeRegistrationsToDisplay[i].start.slice(5, 7)) - 1]
