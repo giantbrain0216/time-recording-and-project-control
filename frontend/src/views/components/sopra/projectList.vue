@@ -86,7 +86,7 @@
                     </vs-button>
                     <vs-button style="width:80px" class=" m-1 btn-bloc"
                                @click="fetchCurrentProjectAssignments(project.projectNumber);fetchProject(project.projectNumber);prompts.activeAssignPrompt = true"
-                               color="success" icon="add"
+                               color="success" icon="assignment_ind"
                                type="filled">
                       Assign
                     </vs-button>

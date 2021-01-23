@@ -11,7 +11,7 @@
       <div style="display:flex;">
         <input type="file" style="width: 500px;" id="fsile" accept=".csv" ref="file" v-on:change="handleFileUpload()">
         <vs-button v-show="this.selectedFile" @click="submit()" v-bind:disabled="numberOfTimeRegistrations() === 0"
-                   class="float-right ml-2" color="success" type="filled">
+                   class="float-right ml-2" color="success" icon="cloud_upload"  type="filled">
           Submit
         </vs-button>
       </div>
