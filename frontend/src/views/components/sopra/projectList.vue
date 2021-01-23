@@ -507,6 +507,12 @@ export default {
         this.pagination.maxPages = maxPages
         this.pagination.currentPage = maxPages
       }
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.projects.length){
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,this.projects.length)
+      }
 
     },
     /**Filters items for searchbar of competences on add form*/
@@ -754,12 +760,14 @@ export default {
     /**
      *
      */
-    updateClientForFiltering(id, name) {
+    async updateClientForFiltering(id, name) {
       this.selectedClientNameEdit = name;
       if (id == 0) {
-        this.fetchAllProjects();
+        await this.fetchAllProjects();
+        this.updatePagesAfterAddOrDelete()
       } else {
-        this.fetchProjectsSortedByCustomer(id)
+        await this.fetchProjectsSortedByCustomer(id)
+        this.updatePagesAfterAddOrDelete()
       }
 
 
