@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="employee in employees" :key="employee.employeeID">
+            <tr v-for="employee in pagination.viewableEmployees" :key="employee.employeeID">
               <td>{{employee.employeeID}}</td>
               <td>
                 <div class="d-flex align-items-center">
@@ -51,6 +51,7 @@
             </tr>
             </tbody>
           </table>
+            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
           </div>
         </vs-card>
       </vs-col>
@@ -266,12 +267,19 @@ export default {
         selectedCompetences: [],
         tickBoxesForCompetences: {}
       },
-      prompts:{activeAddPrompt:false,activeDeletePrompt:false,activeEditPrompt:false, activeDeleteAssignmentPrompt:false}
+      prompts:{activeAddPrompt:false,activeDeletePrompt:false,activeEditPrompt:false, activeDeleteAssignmentPrompt:false},
+      pagination: {maxPages:0,currentPage:1,viewableEmployees:[]}
     }
   },
 
-  created() {
-    this.fetchEmployees();
+  async created() {
+    await this.fetchEmployees();
+    this.pagination.maxPages = Math.ceil(this.employees.length / 7)
+    if(this.employees.length < 7){
+      this.pagination.viewableEmployees = this.employees.slice(0,this.employees.length)
+    }else{
+      this.pagination.viewableEmployees =this.employees.slice(0,7)
+    }
     this.fetchAllAssignments();
     this.fetchAllProjects();
     this.fetchAllCompetences();
@@ -294,10 +302,43 @@ export default {
       return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 100
           && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 100
       )
+    },
+
+    returnCurrentPage(){
+      return this.pagination.currentPage
+    }
+  },
+
+  watch: {
+    returnCurrentPage(){
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.employees.length){
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,this.employees.length)
+      }
+
     }
   },
 
   methods: {
+    updatePagesAfterAddOrDelete(){
+      var maxPages = Math.ceil(this.employees.length / 7)
+      if(maxPages < this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }else if(maxPages > this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.employees.length){
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,this.employees.length)
+      }
+
+    },
 
     /**Filters items for searchbar of competences on add form*/
     async filterCompetenceItemsAdd(input) {
@@ -652,6 +693,7 @@ export default {
       })
       await this.fetchEmployees()
       this.resetAllValues()
+      this.updatePagesAfterAddOrDelete()
     },
 
     /**
@@ -681,6 +723,7 @@ export default {
         }
       })
       await this.fetchEmployees()
+      this.updatePagesAfterAddOrDelete()
     },
 
     /**
