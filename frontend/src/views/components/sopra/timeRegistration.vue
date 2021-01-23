@@ -51,12 +51,12 @@
                                       v-model="dateInput"
                                       min="2018-01-01" :max="dateToday"></div>
 
-              <div class="m-3"><input type="time" id="starttime" name="starttime"
+              <div class="m-3"><input style="width:128px" type="time" id="starttime" name="starttime"
                                       min="06:00" max="22:00" v-model="starttime" required>
                 <small> Start Time</small>
               </div>
 
-            <div class="m-3"><input type="time" id="endtime" name="endtime"
+            <div class="m-3"><input style="width:128px" type="time" id="endtime" name="endtime"
                                     min="06:00" max="22:00" v-model="endtime" required>
               <small> End Time</small>
             </div>

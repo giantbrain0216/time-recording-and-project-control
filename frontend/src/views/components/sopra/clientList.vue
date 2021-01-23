@@ -25,7 +25,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="client in clients" :key="client.clientID">
+              <tr v-for="client in pagination.viewableClients" :key="client.clientID">
                 <td>{{ client.clientID }}</td>
                 <td>
                   <div class="d-flex align-items-center">
@@ -58,7 +58,9 @@
               </tr>
               </tbody>
             </table>
+
           </div>
+          <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
         </vs-card>
       </vs-col>
       <vs-col v-if="showDetailedView" type="flex" vs-justify="center" vs-align="center" vs-sm="6" vs-lg="6" vs-xs="12">
@@ -75,9 +77,15 @@
             <hr>
             <p><strong>Phone Number: </strong>{{ currentClient.telephoneNumber }}</p>
             <hr>
-            <p><strong>Contact Person (ID): </strong>{{ currentClient.contactPersonID }}</p>
+            <p><strong>Contact Person: </strong>{{ currentClient.contactPersonID + ". " +  getEmployeeName(currentClient.contactPersonID) }}</p>
             <hr>
-            <p><strong>Projects (IDs): </strong>{{ currentClient.projectsIDs }}</p>
+            <vs-list class="mb-2" >
+              <vs-list-header title="Projects of this Client" > </vs-list-header>
+              <h6></h6>
+              <vs-list-item class="ml-2" v-for="project in currentClient.projects" icon='arrow_right' :key="project.projectNumber"
+                            :title="project.projectName"  >
+              </vs-list-item>
+            </vs-list>
             <hr>
             <p><strong>Address: </strong>{{ currentClient.address }}</p>
             <div><Map :address="currentClient.address" :name="currentClient.name"/></div>
@@ -102,22 +110,18 @@
         <vs-input label-placeholder="Email" class="mb-4" v-model="inputValues.emailField"/>
         <vs-input label-placeholder="Address" class="mb-4" v-model="inputValues.addressField"/>
         <vs-input type="number" label-placeholder="Tel" class="mb-4" v-model="inputValues.numberField"/>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-          <div>Contact Person:</div>
-          <vs-dropdown class="ml-1">
-            <a class="a-icon" href="#">
-              {{ this.selectedEmployeeName }}
-              <vs-icon class="" icon="expand_more"></vs-icon>
-            </a>
-            <vs-dropdown-menu>
-              <vs-dropdown-item @click="selectedEmployeeID=employee.employeeID;selectedEmployeeName=employee.name"
-                                v-for="employee in employees" :key="employee.employeeID">
-                {{ employee.name }}
-              </vs-dropdown-item>
-            </vs-dropdown-menu>
-          </vs-dropdown>
-
-
+        <autocomplete
+            ref="textSearchOfEmployeeAdd"
+            :search="filterEmployeeItemsAdd"
+            :get-result-value="getClientResultValue"
+            @submit="handleClientSubmitAdd"
+            placeholder="Search for a client"
+            aria-label="Search for a client"
+            auto-select
+        ></autocomplete>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+          <div>Selected Employee:</div>
+          <div class="ml-1" style="color:royalblue;">{{ selectedEmployeeName }}</div>
         </div>
         <vs-alert
             :active="!validClient"
@@ -131,9 +135,9 @@
     <vs-prompt
         title="Edit Clients"
         color="warning"
-        @cancel='resetAllValues;notify("Closed","Edit was cancelled","warning")'
+        @cancel='resetAllValues();notify("Closed","Edit was cancelled","warning")'
         @accept="updateClient"
-        @close='resetAllValues;notify("Closed","Edit was cancelled","warning")'
+        @close='resetAllValues();notify("Closed","Edit was cancelled","warning")'
         :is-valid="validClientEdit"
         :active.sync="prompts.activeEditPromt"
     >
@@ -148,26 +152,28 @@
         <vs-input :placeholder="editValues.addressField" class="mb-3" v-model="editValues.addressField"/>
         Telephone Number
         <vs-input :placeholder="editValues.numberField" class="mb-3" v-model="editValues.numberField"/>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3">
-          <div>Contact Person:</div>
-          <vs-dropdown class="ml-1">
-            <a class="a-icon" href="#">
-              {{ this.selectedEmployeeName }}
-              <vs-icon class="" icon="expand_more"></vs-icon>
-            </a>
-            <vs-dropdown-menu>
-              <vs-dropdown-item @click="selectedEmployeeID=employee.employeeID;selectedEmployeeName=employee.name"
-                                v-for="employee in employees" :key="employee.employeeID">
-                {{ employee.name }}
-              </vs-dropdown-item>
-            </vs-dropdown-menu>
-          </vs-dropdown>
-
-
+        <autocomplete
+            ref="textSearchOfEmployeeEdit"
+            :search="filterEmployeeItemsAdd"
+            :get-result-value="getClientResultValue"
+            @submit="handleClientSubmitEdit"
+            placeholder="Search for a client"
+            aria-label="Search for a client"
+            auto-select
+        ></autocomplete>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+          <div>Selected Employee:</div>
+          <div class="ml-1" style="color:royalblue;">{{ selectedEmployeeName }}</div>
         </div>
 
 
-        <div class="mb-3"><h5>{{ "Projects ID's: " + editValues.projectsField }}</h5></div>
+        <vs-list class="mb-2" >
+          <vs-list-header title="Projects of this Client" > </vs-list-header>
+          <h6></h6>
+          <vs-list-item class="ml-2" v-for="project in currentClient.projects" icon='arrow_right' :key="project.projectNumber"
+                        :title="project.projectName"  >
+          </vs-list-item>
+        </vs-list>
         <vs-alert
             :active="!validClientEdit"
             color="warning"
@@ -247,12 +253,33 @@ export default {
       },
       map: null,
       mapCenter: {lat: 0, lng: 0},
+      pagination: {maxPages:0,currentPage:1,viewableClients:[]}
     };
+  },
+
+  watch: {
+    returnCurrentPage(){
+      // eslint-disable-next-line no-console
+      console.log("Page changed")
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.clients.length){
+        this.pagination.viewableClients = this.clients.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableClients = this.clients.slice(0+(currentPage-1)*7,this.clients.length)
+      }
+
+    }
   },
 
   async created() {
     await this.fetchCustomers();
     await this.fetchEmployees()
+    this.pagination.maxPages = Math.ceil(this.clients.length / 7)
+    if(this.clients.length < 7){
+      this.pagination.viewableClients = this.clients.slice(0,this.clients.length)
+    }else{
+      this.pagination.viewableClients =this.clients.slice(0,7)
+    }
   },
 
   computed: {
@@ -275,10 +302,61 @@ export default {
           && this.editValues.addressField.length > 0
           && re.test(this.editValues.emailField)
           && this.selectedEmployeeID !== 0)
+    },
+
+    returnCurrentPage(){
+      return this.pagination.currentPage
     }
   },
 
   methods: {
+
+    /**Filters items for searchbar of clients on add form*/
+    async filterEmployeeItemsAdd(input) {
+
+      if (input.length < 1) {
+        return []
+      }
+
+      return this.employees.filter(competence => {
+        // eslint-disable-next-line no-console
+        return (competence.name.toLowerCase()
+            .startsWith(input.toLowerCase()))
+      })
+    },
+    /**Returns name of the client objects*/
+    getClientResultValue(result) {
+      return result.name
+    },
+    /**Handle function when client is selected by searchbar edit form*/
+    handleClientSubmitAdd(result) {
+      this.selectedEmployeeID = result.employeeID
+      this.selectedEmployeeName = result.name
+      this.$refs.textSearchOfEmployeeAdd.value = ""
+
+    },
+
+    handleClientSubmitEdit(result) {
+      this.selectedEmployeeID = result.employeeID
+      this.selectedEmployeeName = result.name
+      this.$refs.textSearchOfEmployeeEdit.value = ""
+
+    },
+
+    updatePagesAfterAddOrDelete(){
+      var maxPages = Math.ceil(this.clients.length / 7)
+      if(maxPages < this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }else if(maxPages > this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }
+
+
+    },
+
+
 
     /**
      * Sets the editValues to the data of the current client
@@ -312,17 +390,16 @@ export default {
      * @return curreentClient with client data of DB
      */
     fetchCustomerAndUpdateCurrentClient: async function (id) {
-      var projects = ""
-      await axios.get('http://localhost:8080/projectsByClient/' + id).then((response) => {
-        var string = ''
-        var arr = response.data
-        // eslint-disable-next-line no-console
-        console.log(arr)
-        // eslint-disable-next-line no-console
-        arr.forEach(function (project) {
-          string = string.concat(", " + project.toString())
-        })
-        projects = string.substr(1)
+      var projects = []
+      await axios.get('http://localhost:8080/projectsByClient/' + id).then(async (response) => {
+
+        for(var i = 0;i< response.data.length;i++){
+          await axios.get('http://localhost:8080/projects/' + response.data[i]).then((response1) => {
+            projects.push(response1.data)
+          })
+        }
+
+
       })
 
       await axios.get(`http://localhost:8080/clients/${id}`)
@@ -330,7 +407,7 @@ export default {
             // JSON responses are automatically parsed.
             // eslint-disable-next-line no-console
             this.currentClient = response.data
-            this.currentClient.projectsIDs = projects
+            this.currentClient.projects = projects
 
           }).catch((error) => {
             if (error.response) {
@@ -404,6 +481,7 @@ export default {
 
       await this.fetchCustomers()
       this.resetAllValues()
+      this.updatePagesAfterAddOrDelete()
 
     },
 
@@ -434,6 +512,7 @@ export default {
       this.prompts.activeDeletePrompt = false
       await this.fetchCustomers()
       this.currentClient = {}
+      this.updatePagesAfterAddOrDelete()
     },
 
     /**
@@ -453,7 +532,7 @@ export default {
         }
       }
       this.editValues.addressField = this.currentClient.address
-      this.editValues.projectsField = this.currentClient.projectsIDs
+      this.editValues.projectsField = this.currentClient.projects
       this.prompts.activeEditPromt = true;
 
     },
@@ -523,6 +602,14 @@ export default {
 
     },
 
+    getEmployeeName(employeeID){
+      for(var i=0;i<this.employees.length;i++){
+        if(this.employees[i].employeeID == employeeID){
+          return this.employees[i].name
+        }
+      }
+    },
+
     /** Shows prompt with title, message and selected color*/
     notify: function (title, message, color) {
       this.$vs.notify({
@@ -545,7 +632,10 @@ export default {
       this.editValues.numberField = '';
       this.editValues.addressField = '';
       this.editValues.projectsField = '';
+      this.currentClient = {}
     }
+
+
 
   }
 }

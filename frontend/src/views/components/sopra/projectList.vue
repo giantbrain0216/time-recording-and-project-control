@@ -45,7 +45,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="project in projects" :key="project.projectNumber">
+              <tr v-for="project in pagination.viewableProjects" :key="project.projectNumber">
                 <td>{{ project.projectNumber }}</td>
                 <td>
                   <div class="d-flex align-items-center">
@@ -102,6 +102,7 @@
               </tr>
               </tbody>
             </table>
+            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
           </div>
         </vs-card>
       </vs-col>
@@ -430,6 +431,7 @@ export default {
         tickBoxesForCompetences: {}
       },
       selectedClientNameEdit: "",
+      pagination: {maxPages:0,currentPage:1,viewableProjects:[]}
     };
   },
 
@@ -446,9 +448,16 @@ export default {
     this.editValues.plannedEndField = this.dateToday
     await this.fetchAllProjects();
     await this.fetchNameOfClientForProjects()
+    this.pagination.maxPages = Math.ceil(this.projects.length / 7)
+    if(this.projects.length < 7){
+      this.pagination.viewableProjects = this.projects.slice(0,this.projects.length)
+    }else{
+      this.pagination.viewableProjects =this.projects.slice(0,7)
+    }
     this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllCompetences();
+
 
 
   },
@@ -467,13 +476,39 @@ export default {
 
     validProjectEdit() {
       return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(this.editValues.plannedStartField).getTime() <= new Date(this.editValues.plannedEndField).getTime()))
+    },
+
+    returnCurrentPage(){
+      return this.pagination.currentPage
     }
 
   },
 
+  watch: {
+    returnCurrentPage(){
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.projects.length){
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,this.projects.length)
+      }
+
+    }
+  },
+
   methods: {
 
+    updatePagesAfterAddOrDelete(){
+      var maxPages = Math.ceil(this.projects.length / 7)
+      if(maxPages < this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }else if(maxPages > this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }
 
+    },
     /**Filters items for searchbar of competences on add form*/
     async filterCompetenceItemsAdd(input) {
 
@@ -783,6 +818,7 @@ export default {
       await this.fetchAllProjects()
       await this.fetchNameOfClientForProjects()
       this.resetAllValues()
+      this.updatePagesAfterAddOrDelete()
 
     },
 
@@ -970,6 +1006,7 @@ export default {
       })
       await this.resetAllValues()
       await this.fetchAllProjects();
+      this.updatePagesAfterAddOrDelete();
     },
 
     /**
@@ -1239,8 +1276,9 @@ export default {
 
 }
 </script>
-label {
-vertical-align: top;
-}
+
 <style>
+label {
+  vertical-align: top;
+}
 </style>
