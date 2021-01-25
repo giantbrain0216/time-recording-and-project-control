@@ -32,7 +32,14 @@
 
 
       <vs-spacer></vs-spacer>
-       
+
+<!--      <vs-dropdown vs-trigger-click left class="cursor-pointer pr-2 pl-2 ml-1 mr-4">-->
+<!--        <a class="text-white-dark" href="#">{{}}<vs-icon icon="wb_sunny"></vs-icon></a>-->
+<!--          <vs-dropdown-menu class="topbar-dd">-->
+<!--            <vs-dropdown-item><vue-weather :api-key="weatherKey" units="uk" hide-header="false"/></vs-dropdown-item>-->
+<!--          </vs-dropdown-menu>-->
+<!--      </vs-dropdown>-->
+      <vue-weather :api-key="weatherKey" hide-header units="uk"  />
 
     </vs-navbar>
      
@@ -41,8 +48,14 @@
 </template>
 
 <script>
+import VueWeather from "vue-weather-widget";
+import config from "@/config";
+
 export default {
 	name : 'Navbar',
+  components : {
+    VueWeather
+  },
   props: {
       topbarColor: {
           type: String,
@@ -58,7 +71,9 @@ export default {
   data:()=>({
     indexActive: 0,
     showToggle: false,
-    search: ""
+    search: "",
+    weatherKey: config.apiKeyWeather,
+    currentWeather : ""
     
   }),
 
