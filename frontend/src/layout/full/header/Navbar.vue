@@ -39,7 +39,7 @@
 <!--            <vs-dropdown-item><vue-weather :api-key="weatherKey" units="uk" hide-header="false"/></vs-dropdown-item>-->
 <!--          </vs-dropdown-menu>-->
 <!--      </vs-dropdown>-->
-<!--      <vue-weather :api-key="weatherKey" hide-header units="uk"  />-->
+     <vue-weather-widget :api-key="weatherKey" hide-header units="uk"  />
 
     </vs-navbar>
      
@@ -48,13 +48,13 @@
 </template>
 
 <script>
-//import VueWeather from "vue-weather-widget";
+import VueWeatherWidget from "./WeatherForecast/src/";
 import config from "@/config";
 
 export default {
 	name : 'Navbar',
   components : {
-  //  VueWeather
+    VueWeatherWidget
   },
   props: {
       topbarColor: {
