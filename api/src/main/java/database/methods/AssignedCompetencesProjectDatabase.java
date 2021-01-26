@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import controllers.Application;
+import entities.AssignedCompetencesEmployee;
 import entities.AssignedCompetencesProject;
 import entities.Assignment;
 import entities.Competence;
@@ -54,6 +55,14 @@ public class AssignedCompetencesProjectDatabase {
             }
         }
         return listOfCompetences.size() + 1;
+    }
+
+    /**
+     * @return all IDs of assigned competences
+     */
+    public List<Integer> getAllAssignedCompetences(){
+        List<AssignedCompetencesProject> listOfAllAssignments = getAllAssignedCompetencesProject();
+        return listOfAllAssignments.stream().map(AssignedCompetencesProject::getCompetenceID).collect(Collectors.toList());
     }
 
     /**

@@ -33,6 +33,16 @@ public class AssignedCompetencesEmployeeController {
      *
      * @return List of all assignedCompetencesEmployee
      */
+    @GetMapping("/allAssignedCompetencesEmployees")
+    public List<Integer> getAssignedCompetences() {
+        return assignedCompetencesEmployeeDatabase.getAllAssignedCompetences();
+    }
+
+    /**
+     * REST METHOD GET FOR ALL Assigned Competences to the employees
+     *
+     * @return List of all assignedCompetencesEmployee
+     */
     @GetMapping("/assignedCompetencesEmployee")
     public List<AssignedCompetencesEmployee> getAssignedCompetencesEmployee() {
         return assignedCompetencesEmployeeDatabase.getAllAssignedCompetencesEmployee();
@@ -103,7 +113,7 @@ public class AssignedCompetencesEmployeeController {
      * postcondition: The correct assignedCompetencesEmployee has been updated
      */
     @PutMapping("/assignedCompetencesEmployee")
-    public void updateClient(@Valid @RequestBody AssignedCompetencesEmployee requestBody) {
+    public void updateAssignment(@Valid @RequestBody AssignedCompetencesEmployee requestBody) {
         assignedCompetencesEmployeeDatabase.modifyAssignedCompetencesEmployee(requestBody);
     }
 

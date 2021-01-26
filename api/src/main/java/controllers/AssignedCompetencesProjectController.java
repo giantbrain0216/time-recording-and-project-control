@@ -68,6 +68,16 @@ public class AssignedCompetencesProjectController {
     }
 
     /**
+     * REST METHOD GET FOR ALL Assigned Competences to the employees
+     *
+     * @return List of all assignedCompetencesEmployee
+     */
+    @GetMapping("/allAssignedCompetencesProject")
+    public List<Integer> getAssignedCompetences() {
+        return assignedCompetencesProjectDatabase.getAllAssignedCompetences();
+    }
+
+    /**
      * deletes all the assignments of one project and competences
      *
      * @param projectID of the project
