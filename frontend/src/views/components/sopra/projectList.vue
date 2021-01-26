@@ -39,7 +39,7 @@
                 <th class="border-top-0" style="color: cornflowerblue">ID</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name of the Client</th>
-                <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
+                <th class="border-top-0" style="color: cornflowerblue">Deadline </th>
                 <th class="border-top-0" style="color: cornflowerblue">Progress</th>
                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
@@ -102,7 +102,9 @@
               </tr>
               </tbody>
             </table>
-            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
+            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination
+                :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back"
+                next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
           </div>
         </vs-card>
       </vs-col>
@@ -256,7 +258,7 @@
           </div>
           <div class="centerx">
             <vs-input-number :placeholder="currentProject.plannedEffort" class="mb-3" :min="currentProject.performedEffort"
-                             v-model="editValues.plannedEffortField" label="Planned Effort In Hours:"/>
+                             v-model="currentProject.plannedEffort" label="Planned Effort In Hours:"/>
           </div>
           <h6 class="mb-2 mt-2" >Performed Effort : <strong style="color: red"> {{ currentProject.performedEffort }} Hours </strong></h6>
 
@@ -861,7 +863,7 @@ export default {
         "clientID": this.currentProject.clientID,
         "plannedStart": this.editValues.plannedStartField + " " + "00:00",
         "plannedEnd": this.editValues.plannedEndField + " " + "00:00",
-        "plannedEffort": parseInt(this.editValues.plannedEffortField),
+        "plannedEffort": parseInt(this.currentProject.plannedEffort),
         "performedEffort": this.currentProject.performedEffort,
         "pricePerHour": this.currentProject.pricePerHour,
       }).then(() => {
@@ -924,6 +926,7 @@ export default {
       await this.fetchAllProjects();
       await this.resetAllValues();
       await this.fetchProject(this.currentProject.projectNumber)
+      await this.updatePagesAfterAddOrDelete()
     },
 
     /**
