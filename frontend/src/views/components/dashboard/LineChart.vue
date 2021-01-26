@@ -72,16 +72,16 @@ export default {
       }
 
       for (let i = 0; i < this.allTimeRegistrationsPerMonthThisYear.length; i++) {
-        let summe = 0;
+        let sumCurrentMonth = 0;
         for (let j = 0; j < this.allTimeRegistrationsPerMonthThisYear[i].length; j++) {
           let startDate = Date.parse(this.allTimeRegistrationsPerMonthThisYear[i][j].start);
           let endDate = Date.parse(this.allTimeRegistrationsPerMonthThisYear[i][j].end);
           let hours = Math.abs(endDate - startDate) / 36e5;
           let price = hours * this.getPricePerHour(this.allTimeRegistrationsPerMonthThisYear[i][j].projectID)
-          summe += price;
+          sumCurrentMonth += price;
         }
         if (month>11) month = 0;
-        this.sum.splice(this.orderOfMonthsToDisplay.indexOf(this.months[i]), 0, summe)
+        this.sum.splice(this.orderOfMonthsToDisplay.indexOf(this.months[i]), 0, sumCurrentMonth)
         month ++;
       }
     },
@@ -100,21 +100,22 @@ export default {
           === year-2)) &&(new Date(time.start).getMonth()>month))
       let allTimeRegistrationsToDisplay = timeRegistrationsPreviousYearToDisplay.concat(timeRegistrationsThisYear)
       for (let i = 0; i < allTimeRegistrationsToDisplay.length; i++) {
+        // add at the index (the month of the registration) all time registration made at this month
         this.allTimeRegistrationsPerMonthLastYear[parseInt(allTimeRegistrationsToDisplay[i].start.slice(5, 7)) - 1]
             .push(allTimeRegistrationsToDisplay[i])
       }
 
       for (let i = 0; i < this.allTimeRegistrationsPerMonthLastYear.length; i++) {
-        let summe = 0;
+        let sumCurrentMonth = 0;
         for (let j = 0; j < this.allTimeRegistrationsPerMonthLastYear[i].length; j++) {
           let startDate = Date.parse(this.allTimeRegistrationsPerMonthLastYear[i][j].start);
           let endDate = Date.parse(this.allTimeRegistrationsPerMonthLastYear[i][j].end);
           let hours = Math.abs(endDate - startDate) / 36e5;
-          let price = hours * this.getPricePerHour(this.allTimeRegistrationsPerMonthLastYear[i][j].projectID)
-          summe += price;
+          let price = hours* this.getPricePerHour(this.allTimeRegistrationsPerMonthLastYear[i][j].projectID)
+          sumCurrentMonth += price;
         }
         if (month>11) month = 0;
-        this.sumLastYear.splice(this.orderOfMonthsToDisplay.indexOf(this.months[i]), 0, summe)
+        this.sumLastYear.splice(this.orderOfMonthsToDisplay.indexOf(this.months[i]), 0, sumCurrentMonth)
         month ++;
       }
     },

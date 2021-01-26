@@ -1284,9 +1284,3 @@ export default {
 
 }
 </script>
-
-<style>
-label {
-  vertical-align: top;
-}
-</style>
