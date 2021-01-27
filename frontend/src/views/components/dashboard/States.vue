@@ -40,9 +40,18 @@
           </ul>
         </vs-card>
         <vs-card>
+          <h4 class="mb-1" style="color:#2b2b2b; font-size:18px">
+            <number
+                ref="numberExample"
+                :to=Object.keys(neededCompetences).length
+                :duration="animationDuration"
+                :format='(num) => {return num.toFixed(0)}'
+            />
+            {{ " Needed Competences" }}
+          </h4>
           <vs-list>
-            <vs-list-header icon="build" style="color:#2b2b2b; font-size:18px" title= "Most Needed Competences"></vs-list-header>
-            <vs-list-item v-for="(name,value) in neededCompetences"
+   <!--         <vs-list-header icon="build" style="color:#2b2b2b; font-size:18px" title= "Most Needed Competences"></vs-list-header>
+     -->       <vs-list-item v-for="(name,value) in neededCompetences"
                           :style='name ? "color:#FF0000" : "color:#FFA500"'
                           :icon='name ? "priority_high" : "low_priority"'
                           :title="getCompetenceName(value)" :key="value"><h6 ></h6>  </vs-list-item>
@@ -203,7 +212,7 @@ export default {
           })
     },
     getCompetenceName: function (id) {
-      return this.allCompetences[id].name
+      return this.allCompetences[id-1].name
 
     },
     getNeededCompetences: function () {
