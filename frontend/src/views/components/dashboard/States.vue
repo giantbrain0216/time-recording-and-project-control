@@ -212,7 +212,14 @@ export default {
           })
     },
     getCompetenceName: function (id) {
-      return this.allCompetences[id-1].name
+      for(var i=0;i<this.allCompetences.length;i++){
+        if(this.allCompetences[i].id == id){
+          return this.allCompetences[i].name
+        }
+
+
+      }
+
 
     },
     getNeededCompetences: function () {
