@@ -41,7 +41,7 @@
         </vs-card>
         <vs-card>
           <vs-list>
-            <vs-list-header icon="build" title= "Most Needed Competences"></vs-list-header>
+            <vs-list-header icon="build" style="color:#2b2b2b; font-size:18px" title= "Most Needed Competences"></vs-list-header>
             <vs-list-item v-for="(name,value) in neededCompetences"
                           :style='name ? "color:#FF0000" : "color:#FFA500"'
                           :icon='name ? "priority_high" : "low_priority"'
