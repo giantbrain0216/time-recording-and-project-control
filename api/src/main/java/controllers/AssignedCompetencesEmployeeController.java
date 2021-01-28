@@ -4,6 +4,9 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import database.methods.AssignedCompetencesEmployeeDatabase;
 import entities.AssignedCompetencesEmployee;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +15,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static properties.Properties.*;
-
+@Tag(name = "Assigned Competences To The Employees", description = "All implemented operations to manage assignments" +
+        " of the competences to the employees")
 @RestController
 public class AssignedCompetencesEmployeeController {
 

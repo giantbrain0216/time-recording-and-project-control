@@ -8,6 +8,10 @@ import database.methods.TimeRegistrationDatabase;
 import entities.Assignment;
 import entities.Project;
 import entities.TimeRegistration;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,7 @@ import java.util.List;
 
 import static properties.Properties.*;
 
+@Tag(name = "Assignments", description = "All implemented operations to manage assignments of the employees in the projects")
 @RestController
 public class AssignmentController {
 
@@ -40,6 +45,8 @@ public class AssignmentController {
      *
      * @return List of all assignments
      */
+    @ApiResponse(responseCode = "200", description = "Assignments found and returned successfully")
+    @Operation(summary = "Get all assignments", description = "Returns a list of all existing assignments in the database")
     @GetMapping("/assignments")
     public List<Assignment> getAssignments() {
         return assignmentDatabase.getAllAssignments();
@@ -55,10 +62,16 @@ public class AssignmentController {
      * @param assignmentID - The ID of the assignment
      * @return the assignment corresponding to the id
      */
+    @ApiResponse(responseCode = "200", description = "Assignment found successfully")
+    @ApiResponse(responseCode = "404", description = "Assignment with the given ID does not exist")
+    @Operation(summary = "Finds assignment by ID", description = "Returns a single assignment whose ID was given")
     @GetMapping("/assignments/{id}")
-    public Assignment getAssignment(@PathVariable("id") Integer assignmentID) throws SQLException {
+    public Assignment getAssignment(@Parameter(description = "ID of the searched assignment") @PathVariable("id") Integer assignmentID) throws SQLException {
         Assignment assignment = assignmentDatabase.getAssignment(assignmentID);
-        return assignment;
+        if (assignment != null)
+            return assignment;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                String.format("Assignment with ID %s not found!", assignmentID));
     }
 
     /**
@@ -70,11 +83,19 @@ public class AssignmentController {
      * @param assignmentID - id of the assignment to be deleted
      * @return the deleted assignment
      */
+    @ApiResponse(responseCode = "200", description = "Assignment found and deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Assignment with the given ID does not exist")
+    @Operation(summary = "deletes assignment by ID", description = "Returns the deleted assignment for testing purposes")
     @DeleteMapping("/assignments/{id}")
-    public Assignment deleteAssignment(@PathVariable("id") Integer assignmentID) throws SQLException {
+    public Assignment deleteAssignment(@Parameter(description = "ID of the assignment to delete") @PathVariable("id") Integer assignmentID) throws SQLException {
         Assignment assignment = assignmentDatabase.getAssignment(assignmentID);
-        assignmentDatabase.deleteAssignment(assignmentID);
-        return assignment;
+        if (assignment != null) {
+            assignmentDatabase.deleteAssignment(assignmentID);
+            return assignment;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                String.format("Assignment with ID %s not found!", assignmentID));
+
     }
 
     /**
@@ -85,9 +106,12 @@ public class AssignmentController {
      *
      * @return
      */
+    @Operation(summary = "Adds a new assignment to the database", description = "After adding the assignment returns his ID that will be " +
+            "needed for testing purposes and other REST Methods")
     @PostMapping("/assignments")
     @ResponseStatus(HttpStatus.CREATED)
-    public int addAssignment(@Valid @RequestBody Assignment requestBody) {
+    public int addAssignment(@Parameter(description = "From the automatically JSON parsed Request Body an assignment will be created. The " +
+            "request Body contains all necessary attributes which are needed to successfully create an assignment ") @Valid @RequestBody Assignment requestBody) {
         try {
             return assignmentDatabase.addAssignment(requestBody);
         } catch (SQLException e) {
@@ -102,8 +126,9 @@ public class AssignmentController {
      * precondition: The request body corresponds to the Assignment Class and the id exists in the database
      * postcondition: The correct assignment has been updated
      */
+    @Operation(summary = "Updates assignment by ID", description = "modifies the data of the given assignment")
     @PutMapping("/assignments")
-    public void updateAssignment(@Valid @RequestBody Assignment requestBody) {
+    public void updateAssignment(@Parameter(description = "Contains the ID of the assignment through which the respective assignment will be recognised ") @Valid @RequestBody Assignment requestBody) {
         // requestBody.setProjectNumber(id);
         try {
             assignmentDatabase.modifyAssignmentData(requestBody);
@@ -123,9 +148,17 @@ public class AssignmentController {
      * @param employeeID - The ID of the employee
      * @return the assignments corresponding to the id
      */
+    @ApiResponse(responseCode = "200", description = "Assignments of the employee with the given ID found and returned successfully")
+    @ApiResponse(responseCode = "404", description = "Employee with the given ID does not have assignments")
+    @Operation(summary = "Get all assignments of the employee whose ID was given", description = "Returns all assignments of the employee whose ID was given")
     @GetMapping("/assignmentsbyemployee/{id}")
-    public List<Assignment> getAssignmentByEmployee(@PathVariable("id") Integer employeeID) throws SQLException {
-        return assignmentDatabase.getAssignmentsByEmployee(employeeID);
+    public List<Assignment> getAssignmentByEmployee(@Parameter(description = "ID of the employee whose assignments should be returned") @PathVariable("id") Integer employeeID) throws SQLException {
+        List<Assignment> assignmentsOfEmployee = assignmentDatabase.getAssignmentsByEmployee(employeeID);
+        if (assignmentsOfEmployee.size() != 0)
+            return assignmentsOfEmployee;
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                String.format("Employee with ID %s has no assignments!", employeeID));
     }
 
     /**
@@ -134,9 +167,16 @@ public class AssignmentController {
      * @param employeeID of the employee
      * @throws SQLException when the deletion could not be done
      */
+    @ApiResponse(responseCode = "200", description = "Assignments of the employee with the given ID found and deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Employee with the given ID does not have assignments to delete")
+    @Operation(summary = "deletes all assignments of the employee whose ID was given", description = "deletes all assignments of the employee whose ID was given")
     @DeleteMapping("/assignmentsbyemployee/{id}")
-    public void deleteAllAssignmentsByEmployee(@PathVariable("id") Integer employeeID) throws SQLException {
-        assignmentDatabase.deleteAllAssignmentsEmployee(employeeID);
+    public void deleteAllAssignmentsByEmployee(@Parameter(description = "ID of the employee whose assignments should be deleted")@PathVariable("id") Integer employeeID) throws SQLException {
+         List<Assignment> deletedAssignments = assignmentDatabase.deleteAllAssignmentsEmployee(employeeID);
+         if (deletedAssignments.size()==0)
+
+             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                     String.format("Employee with ID %s has no assignments to be deleted!", employeeID));
     }
 
     /**
@@ -145,9 +185,17 @@ public class AssignmentController {
      * @param projectID of the project
      * @throws SQLException when the deletion could not be done
      */
+    @ApiResponse(responseCode = "200", description = "Assignments of the project with the given ID found and deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Project with the given ID does not have assignments to delete")
+    @Operation(summary = "deletes all assignments of the project whose ID was given", description = "deletes all assignments of the project whose ID was given")
     @DeleteMapping("/assignmentsbyproject/{id}")
-    public void deleteAllAssignmentsByProject(@PathVariable("id") Integer projectID) throws SQLException {
-        assignmentDatabase.deleteAllAssignmentsProject(projectID);
+    public void deleteAllAssignmentsByProject(@Parameter(description = "ID of the project whose assignments should be deleted") @PathVariable("id") Integer projectID) throws SQLException {
+        List<Assignment> deletedAssignments =  assignmentDatabase.deleteAllAssignmentsProject(projectID);
+        if (deletedAssignments.size()==0)
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    String.format("Project with ID %s has no assignments to be deleted!", projectID));
+
     }
 
     /**
@@ -159,8 +207,17 @@ public class AssignmentController {
      * @param projectID - The ID of the project
      * @return the assignments corresponding to the project id
      */
+    @ApiResponse(responseCode = "200", description = "Assignments found successfully")
+    @ApiResponse(responseCode = "404", description = "Project with the given ID does not have any assignment")
+    @Operation(summary = "Finds assignment of the project whose ID was given", description = "Returns all assignment of a project whose ID was given")
     @GetMapping("/assignmentsbyproject/{id}")
     public List<Assignment> getAssignmentsByProject(@PathVariable("id") Integer projectID) {
-        return assignmentDatabase.getAssignmentsByProject(projectID);
+        List<Assignment> assignmentsProject =  assignmentDatabase.getAssignmentsByProject(projectID);
+        if (assignmentsProject.size()!=0)
+            return assignmentsProject;
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                String.format("Project with ID %s has no assignments !", projectID));
+
     }
 }
