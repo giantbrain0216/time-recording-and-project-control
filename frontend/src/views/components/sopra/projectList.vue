@@ -161,7 +161,7 @@
 
       <vs-prompt
           title="Add New Project"
-          color="success"
+          color="primary"
           @cancel='resetAllValues();notify("Closed","Add was closed successfully","warning")'
           @accept="addProject"
           @close='resetAllValues();notify("Closed","Add was closed successfully","warning")'
@@ -170,7 +170,10 @@
       >
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
-          <hr>
+
+          <vs-divider position="center" color="primary">
+            Client of the project
+          </vs-divider>
           <autocomplete
               ref="textSearchOfClientAdd"
               :search="filterClientItemsAdd"
@@ -179,12 +182,17 @@
               placeholder="Search for a client"
               aria-label="Search for a client"
               auto-select
+              v-if="!clientAddSelected"
+              style="width:90%"
           ></autocomplete>
-          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="clientAddSelected">
             <div>Selected Client:</div>
             <div class="ml-1" style="color:royalblue;">{{ currentClient.name }}</div>
+            <vs-button class="ml-2" @click="clientAddSelected=false;currentClient={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
           </div>
-          <hr>
+          <vs-divider position="center" color="primary">
+            Planned start & end
+          </vs-divider>
           <div class="mb-3" style="width: 55%">
             Planned Start  <input style="width: 60%" class="float-right" type="date" id="start" name="plannedStart"
                                                 v-model="inputValues.plannedStartField"
@@ -193,14 +201,18 @@
             Planned End  <input style="width: 60%" class="float-right" type="date" id="end" name="plannedEnd"
                                               v-model="inputValues.plannedEndField"
                                               :min="inputValues.plannedStartField" max="2030-12-31" required></div>
-          <hr>
+          <vs-divider position="center" color="primary">
+            Hours and price
+          </vs-divider>
           <vs-input type="number" label-placeholder="Planned Effort In Hours" class="mb-4"
                     v-model="inputValues.plannedEffortField"/>
           <vs-input type="number" label-placeholder="Price Per Hour : " class="mt-3" v-model="inputValues.pricePerHour"
           />
           <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
           />
-          <hr>
+          <vs-divider position="center" color="primary">
+            Needed competences
+          </vs-divider>
           <autocomplete
               ref="textSearchOfCompetencesAdd"
               :search="filterCompetenceItemsAdd"
@@ -234,7 +246,7 @@
 
       <vs-prompt
           title="Edit Project"
-          color="danger"
+          color="warning"
           @cancel='resetAllValues();notify("Closed","Edit was cancelled successfully.","warning")'
           @accept="updateProject"
           @close='resetAllValues();notify("Closed","Edit was cancelled successfully.","warning")'
@@ -245,7 +257,9 @@
         <h6 class="mb-2 mt-2">ID of the Client : {{ currentProject.clientID }}</h6>
         <h6 class="mb-2 mt-2" >Price Per Hour : <strong style="color: red"> {{ currentProject.pricePerHour }} € </strong></h6>
 
-        <hr>
+        <vs-divider position="center" color="warning">
+          Properties
+        </vs-divider>
         <div class="con-exemple-prompt">
           <div class="mb-3">
             Planned Start <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
@@ -257,11 +271,13 @@
                                               :min="editValues.plannedStartField" max="2030-12-31">
           </div>
           <div class="centerx">
-            <vs-input-number :placeholder="currentProject.plannedEffort" class="mb-3" :min="currentProject.performedEffort"
+            <vs-input-number color="warning" :placeholder="currentProject.plannedEffort" class="mb-3" :min="currentProject.performedEffort"
                              v-model="currentProject.plannedEffort" label="Planned Effort In Hours:"/>
           </div>
           <h6 class="mb-2 mt-2" >Performed Effort : <strong style="color: red"> {{ currentProject.performedEffort }} Hours </strong></h6>
-
+          <vs-divider position="center" color="warning">
+            Competences
+          </vs-divider>
           <autocomplete
               ref="textSearchOfCompetencesEdit"
               :search="filterCompetenceItemsEdit"
@@ -273,7 +289,7 @@
           ></autocomplete>
 
           <div class="mt-3 mb-3">
-            <vs-checkbox v-for="competence in editValues.selectedCompetences" :key="competence.id"
+            <vs-checkbox color="warning" v-for="competence in editValues.selectedCompetences" :key="competence.id"
                          class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">
               {{ competence.name }}
             </vs-checkbox>
@@ -309,16 +325,24 @@
               placeholder="Search for a employee"
               aria-label="Search for a employee"
               auto-select
+              v-if="!employeeAssignSelected"
           ></autocomplete>
-          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="employeeAssignSelected">
+            <i class="fa fa-check btn-icon-prepend"></i>
             <div>Selected Employee:</div>
             <a class="a-icon ml-1 " href="#">
               {{ this.currentEmployee.name }}
             </a>
+            <vs-button class="ml-2" @click="employeeAssignSelected=false;currentEmployee={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
           </div>
-          <hr>
+          <vs-divider position="center" color="success">
+            Hours per week
+          </vs-divider>
           <vs-input type="number" label-placeholder="Number of Hours Per Week" class="mt-4" v-model="assignHours"/>
-          <hr>
+          <vs-divider position="center" color="success">
+            Remaining effort
+          </vs-divider>
           <div class="ml-5">
             <ul>
               <li><h6>Remaining Working Hours per Week: <strong
@@ -329,7 +353,9 @@
                   }}</strong> Hours</h6></li>
             </ul>
           </div>
-          <hr>
+          <vs-divider position="center" color="success">
+            Existing Assignments
+          </vs-divider>
           <table class="table">
             <thead>
             <tr class="">
@@ -401,10 +427,12 @@ export default {
       currentProjectAssignments: [],
       dateToday: "",
       assignHours: '',
-      currentClient: {name: "None"},
+      currentClient: {},
+      clientAddSelected: false,
       currentAssignment: {},
       currentProject: {},
-      currentEmployee: {name: "Employee"},
+      currentEmployee: {},
+      employeeAssignSelected:false,
       prompts: {
         activeProjectDetailWindow: false,
         deleteAssignmentPrompt: false,
@@ -566,15 +594,20 @@ export default {
     /**Filters items for searchbar of clients on add form*/
     async filterClientItemsAdd(input) {
 
-      if (input.length < 1) {
-        return []
-      }
+      if (input.length < 1) { return [] }
 
-      return this.clients.filter(competence => {
+      else if(input.length < 2){return this.clients.filter(competence => {
         // eslint-disable-next-line no-console
         return (competence.name.toLowerCase()
             .startsWith(input.toLowerCase()))
-      })
+      })}
+      else{
+        return this.clients.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.name.toLowerCase()
+              .includes(input.toLowerCase()))
+        })
+      }
     },
     /**Returns name of the client objects*/
     getClientResultValue(result) {
@@ -584,21 +617,28 @@ export default {
     handleClientSubmitAdd(result) {
       this.currentClient = result
       this.$refs.textSearchOfClientAdd.value = ""
+      this.clientAddSelected = true
 
     },
 
     /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
+      if (input.length < 1) { return [] }
 
-      if (input.length < 1) {
-        return []
-      }
-
-      return this.employees.filter(competence => {
+      else if(input.length < 2){return this.employees.filter(competence => {
         // eslint-disable-next-line no-console
         return (competence.name.toLowerCase()
             .startsWith(input.toLowerCase()) && !this.currentProjectAssignments.map(x => x.employeeID).includes(competence.employeeID))
-      })
+      })}
+      else{
+        return this.employees.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.name.toLowerCase()
+              .includes(input.toLowerCase()) && !this.currentProjectAssignments.map(x => x.employeeID).includes(competence.employeeID))
+        })
+      }
+
+
     },
     /**Returns name of the employee objects*/
     getEmployeeResultValue(result) {
@@ -608,6 +648,7 @@ export default {
     handleEmployeeSubmitAdd(result) {
       this.currentEmployee = result
       this.$refs.textSearchOfEmployeeAdd.value = ""
+      this.employeeAssignSelected = true
 
     },
 
@@ -1279,6 +1320,8 @@ export default {
       this.editValues.performedEffortField = ''
       this.assignHours = 0
       this.competencesAbgedeckt = {}
+      this.employeeAssignSelected = false
+      this.clientAddSelected = false
     },
 
 

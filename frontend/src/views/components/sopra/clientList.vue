@@ -118,13 +118,17 @@
             :search="filterEmployeeItemsAdd"
             :get-result-value="getClientResultValue"
             @submit="handleClientSubmitAdd"
-            placeholder="Search for a client"
-            aria-label="Search for a client"
+            placeholder="Search for a employee"
+            aria-label="Search for a employee"
+            v-if="!selectedEmployeeAdd"
+            class="mb-3"
+            style="width: 88%"
             auto-select
         ></autocomplete>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
-          <div>Selected Employee:</div>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="selectedEmployeeAdd">
+          <div>Selected contact person:</div>
           <div class="ml-1" style="color:royalblue;">{{ selectedEmployeeName }}</div>
+          <vs-button class="ml-2" @click='selectedEmployeeAdd=false;selectedEmployeeName="";selectedEmployeeID=0' radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
         </div>
         <vs-alert
             :active="!validClient"
@@ -160,18 +164,22 @@
             :search="filterEmployeeItemsAdd"
             :get-result-value="getClientResultValue"
             @submit="handleClientSubmitEdit"
-            placeholder="Search for a client"
-            aria-label="Search for a client"
+            placeholder="Search for a employee"
+            aria-label="Search for a employee"
             auto-select
+            v-if="!selectedEmployeeEdit"
+            class="mb-3 mt-2"
+            style="width: 88%"
         ></autocomplete>
-        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
-          <div>Selected Employee:</div>
+        <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="selectedEmployeeEdit">
+          <div>Selected contact person:</div>
           <div class="ml-1" style="color:royalblue;">{{ selectedEmployeeName }}</div>
+          <vs-button class="ml-2" @click='selectedEmployeeEdit=false;selectedEmployeeName="";selectedEmployeeID=0' radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
         </div>
 
 
         <vs-list class="mb-2" >
-          <vs-list-header title="Projects of this Client" > </vs-list-header>
+          <vs-list-header color="warning" title="Projects of this Client" > </vs-list-header>
           <h6></h6>
           <vs-list-item class="ml-2" v-for="project in currentClient.projects" icon='arrow_right' :key="project.projectNumber"
                         :title="project.projectName"  >
@@ -233,6 +241,9 @@ export default {
       projectsCurrentClient: [],
       selectedEmployeeID: 0,
       selectedEmployeeName: "Contact Person",
+      selectedEmployeeAdd: false,
+      selectedEmployeeEdit: false,
+
       clients: [],
       currentClient: {},
       showDetailedView: false,
@@ -317,15 +328,20 @@ export default {
     /**Filters items for searchbar of clients on add form*/
     async filterEmployeeItemsAdd(input) {
 
-      if (input.length < 1) {
-        return []
-      }
+      if (input.length < 1) { return [] }
 
-      return this.employees.filter(competence => {
+      else if(input.length < 2){return this.employees.filter(competence => {
         // eslint-disable-next-line no-console
         return (competence.name.toLowerCase()
             .startsWith(input.toLowerCase()))
-      })
+      })}
+      else{
+        return this.employees.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.name.toLowerCase()
+              .includes(input.toLowerCase()))
+        })
+      }
     },
     /**Returns name of the client objects*/
     getClientResultValue(result) {
@@ -336,6 +352,7 @@ export default {
       this.selectedEmployeeID = result.employeeID
       this.selectedEmployeeName = result.name
       this.$refs.textSearchOfEmployeeAdd.value = ""
+      this.selectedEmployeeAdd = true;
 
     },
 
@@ -343,6 +360,7 @@ export default {
       this.selectedEmployeeID = result.employeeID
       this.selectedEmployeeName = result.name
       this.$refs.textSearchOfEmployeeEdit.value = ""
+      this.selectedEmployeeEdit = true;
 
     },
 
@@ -354,6 +372,12 @@ export default {
       }else if(maxPages > this.pagination.maxPages){
         this.pagination.maxPages = maxPages
         this.pagination.currentPage = maxPages
+      }
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.clients.length){
+        this.pagination.viewableClients = this.clients.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableClients = this.clients.slice(0+(currentPage-1)*7,this.clients.length)
       }
 
 
@@ -382,8 +406,7 @@ export default {
         }
       })
       await this.fetchCustomers()
-
-
+      this.updatePagesAfterAddOrDelete()
     },
 
     /**
@@ -635,7 +658,9 @@ export default {
       this.editValues.numberField = '';
       this.editValues.addressField = '';
       this.editValues.projectsField = '';
-      this.currentClient = {}
+      this.currentClient = {};
+      this.selectedEmployeeAdd= false;
+      this.selectedEmployeeEdit= false;
     }
 
 

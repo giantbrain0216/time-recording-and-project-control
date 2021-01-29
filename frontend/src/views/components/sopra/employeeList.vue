@@ -175,7 +175,9 @@
         <div class="con-exemple-prompt">
           <h5>Please Modify Employee Data of <strong class="edit-employeee">{{ editValues.nameField }}</strong></h5>
           <h5>ID of the Employee: <strong class="edit-employeee">{{ currentEmployee.employeeID }}</strong></h5>
-          <hr>
+          <vs-divider position="center" color="warning">
+            Properties
+          </vs-divider>
           <vs-input label="Domicile" :placeholder="currentEmployee.domicile" class="mb-3"
                     v-model="editValues.domicileField"/>
           <vs-input label="Working Hours Peer Week" type="number" :placeholder="currentEmployee.workingHoursPerWeek"
@@ -191,7 +193,7 @@
               auto-select
           ></autocomplete>
           <div class="mt-3 mb-3">
-            <vs-checkbox v-for="competence in editValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
+            <vs-checkbox color="warning" v-for="competence in editValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
           </div>
 
           <vs-alert
@@ -530,6 +532,7 @@ export default {
 
       await this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
       await this.fetchEmployees()
+      this.updatePagesAfterAddOrDelete()
       this.resetAllValues()
     },
 
