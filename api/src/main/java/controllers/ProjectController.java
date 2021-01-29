@@ -65,11 +65,9 @@ public class ProjectController {
     @GetMapping("/projects/{id}")
     public Project getProject(@Parameter(description = "ID of the searched project") @PathVariable("id") Integer projectID) {
         Project project = projectDatabase.getProject(projectID);
-        if (project != null)
+
             return project;
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Project with ID %s not found!", projectID));
 
     }
 
@@ -89,13 +87,9 @@ public class ProjectController {
     @DeleteMapping("/projects/{id}")
     public Project deleteProject(@Parameter(description = "ID of the project to delete") @PathVariable("id") Integer projectID) {
         Project project = projectDatabase.getProject(projectID);
-        if (project != null) {
+
             projectDatabase.deleteFromDatabase(projectID);
             return project;
-        }
-
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Project with ID %s not found!", projectID));
 
     }
 

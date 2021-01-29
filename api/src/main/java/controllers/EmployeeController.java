@@ -69,11 +69,9 @@ public class EmployeeController {
     @Operation(summary = "Finds employee by ID", description = "Returns a single employee whose ID was given")
     @GetMapping("/employees/{id}")
     public Employee getEmployee(@Parameter(description = "ID of the searched employee") @PathVariable("id") Integer employeeID) {
-        if (employeeDatabase.getEmployee(employeeID) != null) {
+
             return employeeDatabase.getEmployee(employeeID);
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Employee with ID %s not found!", employeeID));
+
     }
 
     /**
@@ -92,13 +90,10 @@ public class EmployeeController {
     @DeleteMapping("/employees/{id}")
     public Employee deleteEmployee(@Parameter(description = "ID of the employee to delete") @PathVariable("id") Integer employeeID) {
         Employee employee = employeeDatabase.getEmployee(employeeID);
-        if (employee != null) {
+
             employeeDatabase.deleteFromDatabase(employeeID);
             return employee;
-        }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Employee with ID %s not found!", employeeID));
 
     }
 

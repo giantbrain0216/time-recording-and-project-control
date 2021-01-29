@@ -68,10 +68,7 @@ public class AssignmentController {
     @GetMapping("/assignments/{id}")
     public Assignment getAssignment(@Parameter(description = "ID of the searched assignment") @PathVariable("id") Integer assignmentID) throws SQLException {
         Assignment assignment = assignmentDatabase.getAssignment(assignmentID);
-        if (assignment != null)
-            return assignment;
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Assignment with ID %s not found!", assignmentID));
+        return assignment;
     }
 
     /**
@@ -89,12 +86,9 @@ public class AssignmentController {
     @DeleteMapping("/assignments/{id}")
     public Assignment deleteAssignment(@Parameter(description = "ID of the assignment to delete") @PathVariable("id") Integer assignmentID) throws SQLException {
         Assignment assignment = assignmentDatabase.getAssignment(assignmentID);
-        if (assignment != null) {
-            assignmentDatabase.deleteAssignment(assignmentID);
-            return assignment;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Assignment with ID %s not found!", assignmentID));
+        assignmentDatabase.deleteAssignment(assignmentID);
+        return assignment;
+
 
     }
 
@@ -153,12 +147,8 @@ public class AssignmentController {
     @Operation(summary = "Get all assignments of the employee whose ID was given", description = "Returns all assignments of the employee whose ID was given")
     @GetMapping("/assignmentsbyemployee/{id}")
     public List<Assignment> getAssignmentByEmployee(@Parameter(description = "ID of the employee whose assignments should be returned") @PathVariable("id") Integer employeeID) throws SQLException {
-        List<Assignment> assignmentsOfEmployee = assignmentDatabase.getAssignmentsByEmployee(employeeID);
-        if (assignmentsOfEmployee.size() != 0)
-            return assignmentsOfEmployee;
+        return assignmentDatabase.getAssignmentsByEmployee(employeeID);
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Employee with ID %s has no assignments!", employeeID));
     }
 
     /**
@@ -171,13 +161,10 @@ public class AssignmentController {
     @ApiResponse(responseCode = "404", description = "Employee with the given ID does not have assignments to delete")
     @Operation(summary = "deletes all assignments of the employee whose ID was given", description = "deletes all assignments of the employee whose ID was given")
     @DeleteMapping("/assignmentsbyemployee/{id}")
-    public void deleteAllAssignmentsByEmployee(@Parameter(description = "ID of the employee whose assignments should be deleted")@PathVariable("id") Integer employeeID) throws SQLException {
-         List<Assignment> deletedAssignments = assignmentDatabase.deleteAllAssignmentsEmployee(employeeID);
-         if (deletedAssignments.size()==0)
-
-             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                     String.format("Employee with ID %s has no assignments to be deleted!", employeeID));
+    public void deleteAllAssignmentsByEmployee(@Parameter(description = "ID of the employee whose assignments should be deleted") @PathVariable("id") Integer employeeID) throws SQLException {
+        assignmentDatabase.deleteAllAssignmentsEmployee(employeeID);
     }
+
 
     /**
      * deletes all the assignments of one project
@@ -186,15 +173,11 @@ public class AssignmentController {
      * @throws SQLException when the deletion could not be done
      */
     @ApiResponse(responseCode = "200", description = "Assignments of the project with the given ID found and deleted successfully")
-    @ApiResponse(responseCode = "404", description = "Project with the given ID does not have assignments to delete")
     @Operation(summary = "deletes all assignments of the project whose ID was given", description = "deletes all assignments of the project whose ID was given")
     @DeleteMapping("/assignmentsbyproject/{id}")
     public void deleteAllAssignmentsByProject(@Parameter(description = "ID of the project whose assignments should be deleted") @PathVariable("id") Integer projectID) throws SQLException {
-        List<Assignment> deletedAssignments =  assignmentDatabase.deleteAllAssignmentsProject(projectID);
-        if (deletedAssignments.size()==0)
+        assignmentDatabase.deleteAllAssignmentsProject(projectID);
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Project with ID %s has no assignments to be deleted!", projectID));
 
     }
 
@@ -205,19 +188,13 @@ public class AssignmentController {
      * postcondition: correct list of assignments is returned
      *
      * @param projectID - The ID of the project
-     * @return the assignments corresponding to the project id
      */
     @ApiResponse(responseCode = "200", description = "Assignments found successfully")
-    @ApiResponse(responseCode = "404", description = "Project with the given ID does not have any assignment")
     @Operation(summary = "Finds assignment of the project whose ID was given", description = "Returns all assignment of a project whose ID was given")
     @GetMapping("/assignmentsbyproject/{id}")
     public List<Assignment> getAssignmentsByProject(@PathVariable("id") Integer projectID) {
-        List<Assignment> assignmentsProject =  assignmentDatabase.getAssignmentsByProject(projectID);
-        if (assignmentsProject.size()!=0)
-            return assignmentsProject;
+      return  assignmentDatabase.getAssignmentsByProject(projectID);
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Project with ID %s has no assignments !", projectID));
 
     }
 }

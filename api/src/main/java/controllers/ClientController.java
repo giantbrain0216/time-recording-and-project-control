@@ -61,10 +61,7 @@ public class ClientController {
     @Operation(summary = "Finds client by ID", description = "Returns a single client whose ID was given")
     @GetMapping("/clients/{id}")
     public Client getClient(@Parameter(description = "ID of the searched Client") @PathVariable("id") Integer clientID) {
-        if (clientDatabase.getClient(clientID) != null)
-            return clientDatabase.getClient(clientID);
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Client with ID %s not found!", clientID));
+             return clientDatabase.getClient(clientID);
     }
 
     /**
@@ -82,13 +79,9 @@ public class ClientController {
     @DeleteMapping("/clients/{id}")
     public Client deleteClient(@PathVariable("id") Integer clientID) {
         Client client = clientDatabase.getClient(clientID);
-        if (client != null) {
-            clientDatabase.deleteFromDatabase(clientID);
+             clientDatabase.deleteFromDatabase(clientID);
             return client;
-        }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Client with ID %s not found!", clientID));
     }
 
     /**

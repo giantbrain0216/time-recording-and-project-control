@@ -61,10 +61,8 @@ public class TimeRegistrationController {
     @GetMapping("/timeregistrationsEmployee/{id}")
     public List<TimeRegistration> getTimeRegistrationsEmployee(@Parameter(description = "ID of the employee whose time registrations are being searched") @PathVariable("id") Integer employeeID) {
         List<TimeRegistration> timeRegistrationsOfEmployee = timeregistrationDatabase.getTimeRegistrationsOfEmployee(employeeID);
-        if (timeRegistrationsOfEmployee.size() != 0)
+
             return timeRegistrationsOfEmployee;
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Time registrations of the employee with ID %s not found!", employeeID));
     }
 
 
@@ -78,10 +76,8 @@ public class TimeRegistrationController {
     @Operation(summary = "Deletes Time Registrations for the employee whose ID was given", description = "Deletes all time registrations of the employee whose ID was given")
     @DeleteMapping("/timeregistrationsEmployee/{id}")
     public void deleteTimeRegistrationsEmployee(@Parameter(description = "ID of the employee whose time registrations should be deleted") @PathVariable("id") Integer employeeID) throws SQLException {
-        List<TimeRegistration> deletedTimeRegistrations = timeregistrationDatabase.deleteTimeRegistrationsOfEmployee(employeeID);
-        if (deletedTimeRegistrations.size() == 0)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    String.format("Time registrations of the employee with ID %s not found!", employeeID));
+         timeregistrationDatabase.deleteTimeRegistrationsOfEmployee(employeeID);
+
 
     }
 
@@ -100,11 +96,9 @@ public class TimeRegistrationController {
     @GetMapping("/timeregistrations/{id}")
     public TimeRegistration getTimeRegistration(@Parameter(description = "ID of the searched time registration") @PathVariable("id") Integer timeregistrationID) {
         TimeRegistration timeRegistration = timeregistrationDatabase.getTimeRegistration(timeregistrationID);
-        if (timeRegistration != null)
+
             return timeRegistration;
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Time registrations with ID %s not found!", timeregistrationID));
     }
 
     /**
@@ -124,13 +118,10 @@ public class TimeRegistrationController {
     @DeleteMapping("/timeregistrations/{id}")
     public TimeRegistration deleteTimeRegistration(@Parameter(description = "ID of the time registration to deleted") @PathVariable("id") Integer timeregistrationID) {
         TimeRegistration timeRegistration = timeregistrationDatabase.getTimeRegistration(timeregistrationID);
-        if (timeRegistration != null) {
+
             timeregistrationDatabase.deleteFromDatabase(timeregistrationID);
             return timeRegistration;
-        }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Time registrations with ID %s not found and not deleted!", timeregistrationID));
     }
 
     /**

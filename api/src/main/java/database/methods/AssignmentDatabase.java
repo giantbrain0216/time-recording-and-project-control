@@ -140,29 +140,25 @@ public class AssignmentDatabase {
     /**
      *
      * @param employeeID of the employee
-     * @return list of the deleted assignments for testing purposes
-     * @throws SQLException in case the assignments could not be deleted
+      * @throws SQLException in case the assignments could not be deleted
      */
-    public List<Assignment> deleteAllAssignmentsEmployee(int employeeID) throws SQLException {
+    public void deleteAllAssignmentsEmployee(int employeeID) throws SQLException {
         List<Assignment> assignmentsEmployee = getAssignmentsByEmployee(employeeID);
         for (Assignment assignment : assignmentsEmployee) {
             assignmentDAO.deleteById(assignment.getId());
         }
-        return assignmentsEmployee;
-    }
+     }
 
     /**
      *
      * @param projectID of the project
-     * @return list of the deleted assignments for testing purposes
-     * @throws SQLException in case the assignments could not be deleted
+      * @throws SQLException in case the assignments could not be deleted
      */
-    public List<Assignment> deleteAllAssignmentsProject(int projectID) throws SQLException {
+    public void deleteAllAssignmentsProject(int projectID) throws SQLException {
         List<Assignment> assignmentsProject = getAssignmentsByProject(projectID);
         for (Assignment assignment : assignmentsProject) {
             assignmentDAO.deleteById(assignment.getId());
         }
-        return assignmentsProject;
-    }
+     }
 
 }
