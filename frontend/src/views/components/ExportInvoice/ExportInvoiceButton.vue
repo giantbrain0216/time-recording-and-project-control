@@ -201,10 +201,19 @@ export default {
     async search(input) {
 
       if (input.length < 1) { return [] }
-      return this.projects.filter(project => {
-        return project.projectName.toLowerCase()
-            .startsWith(input.toLowerCase())
-      })
+
+      else if(input.length < 2){return this.projects.filter(competence => {
+        // eslint-disable-next-line no-console
+        return (competence.projectName.toLowerCase()
+            .startsWith(input.toLowerCase()))
+      })}
+      else{
+        return this.projects.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.projectName.toLowerCase()
+              .includes(input.toLowerCase()))
+        })
+      }
     },
 
     getResultValue(result){

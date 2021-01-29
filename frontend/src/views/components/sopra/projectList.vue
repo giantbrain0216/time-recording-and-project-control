@@ -8,7 +8,7 @@
           <div slot="header">
             <h2 class="float-left" style="color: cornflowerblue">Project List </h2>
             <div class="float-right mb-1">
-              <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="add" type="filled">Add New
+              <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="note_add" type="filled">Add New
                 Project
               </vs-button>
             </div>
@@ -39,13 +39,13 @@
                 <th class="border-top-0" style="color: cornflowerblue">ID</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name of the Client</th>
-                <th class="border-top-0" style="color: cornflowerblue">Deadline</th>
+                <th class="border-top-0" style="color: cornflowerblue">Deadline </th>
                 <th class="border-top-0" style="color: cornflowerblue">Progress</th>
                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
               </thead>
               <tbody>
-              <tr v-for="project in projects" :key="project.projectNumber">
+              <tr v-for="project in pagination.viewableProjects" :key="project.projectNumber">
                 <td>{{ project.projectNumber }}</td>
                 <td>
                   <div class="d-flex align-items-center">
@@ -54,11 +54,18 @@
                          class="m-b-0"
                          style="font-weight: bold; font-size: 15px; cursor:pointer">
                         {{ project.projectName }}
+
                         <b-card style="font-size:10px;" class="text-success"
-                                v-if="calculateStatus(project.projectNumber)">running
+                                v-if="calculateStatus(project.projectNumber) == 2">running
                         </b-card>
                         <b-card style="font-size:10px;" class="text-secondary"
-                                v-else-if="!calculateStatus(project.projectNumber)">finished
+                                v-else-if="calculateStatus(project.projectNumber) == 1">finished
+                        </b-card>
+                        <b-card style="font-size:10px;" class="text-secondary"
+                                v-else-if="calculateStatus(project.projectNumber) == 0">unbegun
+                        </b-card>
+                        <b-card style="font-size:10px;" class="text-danger"
+                                v-else-if="calculateStatus(project.projectNumber) == 3">overdue
                         </b-card>
 
                       </a>
@@ -95,6 +102,9 @@
               </tr>
               </tbody>
             </table>
+            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination
+                :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back"
+                next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
           </div>
         </vs-card>
       </vs-col>
@@ -151,7 +161,7 @@
 
       <vs-prompt
           title="Add New Project"
-          color="success"
+          color="primary"
           @cancel='resetAllValues();notify("Closed","Add was closed successfully","warning")'
           @accept="addProject"
           @close='resetAllValues();notify("Closed","Add was closed successfully","warning")'
@@ -160,7 +170,10 @@
       >
         <div class="con-exemple-prompt">
           <vs-input label-placeholder="Name" class="mb-3" v-model="inputValues.projectName"/>
-          <hr>
+
+          <vs-divider position="center" color="primary">
+            Client of the project
+          </vs-divider>
           <autocomplete
               ref="textSearchOfClientAdd"
               :search="filterClientItemsAdd"
@@ -169,12 +182,17 @@
               placeholder="Search for a client"
               aria-label="Search for a client"
               auto-select
+              v-if="!clientAddSelected"
+              style="width:90%"
           ></autocomplete>
-          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="clientAddSelected">
             <div>Selected Client:</div>
             <div class="ml-1" style="color:royalblue;">{{ currentClient.name }}</div>
+            <vs-button class="ml-2" @click="clientAddSelected=false;currentClient={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
           </div>
-          <hr>
+          <vs-divider position="center" color="primary">
+            Planned start & end
+          </vs-divider>
           <div class="mb-3" style="width: 55%">
             Planned Start  <input style="width: 60%" class="float-right" type="date" id="start" name="plannedStart"
                                                 v-model="inputValues.plannedStartField"
@@ -183,14 +201,18 @@
             Planned End  <input style="width: 60%" class="float-right" type="date" id="end" name="plannedEnd"
                                               v-model="inputValues.plannedEndField"
                                               :min="inputValues.plannedStartField" max="2030-12-31" required></div>
-          <hr>
+          <vs-divider position="center" color="primary">
+            Hours and price
+          </vs-divider>
           <vs-input type="number" label-placeholder="Planned Effort In Hours" class="mb-4"
                     v-model="inputValues.plannedEffortField"/>
           <vs-input type="number" label-placeholder="Price Per Hour : " class="mt-3" v-model="inputValues.pricePerHour"
           />
           <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
           />
-          <hr>
+          <vs-divider position="center" color="primary">
+            Needed competences
+          </vs-divider>
           <autocomplete
               ref="textSearchOfCompetencesAdd"
               :search="filterCompetenceItemsAdd"
@@ -224,7 +246,7 @@
 
       <vs-prompt
           title="Edit Project"
-          color="danger"
+          color="warning"
           @cancel='resetAllValues();notify("Closed","Edit was cancelled successfully.","warning")'
           @accept="updateProject"
           @close='resetAllValues();notify("Closed","Edit was cancelled successfully.","warning")'
@@ -235,7 +257,9 @@
         <h6 class="mb-2 mt-2">ID of the Client : {{ currentProject.clientID }}</h6>
         <h6 class="mb-2 mt-2" >Price Per Hour : <strong style="color: red"> {{ currentProject.pricePerHour }} € </strong></h6>
 
-        <hr>
+        <vs-divider position="center" color="warning">
+          Properties
+        </vs-divider>
         <div class="con-exemple-prompt">
           <div class="mb-3">
             Planned Start <input class="ml-2" type="date" id="startedit" name="plannedStartEdit"
@@ -247,11 +271,13 @@
                                               :min="editValues.plannedStartField" max="2030-12-31">
           </div>
           <div class="centerx">
-            <vs-input-number :placeholder="currentProject.plannedEffort" class="mb-3" :min="currentProject.performedEffort"
-                             v-model="editValues.plannedEffortField" label="Planned Effort In Hours:"/>
+            <vs-input-number color="warning" :placeholder="currentProject.plannedEffort" class="mb-3" :min="currentProject.performedEffort"
+                             v-model="currentProject.plannedEffort" label="Planned Effort In Hours:"/>
           </div>
           <h6 class="mb-2 mt-2" >Performed Effort : <strong style="color: red"> {{ currentProject.performedEffort }} Hours </strong></h6>
-
+          <vs-divider position="center" color="warning">
+            Competences
+          </vs-divider>
           <autocomplete
               ref="textSearchOfCompetencesEdit"
               :search="filterCompetenceItemsEdit"
@@ -263,7 +289,7 @@
           ></autocomplete>
 
           <div class="mt-3 mb-3">
-            <vs-checkbox v-for="competence in editValues.selectedCompetences" :key="competence.id"
+            <vs-checkbox color="warning" v-for="competence in editValues.selectedCompetences" :key="competence.id"
                          class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">
               {{ competence.name }}
             </vs-checkbox>
@@ -299,16 +325,24 @@
               placeholder="Search for a employee"
               aria-label="Search for a employee"
               auto-select
+              v-if="!employeeAssignSelected"
           ></autocomplete>
-          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+
+          <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="employeeAssignSelected">
+            <i class="fa fa-check btn-icon-prepend"></i>
             <div>Selected Employee:</div>
             <a class="a-icon ml-1 " href="#">
               {{ this.currentEmployee.name }}
             </a>
+            <vs-button class="ml-2" @click="employeeAssignSelected=false;currentEmployee={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
           </div>
-          <hr>
+          <vs-divider position="center" color="success">
+            Hours per week
+          </vs-divider>
           <vs-input type="number" label-placeholder="Number of Hours Per Week" class="mt-4" v-model="assignHours"/>
-          <hr>
+          <vs-divider position="center" color="success">
+            Remaining effort
+          </vs-divider>
           <div class="ml-5">
             <ul>
               <li><h6>Remaining Working Hours per Week: <strong
@@ -319,7 +353,9 @@
                   }}</strong> Hours</h6></li>
             </ul>
           </div>
-          <hr>
+          <vs-divider position="center" color="success">
+            Existing Assignments
+          </vs-divider>
           <table class="table">
             <thead>
             <tr class="">
@@ -391,10 +427,12 @@ export default {
       currentProjectAssignments: [],
       dateToday: "",
       assignHours: '',
-      currentClient: {name: "None"},
+      currentClient: {},
+      clientAddSelected: false,
       currentAssignment: {},
       currentProject: {},
-      currentEmployee: {name: "Employee"},
+      currentEmployee: {},
+      employeeAssignSelected:false,
       prompts: {
         activeProjectDetailWindow: false,
         deleteAssignmentPrompt: false,
@@ -423,6 +461,7 @@ export default {
         tickBoxesForCompetences: {}
       },
       selectedClientNameEdit: "",
+      pagination: {maxPages:0,currentPage:1,viewableProjects:[]}
     };
   },
 
@@ -439,9 +478,16 @@ export default {
     this.editValues.plannedEndField = this.dateToday
     await this.fetchAllProjects();
     await this.fetchNameOfClientForProjects()
+    this.pagination.maxPages = Math.ceil(this.projects.length / 7)
+    if(this.projects.length < 7){
+      this.pagination.viewableProjects = this.projects.slice(0,this.projects.length)
+    }else{
+      this.pagination.viewableProjects =this.projects.slice(0,7)
+    }
     this.fetchAllEmployees();
     this.fetchClients();
     this.fetchAllCompetences();
+
 
 
   },
@@ -460,13 +506,45 @@ export default {
 
     validProjectEdit() {
       return (this.editValues.plannedEffortField >= this.currentProject.performedEffort && (new Date(this.editValues.plannedStartField).getTime() <= new Date(this.editValues.plannedEndField).getTime()))
+    },
+
+    returnCurrentPage(){
+      return this.pagination.currentPage
     }
 
   },
 
+  watch: {
+    returnCurrentPage(){
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.projects.length){
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,this.projects.length)
+      }
+
+    }
+  },
+
   methods: {
 
+    updatePagesAfterAddOrDelete(){
+      var maxPages = Math.ceil(this.projects.length / 7)
+      if(maxPages < this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }else if(maxPages > this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.projects.length){
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableProjects = this.projects.slice(0+(currentPage-1)*7,this.projects.length)
+      }
 
+    },
     /**Filters items for searchbar of competences on add form*/
     async filterCompetenceItemsAdd(input) {
 
@@ -516,15 +594,20 @@ export default {
     /**Filters items for searchbar of clients on add form*/
     async filterClientItemsAdd(input) {
 
-      if (input.length < 1) {
-        return []
-      }
+      if (input.length < 1) { return [] }
 
-      return this.clients.filter(competence => {
+      else if(input.length < 2){return this.clients.filter(competence => {
         // eslint-disable-next-line no-console
         return (competence.name.toLowerCase()
             .startsWith(input.toLowerCase()))
-      })
+      })}
+      else{
+        return this.clients.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.name.toLowerCase()
+              .includes(input.toLowerCase()))
+        })
+      }
     },
     /**Returns name of the client objects*/
     getClientResultValue(result) {
@@ -534,21 +617,28 @@ export default {
     handleClientSubmitAdd(result) {
       this.currentClient = result
       this.$refs.textSearchOfClientAdd.value = ""
+      this.clientAddSelected = true
 
     },
 
     /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
+      if (input.length < 1) { return [] }
 
-      if (input.length < 1) {
-        return []
-      }
-
-      return this.employees.filter(competence => {
+      else if(input.length < 2){return this.employees.filter(competence => {
         // eslint-disable-next-line no-console
         return (competence.name.toLowerCase()
             .startsWith(input.toLowerCase()) && !this.currentProjectAssignments.map(x => x.employeeID).includes(competence.employeeID))
-      })
+      })}
+      else{
+        return this.employees.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.name.toLowerCase()
+              .includes(input.toLowerCase()) && !this.currentProjectAssignments.map(x => x.employeeID).includes(competence.employeeID))
+        })
+      }
+
+
     },
     /**Returns name of the employee objects*/
     getEmployeeResultValue(result) {
@@ -558,6 +648,7 @@ export default {
     handleEmployeeSubmitAdd(result) {
       this.currentEmployee = result
       this.$refs.textSearchOfEmployeeAdd.value = ""
+      this.employeeAssignSelected = true
 
     },
 
@@ -712,12 +803,14 @@ export default {
     /**
      *
      */
-    updateClientForFiltering(id, name) {
+    async updateClientForFiltering(id, name) {
       this.selectedClientNameEdit = name;
       if (id == 0) {
-        this.fetchAllProjects();
+        await this.fetchAllProjects();
+        this.updatePagesAfterAddOrDelete()
       } else {
-        this.fetchProjectsSortedByCustomer(id)
+        await this.fetchProjectsSortedByCustomer(id)
+        this.updatePagesAfterAddOrDelete()
       }
 
 
@@ -776,6 +869,7 @@ export default {
       await this.fetchAllProjects()
       await this.fetchNameOfClientForProjects()
       this.resetAllValues()
+      this.updatePagesAfterAddOrDelete()
 
     },
 
@@ -810,7 +904,7 @@ export default {
         "clientID": this.currentProject.clientID,
         "plannedStart": this.editValues.plannedStartField + " " + "00:00",
         "plannedEnd": this.editValues.plannedEndField + " " + "00:00",
-        "plannedEffort": parseInt(this.editValues.plannedEffortField),
+        "plannedEffort": parseInt(this.currentProject.plannedEffort),
         "performedEffort": this.currentProject.performedEffort,
         "pricePerHour": this.currentProject.pricePerHour,
       }).then(() => {
@@ -873,6 +967,7 @@ export default {
       await this.fetchAllProjects();
       await this.resetAllValues();
       await this.fetchProject(this.currentProject.projectNumber)
+      await this.updatePagesAfterAddOrDelete()
     },
 
     /**
@@ -963,6 +1058,7 @@ export default {
       })
       await this.resetAllValues()
       await this.fetchAllProjects();
+      this.updatePagesAfterAddOrDelete();
     },
 
     /**
@@ -1174,14 +1270,20 @@ export default {
       for (var i = 0; i < this.projects.length; i++) {
         if (this.projects[i].projectNumber === id) {
           let deadline = new Date(this.projects[i].plannedEnd)
-          if (today.getTime() > deadline.getTime()) {
-            // eslint-disable-next-line no-console
-            //console.log("Returning false")
-            return false;
+          let start = new Date(this.projects[i].plannedStart)
+          if(today.getTime() < start.getTime()){
+            return 0;
+          }
+          if ((today.getTime() > deadline.getTime())) {
+            if((this.projects[i].performedEffort/this.projects[i].plannedEffort) > 0.8){
+              return 1;
+            }else{
+              return 3;
+            }
           } else {
             // eslint-disable-next-line no-console
             //console.log("Returning true")
-            return true;
+            return 2;
           }
         }
       }
@@ -1218,6 +1320,8 @@ export default {
       this.editValues.performedEffortField = ''
       this.assignHours = 0
       this.competencesAbgedeckt = {}
+      this.employeeAssignSelected = false
+      this.clientAddSelected = false
     },
 
 
@@ -1226,8 +1330,3 @@ export default {
 
 }
 </script>
-label {
-vertical-align: top;
-}
-<style>
-</style>

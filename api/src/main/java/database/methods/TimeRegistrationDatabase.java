@@ -150,19 +150,21 @@ public class TimeRegistrationDatabase {
                 allTimeRegistrationsOfEmployee.add(timeRegistration);
             }
         }
-        return allTimeRegistrationsOfEmployee;
+        return allTimeRegistrationsOfEmployee ;
     }
 
     /**
      * deletes all the time registrations of one employee
      * @param employeeID whose time registrations must be deleted
      * @throws SQLException if at least one time registration could not be deleted
+     * @return list of all time registrations of the employee for testing purposes
      */
-    public void deleteTimeRegistrationsOfEmployee(int employeeID) throws SQLException {
+    public List<TimeRegistration> deleteTimeRegistrationsOfEmployee(int employeeID) throws SQLException {
         List<TimeRegistration> allTimeRegistrationsOfEmployee = getTimeRegistrationsOfEmployee(employeeID);
         for (final TimeRegistration timeRegistration : allTimeRegistrationsOfEmployee){
             timeRegistrationDAO.deleteById(timeRegistration.getID());
         }
+        return allTimeRegistrationsOfEmployee;
 
     }
 }

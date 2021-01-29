@@ -5,13 +5,9 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import entities.Assignment;
-import entities.Client;
-import entities.Employee;
-import entities.Project;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -141,20 +137,28 @@ public class AssignmentDatabase {
             return new ArrayList<>();
         }
     }
-
+    /**
+     *
+     * @param employeeID of the employee
+      * @throws SQLException in case the assignments could not be deleted
+     */
     public void deleteAllAssignmentsEmployee(int employeeID) throws SQLException {
         List<Assignment> assignmentsEmployee = getAssignmentsByEmployee(employeeID);
         for (Assignment assignment : assignmentsEmployee) {
             assignmentDAO.deleteById(assignment.getId());
         }
-    }
+     }
 
-
+    /**
+     *
+     * @param projectID of the project
+      * @throws SQLException in case the assignments could not be deleted
+     */
     public void deleteAllAssignmentsProject(int projectID) throws SQLException {
         List<Assignment> assignmentsProject = getAssignmentsByProject(projectID);
         for (Assignment assignment : assignmentsProject) {
             assignmentDAO.deleteById(assignment.getId());
         }
-    }
+     }
 
 }

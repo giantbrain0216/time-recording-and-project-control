@@ -35,8 +35,8 @@
         <table class="table v-middle border">
           <thead>
           <tr class="">
-            <th class="border-top-0">Employee ID</th>
-            <th class="border-top-0">Project ID</th>
+            <th class="border-top-0">Employee </th>
+            <th class="border-top-0">Project </th>
             <th class="border-top-0">From</th>
             <th class="border-top-0">To</th>
             <th class="border-top-0">Brief Description</th>
@@ -50,11 +50,11 @@
           >
             <td>
               <div class="d-flex align-items-center">
-                <div class="mr-2">{{ registration[0] }}</div>
+                <div class="mr-2">{{ getEmployeeName(registration[0]) }}</div>
               </div>
             </td>
             <td>
-              <div class="mr-2">{{ registration[1] }}</div>
+              <div class="mr-2">{{  getProjectName(registration[1]) }}</div>
             </td>
             <td>
               <div class="d-flex align-items-center">{{ registration[2] }}</div>
@@ -73,7 +73,7 @@
                   Delete
                 </vs-button>
 
-                <vs-button @click="undo(index)" v-show="!deletedRegistrations(index)" icon="cancel" class="m-1"
+                <vs-button @click="undo(index)" v-show="!deletedRegistrations(index)" icon="undo" class="m-1"
                            color="warning"
                            type="filled">
                   Undo
@@ -99,6 +99,8 @@ export default {
   data: () => {
     return {
       allProjectIDs: [],
+      allProjects:[],
+      allEmployees:[],
       allEmployeeIDs: [],
       allTimeRegistrationFromCSV: [],
       timeRegistrationsToUpload: [],
@@ -125,6 +127,7 @@ export default {
       await axios.get(`http://localhost:8080/projects`)
           .then(response => {
             // JSON responses are automatically parsed.
+            this.allProjects = response.data
             this.allProjectIDs = response.data.map(project => project.projectNumber)
           })
           .catch((error) => {
@@ -139,6 +142,7 @@ export default {
       await axios.get(`http://localhost:8080/employees`)
           .then(response => {
             // JSON responses are automatically parsed.
+            this.allEmployees = response.data
             this.allEmployeeIDs = response.data.map(project => project.employeeID)
           })
           .catch((error) => {
@@ -149,6 +153,21 @@ export default {
             }
           })
     },
+
+    getProjectName: function (id){
+      for (let i=0;i<this.allProjects.length;i++){
+        if (this.allProjects[i].projectNumber === parseInt(id))
+          return this.allProjects[i].projectName
+      }
+    },
+
+    getEmployeeName: function (id){
+      for (let i=0;i<this.allEmployees.length;i++){
+        if (this.allEmployees[i].employeeID === parseInt(id))
+          return this.allEmployees[i].name
+      }
+    },
+
 // in the first index we save the employee id and in the seconde one the project id
     validTimeRegistration(index) {
       return (!this.timeRegistrationsToUpload[index].includes("") && !this.timeRegistrationsToUpload[index].includes(null)

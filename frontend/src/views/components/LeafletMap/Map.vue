@@ -78,10 +78,12 @@ export default {
 
   watch: {
     address: async function() {
+
       axios.get("https://nominatim.openstreetmap.org/search?q=" + this.address.replace(" ", "+") + "&format=json").then((response) => {
         this.center = latLng(response.data[0].lat,response.data[0].lon)
         this.withTooltip = latLng(response.data[0].lat,response.data[0].lon)
       })
+
     }
   },
 
@@ -95,11 +97,11 @@ export default {
       iconUrl: require('leaflet/dist/images/marker-icon.png'),
       shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
-
+    if(this.address != null){
       axios.get("https://nominatim.openstreetmap.org/search?q=" + this.address.replace(" ", "+") + "&format=json").then((response) => {
         this.center = latLng(response.data[0].lat,response.data[0].lon)
         this.withTooltip = latLng(response.data[0].lat,response.data[0].lon)
-      })
+      })}
 
   }
 };

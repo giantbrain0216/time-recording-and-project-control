@@ -7,7 +7,7 @@
           <div slot="header">
             <h2  class="float-left" style="color: cornflowerblue">Employee List</h2>
             <div class="float-right mb-1">
-            <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="add" type="filled">Add New Employee</vs-button>
+            <vs-button @click="prompts.activeAddPrompt = true" color="primary" icon="person_add" type="filled">Add New Employee</vs-button>
             </div>
           </div>
           <div class="table-responsive">
@@ -22,7 +22,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="employee in employees" :key="employee.employeeID">
+            <tr v-for="employee in pagination.viewableEmployees" :key="employee.employeeID">
               <td>{{employee.employeeID}}</td>
               <td>
                 <div class="d-flex align-items-center">
@@ -51,6 +51,7 @@
             </tr>
             </tbody>
           </table>
+            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
           </div>
         </vs-card>
       </vs-col>
@@ -174,7 +175,9 @@
         <div class="con-exemple-prompt">
           <h5>Please Modify Employee Data of <strong class="edit-employeee">{{ editValues.nameField }}</strong></h5>
           <h5>ID of the Employee: <strong class="edit-employeee">{{ currentEmployee.employeeID }}</strong></h5>
-          <hr>
+          <vs-divider position="center" color="warning">
+            Properties
+          </vs-divider>
           <vs-input label="Domicile" :placeholder="currentEmployee.domicile" class="mb-3"
                     v-model="editValues.domicileField"/>
           <vs-input label="Working Hours Peer Week" type="number" :placeholder="currentEmployee.workingHoursPerWeek"
@@ -190,7 +193,7 @@
               auto-select
           ></autocomplete>
           <div class="mt-3 mb-3">
-            <vs-checkbox v-for="competence in editValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
+            <vs-checkbox color="warning" v-for="competence in editValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
           </div>
 
           <vs-alert
@@ -266,12 +269,19 @@ export default {
         selectedCompetences: [],
         tickBoxesForCompetences: {}
       },
-      prompts:{activeAddPrompt:false,activeDeletePrompt:false,activeEditPrompt:false, activeDeleteAssignmentPrompt:false}
+      prompts:{activeAddPrompt:false,activeDeletePrompt:false,activeEditPrompt:false, activeDeleteAssignmentPrompt:false},
+      pagination: {maxPages:0,currentPage:1,viewableEmployees:[]}
     }
   },
 
-  created() {
-    this.fetchEmployees();
+  async created() {
+    await this.fetchEmployees();
+    this.pagination.maxPages = Math.ceil(this.employees.length / 7)
+    if(this.employees.length < 7){
+      this.pagination.viewableEmployees = this.employees.slice(0,this.employees.length)
+    }else{
+      this.pagination.viewableEmployees =this.employees.slice(0,7)
+    }
     this.fetchAllAssignments();
     this.fetchAllProjects();
     this.fetchAllCompetences();
@@ -294,10 +304,43 @@ export default {
       return (this.editValues.nameField.length > 0 && this.editValues.nameField.length < 100
           && this.editValues.domicileField.length > 4 && this.editValues.domicileField.length < 100
       )
+    },
+
+    returnCurrentPage(){
+      return this.pagination.currentPage
+    }
+  },
+
+  watch: {
+    returnCurrentPage(){
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.employees.length){
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,this.employees.length)
+      }
+
     }
   },
 
   methods: {
+    updatePagesAfterAddOrDelete(){
+      var maxPages = Math.ceil(this.employees.length / 7)
+      if(maxPages < this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }else if(maxPages > this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.employees.length){
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,this.employees.length)
+      }
+
+    },
 
     /**Filters items for searchbar of competences on add form*/
     async filterCompetenceItemsAdd(input) {
@@ -489,6 +532,7 @@ export default {
 
       await this.fetchEmployeeUpdateCurrentEmployee(this.currentEmployee.employeeID)
       await this.fetchEmployees()
+      this.updatePagesAfterAddOrDelete()
       this.resetAllValues()
     },
 
@@ -652,6 +696,7 @@ export default {
       })
       await this.fetchEmployees()
       this.resetAllValues()
+      this.updatePagesAfterAddOrDelete()
     },
 
     /**
@@ -681,6 +726,7 @@ export default {
         }
       })
       await this.fetchEmployees()
+      this.updatePagesAfterAddOrDelete()
     },
 
     /**

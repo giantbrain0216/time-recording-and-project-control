@@ -112,8 +112,8 @@
                 <th class="border-top-0" style="color: cornflowerblue">ID</th>
                 <th class="border-top-0" style="color: cornflowerblue">Name</th>
                 <th class="border-top-0" style="color: cornflowerblue">EMAIL</th>
-                <th class="border-top-0" style="color: cornflowerblue">Project IDs</th>
-                <th class="border-top-0" style="color: cornflowerblue">Actions</th>
+                <th class="border-top-0" style="color: cornflowerblue">ADDRESS</th>
+                 <th class="border-top-0" style="color: cornflowerblue">Actions</th>
               </tr>
               </thead>
               <tbody>
@@ -126,7 +126,7 @@
                   {{ client.name }}
                 </td>
                 <td>{{ client.email }}</td>
-                <td>{{ client.projectIDs }}</td>
+                <td>{{ client.address }}</td>
                 <td><i >You need to go to the client list view. You can there edit or delete clients
                   !</i></td>
               </tr>
@@ -275,8 +275,6 @@ export default {
     },
 
     getProjectName: function (id){
-      // eslint-disable-next-line no-console
-      console.log("YES I MA ER")
       for (let i=0;i<this.allProjects.length;i++){
         if (this.allProjects[i].projectNumber === id)
           return this.allProjects[i].projectName
@@ -284,8 +282,6 @@ export default {
     },
 
     getEmployeeName: function (id){
-      // eslint-disable-next-line no-console
-      console.log("YES I MA ER")
       for (let i=0;i<this.allEmployees.length;i++){
         if (this.allEmployees[i].employeeID === id)
           return this.allEmployees[i].name

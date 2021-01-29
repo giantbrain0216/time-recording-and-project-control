@@ -167,6 +167,14 @@ public class AssignedCompetencesEmployeeDatabase {
     }
 
     /**
+     * @return all IDs of assigned competences
+     */
+    public List<Integer> getAllAssignedCompetences(){
+        List<AssignedCompetencesEmployee> listOfAllAssignments = getAllAssignedCompetencesEmployee();
+        return listOfAllAssignments.stream().map(AssignedCompetencesEmployee::getCompetenceID).collect(Collectors.toList());
+    }
+
+    /**
      * searches the database and then returns the list with the competences IDs  of the
      * employee whose ID was given
      *

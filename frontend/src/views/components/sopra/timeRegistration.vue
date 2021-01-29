@@ -18,10 +18,12 @@
                 placeholder="Search for an employee"
                 aria-label="Search for an employee"
                 auto-select
+                v-if="!employeeSelected"
             ></autocomplete>
-            <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+            <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="employeeSelected">
               <div>Selected Employee:</div>
               <div class="ml-1" style="color:royalblue;">{{currentEmployee.name }}</div>
+              <vs-button class="ml-2" @click="employeeSelected=false;currentEmployee={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
             </div>
             </div>
             <div class="ml-3" v-if='"employeeID" in currentEmployee'>
@@ -34,10 +36,12 @@
                 :placeholder= "'Select project of ' + currentEmployee.name"
                 aria-label="Search for an employee"
                 auto-select
+                v-if="!projectSelected"
             ></autocomplete>
-            <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2">
+            <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="projectSelected">
               <div>Selected Project:</div>
               <div class="ml-1" style="color:royalblue;">{{currentProject.projectName }}</div>
+              <vs-button class="ml-2" @click="projectSelected=false;currentProject={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
             </div>
             </div>
 
@@ -51,12 +55,12 @@
                                       v-model="dateInput"
                                       min="2018-01-01" :max="dateToday"></div>
 
-              <div class="m-3"><input type="time" id="starttime" name="starttime"
+              <div class="m-3"><input style="width:128px" type="time" id="starttime" name="starttime"
                                       min="06:00" max="22:00" v-model="starttime" required>
                 <small> Start Time</small>
               </div>
 
-            <div class="m-3"><input type="time" id="endtime" name="endtime"
+            <div class="m-3"><input style="width:128px" type="time" id="endtime" name="endtime"
                                     min="06:00" max="22:00" v-model="endtime" required>
               <small> End Time</small>
             </div>
@@ -80,7 +84,7 @@
             <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import", params: {}});'>
               Import Time Registrations From CSV File
             </h4>
-          </div>
+           </div>
         </vs-card>
 
         <vs-divider>
@@ -113,7 +117,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="registration in timeregistrations" :key="registration.id">
+              <tr v-for="registration in pagination.viewableRegistrations" :key="registration.id">
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="mr-2">{{projectNames[registration.projectID] }}</div>
@@ -137,6 +141,7 @@
               </tr>
               </tbody>
             </table>
+            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" color="danger" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
           </div>
         </vs-card>
       </vs-col>
@@ -170,6 +175,8 @@ export default {
       projectNames: {},
       currentProject: {projectName: "Project"},
       currentEmployee: {name: "None"},
+      employeeSelected: false,
+      projectSelected : false,
       dateToday: "",
       dateInput: "",
       starttime: "",
@@ -179,9 +186,26 @@ export default {
       currentRegistration: 0,
       textarea: '',
       counterDanger: false,
-      csv: ''
+      csv: '',
+      pagination: {maxPages:0,currentPage:1,viewableRegistrations:[]}
 
     };
+  },
+  computed: {
+    returnCurrentPage(){
+      return this.pagination.currentPage
+    }
+  },
+  watch: {
+    returnCurrentPage(){
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.timeregistrations.length){
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,this.timeregistrations.length)
+      }
+
+    }
   },
 
   async created() {
@@ -215,17 +239,42 @@ export default {
   },
 
   methods: {
+    updatePages(){
+      var maxPages = Math.ceil(this.timeregistrations.length / 7)
+      if(maxPages < this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }else if(maxPages > this.pagination.maxPages){
+        this.pagination.maxPages = maxPages
+        this.pagination.currentPage = maxPages
+      }
+      var currentPage = this.pagination.currentPage
+      if(7+(currentPage-1)*7 < this.timeregistrations.length){
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
+      }else{
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,this.timeregistrations.length)
+      }
+
+    },
 
     /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
 
       if (input.length < 1) { return [] }
 
-      return this.employees.filter(competence => {
+      else if(input.length < 2){return this.employees.filter(competence => {
         // eslint-disable-next-line no-console
         return (competence.name.toLowerCase()
             .startsWith(input.toLowerCase()))
-      })
+      })}
+      else{
+        return this.employees.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.name.toLowerCase()
+              .includes(input.toLowerCase()))
+        })
+      }
+
     },
     /**Returns name of the employee objects*/
     getEmployeeResultValue(result){
@@ -235,8 +284,10 @@ export default {
     async handleEmployeeSubmitAdd(result){
       await this.fetchProjectsByEmployee(result.employeeID);
       await this.fetchTimeRegistrationsByEmployee(result.employeeID);
+      this.updatePages()
       this.currentEmployee=result
       this.$refs.textSearchOfEmployeeAdd.value = ""
+      this.employeeSelected = true
 
     },
 
@@ -245,11 +296,18 @@ export default {
 
       if (input.length < 1) { return [] }
 
-      return this.projects.filter(competence => {
+      else if(input.length < 2){return this.projects.filter(competence => {
         // eslint-disable-next-line no-console
         return (competence.projectName.toLowerCase()
             .startsWith(input.toLowerCase()))
-      })
+      })}
+      else{
+        return this.projects.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.projectName.toLowerCase()
+              .includes(input.toLowerCase()))
+        })
+      }
     },
     /**Returns name of the project objects*/
     getProjectResultValue(result){
@@ -258,7 +316,8 @@ export default {
     /**Handle function when project is selected by searchbar add form*/
     handleProjectSubmitAdd(result){
       this.currentProject = result;
-      this.$refs.textSearchOfEmployeeAdd.value = ""
+      this.$refs.textSearchOfProjectAdd.value = ""
+      this.projectSelected = true
 
     },
 
@@ -434,6 +493,7 @@ export default {
         }
       })
       await this.fetchTimeRegistrationsByEmployee(this.currentEmployeeID)
+      this.updatePages()
     },
 
     /** Shows prompt with title, message and selected color*/
@@ -454,6 +514,8 @@ export default {
       this.endtime = ""
       this.timeregistrations = []
       this.textarea = ""
+      this.employeeSelected = false
+      this.projectSelected = false
     },
 
     handleFileUpload: function () {

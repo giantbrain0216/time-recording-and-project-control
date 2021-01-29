@@ -30,6 +30,10 @@ Vue.component('l-map', LMap);
 Vue.component('l-tile-layer', LTileLayer);
 Vue.component('l-marker', LMarker);
 
+//Animated Counter
+import VueNumber from 'vue-number-animation'
+Vue.use(VueNumber)
+
 // Vue Router
 import router from './router'
 Vue.config.productionTip = false

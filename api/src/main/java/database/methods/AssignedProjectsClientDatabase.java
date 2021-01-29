@@ -34,6 +34,7 @@ public class AssignedProjectsClientDatabase {
         TableUtils.createTableIfNotExists(connectionSource, AssignedProjectsClient.class);
     }
 
+
     /**
      * Creates IDs in such a way that after deleting an assignment, for example,
      * there are no gaps, but the ID whose assignment was deleted is assigned
@@ -154,12 +155,12 @@ public class AssignedProjectsClientDatabase {
     /**
      * searches the table in the database and deletes all projects whose client ID is equal to the given one
      *
-     * @param projectID of the project
+     * @param clientID of the client
      * @throws SQLException if at least one assignment could not been deleted
      */
 
-    public List<Integer> deleteAllProjectsByClient(Integer projectID) throws SQLException {
-        List<AssignedProjectsClient> assignedProjectsByClient = getAllProjectsByClient(projectID);
+    public List<Integer> deleteAllProjectsByClient(Integer clientID) throws SQLException {
+        List<AssignedProjectsClient> assignedProjectsByClient = getAllProjectsByClient(clientID);
         for (AssignedProjectsClient assignedProjectsClient : assignedProjectsByClient) {
             assignedProjectsClientsDao.deleteById(assignedProjectsClient.getId());
         }

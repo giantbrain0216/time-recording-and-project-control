@@ -6,17 +6,17 @@
 		},
 		{
 			url :"/projectList",
-			name:"Project list",
+			name:"Projects",
 			icon:"list"
 		},
 		{
 			url :"/employeeList",
-			name: "Employee list",
+			name: "Employees",
 			icon: "folder_shared"
 		},
 		{
 			url: "/clientlist",
-			name: "Client List",
+			name: "Clients",
 			icon:"people"  /*error_outline*/
 		},
 		{
