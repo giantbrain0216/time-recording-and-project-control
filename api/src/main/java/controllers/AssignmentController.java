@@ -63,8 +63,7 @@ public class AssignmentController {
      * @return the assignment corresponding to the id
      */
     @ApiResponse(responseCode = "200", description = "Assignment found successfully")
-    @ApiResponse(responseCode = "404", description = "Assignment with the given ID does not exist")
-    @Operation(summary = "Finds assignment by ID", description = "Returns a single assignment whose ID was given")
+     @Operation(summary = "Finds assignment by ID", description = "Returns a single assignment whose ID was given")
     @GetMapping("/assignments/{id}")
     public Assignment getAssignment(@Parameter(description = "ID of the searched assignment") @PathVariable("id") Integer assignmentID) throws SQLException {
         Assignment assignment = assignmentDatabase.getAssignment(assignmentID);
@@ -81,8 +80,7 @@ public class AssignmentController {
      * @return the deleted assignment
      */
     @ApiResponse(responseCode = "200", description = "Assignment found and deleted successfully")
-    @ApiResponse(responseCode = "404", description = "Assignment with the given ID does not exist")
-    @Operation(summary = "deletes assignment by ID", description = "Returns the deleted assignment for testing purposes")
+     @Operation(summary = "deletes assignment by ID", description = "Returns the deleted assignment for testing purposes")
     @DeleteMapping("/assignments/{id}")
     public Assignment deleteAssignment(@Parameter(description = "ID of the assignment to delete") @PathVariable("id") Integer assignmentID) throws SQLException {
         Assignment assignment = assignmentDatabase.getAssignment(assignmentID);
@@ -143,7 +141,6 @@ public class AssignmentController {
      * @return the assignments corresponding to the id
      */
     @ApiResponse(responseCode = "200", description = "Assignments of the employee with the given ID found and returned successfully")
-    @ApiResponse(responseCode = "404", description = "Employee with the given ID does not have assignments")
     @Operation(summary = "Get all assignments of the employee whose ID was given", description = "Returns all assignments of the employee whose ID was given")
     @GetMapping("/assignmentsbyemployee/{id}")
     public List<Assignment> getAssignmentByEmployee(@Parameter(description = "ID of the employee whose assignments should be returned") @PathVariable("id") Integer employeeID) throws SQLException {
@@ -158,8 +155,7 @@ public class AssignmentController {
      * @throws SQLException when the deletion could not be done
      */
     @ApiResponse(responseCode = "200", description = "Assignments of the employee with the given ID found and deleted successfully")
-    @ApiResponse(responseCode = "404", description = "Employee with the given ID does not have assignments to delete")
-    @Operation(summary = "deletes all assignments of the employee whose ID was given", description = "deletes all assignments of the employee whose ID was given")
+     @Operation(summary = "deletes all assignments of the employee whose ID was given", description = "deletes all assignments of the employee whose ID was given")
     @DeleteMapping("/assignmentsbyemployee/{id}")
     public void deleteAllAssignmentsByEmployee(@Parameter(description = "ID of the employee whose assignments should be deleted") @PathVariable("id") Integer employeeID) throws SQLException {
         assignmentDatabase.deleteAllAssignmentsEmployee(employeeID);

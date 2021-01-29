@@ -56,13 +56,12 @@ public class TimeRegistrationController {
      * @return List of all Time Registrations of the employee
      */
     @ApiResponse(responseCode = "200", description = "Time Registrations for the employee whose ID was given are  found successfully")
-    @ApiResponse(responseCode = "404", description = "The Database does not contain any Time Registrations for the employee whose ID was given ")
     @Operation(summary = "Finds Time Registrations for the employee whose ID was given", description = "Returns a list of the time registrations of the employee whose ID was given")
     @GetMapping("/timeregistrationsEmployee/{id}")
     public List<TimeRegistration> getTimeRegistrationsEmployee(@Parameter(description = "ID of the employee whose time registrations are being searched") @PathVariable("id") Integer employeeID) {
         List<TimeRegistration> timeRegistrationsOfEmployee = timeregistrationDatabase.getTimeRegistrationsOfEmployee(employeeID);
 
-            return timeRegistrationsOfEmployee;
+        return timeRegistrationsOfEmployee;
     }
 
 
@@ -72,11 +71,10 @@ public class TimeRegistrationController {
      * @param employeeID whose time registrations should be searched
      */
     @ApiResponse(responseCode = "200", description = "Time Registrations for the employee whose ID was given are  found and deleted successfully")
-    @ApiResponse(responseCode = "404", description = "The Database does not contain any Time Registrations for the employee whose ID was given. Therefore nothing will be deleted ")
     @Operation(summary = "Deletes Time Registrations for the employee whose ID was given", description = "Deletes all time registrations of the employee whose ID was given")
     @DeleteMapping("/timeregistrationsEmployee/{id}")
     public void deleteTimeRegistrationsEmployee(@Parameter(description = "ID of the employee whose time registrations should be deleted") @PathVariable("id") Integer employeeID) throws SQLException {
-         timeregistrationDatabase.deleteTimeRegistrationsOfEmployee(employeeID);
+        timeregistrationDatabase.deleteTimeRegistrationsOfEmployee(employeeID);
 
 
     }
@@ -91,13 +89,12 @@ public class TimeRegistrationController {
      * @return the time registration corresponding to the id
      */
     @ApiResponse(responseCode = "200", description = "Time Registration found successfully")
-    @ApiResponse(responseCode = "400", description = "Time Registration with the given ID does not exist")
     @Operation(summary = "Finds Time Registration by ID", description = "Returns a single Time Registration whose ID was given")
     @GetMapping("/timeregistrations/{id}")
     public TimeRegistration getTimeRegistration(@Parameter(description = "ID of the searched time registration") @PathVariable("id") Integer timeregistrationID) {
         TimeRegistration timeRegistration = timeregistrationDatabase.getTimeRegistration(timeregistrationID);
 
-            return timeRegistration;
+        return timeRegistration;
 
     }
 
@@ -113,14 +110,13 @@ public class TimeRegistrationController {
 
 
     @ApiResponse(responseCode = "200", description = "Time Registration  found and deleted successfully")
-    @ApiResponse(responseCode = "400", description = "Time Registration  with the given ID does not exist")
     @Operation(summary = "deletes Time Registration  by ID", description = "Returns the deleted Time Registration  for testing purposes")
     @DeleteMapping("/timeregistrations/{id}")
     public TimeRegistration deleteTimeRegistration(@Parameter(description = "ID of the time registration to deleted") @PathVariable("id") Integer timeregistrationID) {
         TimeRegistration timeRegistration = timeregistrationDatabase.getTimeRegistration(timeregistrationID);
 
-            timeregistrationDatabase.deleteFromDatabase(timeregistrationID);
-            return timeRegistration;
+        timeregistrationDatabase.deleteFromDatabase(timeregistrationID);
+        return timeRegistration;
 
     }
 
@@ -137,7 +133,7 @@ public class TimeRegistrationController {
             "needed for testing purposes and other REST Methods")
     @ResponseStatus(HttpStatus.CREATED)
     public int addTimeRegistration(@Parameter(description = "From the automatically JSON parsed Request Body a time registration will be created. The " +
-            "request Body contains all necessary attributes which are needed to successfully create a time registration " )@Valid @RequestBody TimeRegistration timeRegistration) {
+            "request Body contains all necessary attributes which are needed to successfully create a time registration ") @Valid @RequestBody TimeRegistration timeRegistration) {
         try {
             return timeregistrationDatabase.addToDataBase(timeRegistration);
         } catch (SQLException e) {

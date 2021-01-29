@@ -4,6 +4,9 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import database.methods.AssignedProjectsClientDatabase;
 import entities.AssignedProjectsClient;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +37,8 @@ public class AssignedProjectsClientController {
      * @return List of all assignedProjectsClient
      */
     @GetMapping("/assignedProjectsClient")
+    @ApiResponse(responseCode = "200", description = "All assignments of projects to clients found and returned successfully")
+    @Operation(summary = "Get all assignments of projects to clients ", description = "Returns all assignments of projects to clients ")
     public List<AssignedProjectsClient> getAllAssignedProjectsClient() {
         return assignedProjectsClientDatabase.getAllAssignedProjectsClient();
     }
@@ -48,7 +53,9 @@ public class AssignedProjectsClientController {
      * @return AssignedProjectsClient corresponding to the id
      */
     @GetMapping("/assignedProjectsClient/{id}")
-    public AssignedProjectsClient getassignedProjectsClient(@PathVariable("id") Integer assignmentID) {
+    @ApiResponse(responseCode = "200", description = "The assignment whose ID was given of projects to clients found and returned successfully")
+    @Operation(summary = "Get The assignment whose ID was given of projects to clients  ", description = "Returns The assignment whose ID was given of projects to clients  ")
+    public AssignedProjectsClient getAssignedProjectsClient(@Parameter(description = "ID of the assignment") @Valid @PathVariable("id") Integer assignmentID) {
         return assignedProjectsClientDatabase.getAssignedProjectsClient(assignmentID);
     }
 
@@ -61,7 +68,9 @@ public class AssignedProjectsClientController {
      * @param assignmentID - id of the employee to be deleted
      */
     @DeleteMapping("/assignedProjectsClient/{id}")
-    public AssignedProjectsClient deleteAssignedProjectsClient(@PathVariable("id") Integer assignmentID) {
+    @ApiResponse(responseCode = "200", description = "The assignment whose ID was given of projects to clients found and deleted successfully")
+    @Operation(summary = "Delete The assignment whose ID was given of projects to clients  ", description = "deleted The assignment whose ID was given of projects to clients  ")
+    public AssignedProjectsClient deleteAssignedProjectsClient(@Parameter(description = "ID of the assignment to delete") @Valid @PathVariable("id") Integer assignmentID) {
         AssignedProjectsClient assignedProjectsClient = assignedProjectsClientDatabase.getAssignedProjectsClient(assignmentID);
         assignedProjectsClientDatabase.deleteFromDatabase(assignmentID);
         return assignedProjectsClient;
@@ -71,12 +80,14 @@ public class AssignedProjectsClientController {
      * deletes all the projects of one client
      *
      * @param clientID of the client
-     * @throws SQLException when the deletion could not be done
      * @return list of the IDs of the deleted projects
+     * @throws SQLException when the deletion could not be done
      */
     @DeleteMapping("/allAssignedProjectsClient/{id}")
-    public List<Integer> deleteAllProjectsByClient(@PathVariable("id") Integer clientID) throws SQLException {
-       return assignedProjectsClientDatabase.deleteAllProjectsByClient(clientID);
+    @ApiResponse(responseCode = "200", description = "All assignments of the client whose ID was given found and deleted successfully")
+    @Operation(summary = "Delete All assignments of the client whose ID was given", description = "deleted All assignments of the client whose ID was given ")
+    public List<Integer> deleteAllProjectsByClient(@Parameter(description = "ID of the client whose assignments should be deleted") @Valid @PathVariable("id") Integer clientID) throws SQLException {
+        return assignedProjectsClientDatabase.deleteAllProjectsByClient(clientID);
     }
 
     /**
@@ -88,8 +99,13 @@ public class AssignedProjectsClientController {
      * @return ID of the added assignedProjectsClient
      */
     @PostMapping("/assignedProjectsClient")
+    @Operation(summary = "Adds a new assignment to the database", description = "After adding the assigned project to the client returns his ID that will be " +
+            "needed for testing purposes and other REST Methods")
     @ResponseStatus(HttpStatus.CREATED)
-    public int addClient(@Valid @RequestBody AssignedProjectsClient requestBody) {
+    public int assignNewProjectToClient(@Parameter(description = "From the automatically JSON parsed Request Body an assigned" +
+            " project to the client  object will be created. The " +
+            "request Body contains all necessary attributes which are needed to successfully create an " +
+            "assigned project to the client object ") @Valid @RequestBody AssignedProjectsClient requestBody) {
         try {
             return assignedProjectsClientDatabase.addToDatabase(requestBody);
         } catch (SQLException e) {
@@ -104,8 +120,10 @@ public class AssignedProjectsClientController {
      * precondition: The request body corresponds to the assignedProjectsClient Class and the id exists in the database
      * postcondition: The correct assignedProjectsClient has been updated
      */
+    @Operation(summary = "Updates the project to the client by ID", description = "modifies the data of the given assignment of the project to the client")
     @PutMapping("/assignedProjectsClient")
-    public void updateClient(@Valid @RequestBody AssignedProjectsClient requestBody) {
+    public void updateClient(@Parameter(description = "Contains the ID of the assignment through which the respective assignment will" +
+            " be recognised") @Valid @RequestBody AssignedProjectsClient requestBody) {
         assignedProjectsClientDatabase.modifyAssignedProjectsClient(requestBody);
     }
 
@@ -119,7 +137,9 @@ public class AssignedProjectsClientController {
      * @return the IDs of the projects corresponding to the client id
      */
     @GetMapping("/projectsByClient/{id}")
-    public List<Integer> getProjectsByClient(@PathVariable("id") Integer clientID) {
+    @ApiResponse(responseCode = "200", description = "All IDs of the assigned project to the client whose ID was given found and returned successfully")
+    @Operation(summary = "Get All IDs of the assigned project to the client whose ID was given ", description = "Returns All IDs of the assigned project to the client whose ID was given   ")
+    public List<Integer> getProjectsByClient(@Parameter(description = "ID of the client whose project IDs should be returned") @Valid @PathVariable("id") Integer clientID) {
         return assignedProjectsClientDatabase.getProjectIDs(clientID);
     }
 }

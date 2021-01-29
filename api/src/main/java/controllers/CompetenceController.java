@@ -57,16 +57,12 @@ public class CompetenceController {
      * @return competence corresponding to the id
      */
     @ApiResponse(responseCode = "200", description = "competence found successfully")
-    @ApiResponse(responseCode = "404", description = "competence with the given ID does not exist")
     @Operation(summary = "Finds competence by ID", description = "Returns a single competence whose ID was given")
     @GetMapping("/competences/{id}")
     public Competence getCompetence(@Parameter(description = "ID of the searched competence") @PathVariable("id") Integer competenceID) {
         Competence competence = competenceDatabase.getCompetence(competenceID);
-        if (competence != null) {
-            return competence;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Competence with ID %s not found!", competenceID));
+        return competence;
+
     }
 
     /**
@@ -79,17 +75,14 @@ public class CompetenceController {
      * @return the deleted Competence
      */
     @ApiResponse(responseCode = "200", description = "competence found and deleted successfully")
-    @ApiResponse(responseCode = "404", description = "competence with the given ID does not exist")
     @Operation(summary = "deletes competence by ID", description = "Returns the deleted competence for testing purposes")
     @DeleteMapping("/competences/{id}")
     public Competence deleteCompetence(@Parameter(description = "ID of the competence to delete") @PathVariable("id") Integer competenceID) {
         Competence competence = competenceDatabase.getCompetence(competenceID);
-        if (competence != null) {
-            competenceDatabase.deleteFromDatabase(competenceID);
-            return competence;
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("competence with ID %s not found!", competenceID));
+
+        competenceDatabase.deleteFromDatabase(competenceID);
+        return competence;
+
     }
 
 
@@ -107,7 +100,7 @@ public class CompetenceController {
     @PostMapping("/competences")
     @ResponseStatus(HttpStatus.CREATED)
     public int addCompetence(@Parameter(description = "From the automatically JSON parsed Request Body a competence will be created. The " +
-            "request Body contains all necessary attributes which are needed to successfully create a competence ")@Valid @RequestBody Competence requestBody) {
+            "request Body contains all necessary attributes which are needed to successfully create a competence ") @Valid @RequestBody Competence requestBody) {
         try {
             return competenceDatabase.addToDatabase(requestBody);
         } catch (SQLException e) {

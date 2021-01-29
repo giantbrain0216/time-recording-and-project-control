@@ -60,13 +60,12 @@ public class ProjectController {
      * @return the project corresponding to the id
      */
     @ApiResponse(responseCode = "200", description = "Project found successfully")
-    @ApiResponse(responseCode = "400", description = "Project with the given ID does not exist")
     @Operation(summary = "Finds project by ID", description = "Returns a single project whose ID was given")
     @GetMapping("/projects/{id}")
     public Project getProject(@Parameter(description = "ID of the searched project") @PathVariable("id") Integer projectID) {
         Project project = projectDatabase.getProject(projectID);
 
-            return project;
+        return project;
 
 
     }
@@ -81,15 +80,14 @@ public class ProjectController {
      * @return the deleted project for testing ppurposes
      */
     @ApiResponse(responseCode = "200", description = "Project found and deleted successfully")
-    @ApiResponse(responseCode = "400", description = "Project with the given ID does not exist")
     @Operation(summary = "deletes project by ID", description = "Returns the deleted project for testing purposes")
 
     @DeleteMapping("/projects/{id}")
     public Project deleteProject(@Parameter(description = "ID of the project to delete") @PathVariable("id") Integer projectID) {
         Project project = projectDatabase.getProject(projectID);
 
-            projectDatabase.deleteFromDatabase(projectID);
-            return project;
+        projectDatabase.deleteFromDatabase(projectID);
+        return project;
 
     }
 

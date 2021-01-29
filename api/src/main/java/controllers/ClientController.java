@@ -57,11 +57,10 @@ public class ClientController {
      * @return Client corresponding to the id
      */
     @ApiResponse(responseCode = "200", description = "Client found successfully")
-    @ApiResponse(responseCode = "400", description = "Client with the given ID does not exist")
     @Operation(summary = "Finds client by ID", description = "Returns a single client whose ID was given")
     @GetMapping("/clients/{id}")
     public Client getClient(@Parameter(description = "ID of the searched Client") @PathVariable("id") Integer clientID) {
-             return clientDatabase.getClient(clientID);
+        return clientDatabase.getClient(clientID);
     }
 
     /**
@@ -74,13 +73,12 @@ public class ClientController {
      * @return the deleted client
      */
     @ApiResponse(responseCode = "200", description = "Client found and deleted successfully")
-    @ApiResponse(responseCode = "400", description = "Client with the given ID does not exist")
     @Operation(summary = "deletes client by ID", description = "Returns the deleted client for testing purposes")
     @DeleteMapping("/clients/{id}")
     public Client deleteClient(@PathVariable("id") Integer clientID) {
         Client client = clientDatabase.getClient(clientID);
-             clientDatabase.deleteFromDatabase(clientID);
-            return client;
+        clientDatabase.deleteFromDatabase(clientID);
+        return client;
 
     }
 
@@ -114,7 +112,7 @@ public class ClientController {
      */
     @Operation(summary = "Updates client by ID", description = "modifies the data of the given client")
     @PutMapping("/clients")
-    public void updateClient(@Parameter(description = "Contains the ID of the client through which the respective client will be recognised ") @Valid @RequestBody Client requestBody) {
+    public void updateClient(@Parameter(description = "Contains the ID of the client through which the respective client will be recognised") @Valid @RequestBody Client requestBody) {
         clientDatabase.modifyClientData(requestBody);
 
     }

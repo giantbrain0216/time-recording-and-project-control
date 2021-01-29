@@ -65,12 +65,11 @@ public class EmployeeController {
      */
 
     @ApiResponse(responseCode = "200", description = "Employee found successfully")
-    @ApiResponse(responseCode = "404", description = "Employee with the given ID does not exist")
     @Operation(summary = "Finds employee by ID", description = "Returns a single employee whose ID was given")
     @GetMapping("/employees/{id}")
     public Employee getEmployee(@Parameter(description = "ID of the searched employee") @PathVariable("id") Integer employeeID) {
 
-            return employeeDatabase.getEmployee(employeeID);
+        return employeeDatabase.getEmployee(employeeID);
 
     }
 
@@ -85,14 +84,13 @@ public class EmployeeController {
      */
 
     @ApiResponse(responseCode = "200", description = "Employee found and deleted successfully")
-    @ApiResponse(responseCode = "404", description = "Employee with the given ID does not exist")
     @Operation(summary = "deletes employee by ID", description = "Returns the deleted employee for testing purposes")
     @DeleteMapping("/employees/{id}")
     public Employee deleteEmployee(@Parameter(description = "ID of the employee to delete") @PathVariable("id") Integer employeeID) {
         Employee employee = employeeDatabase.getEmployee(employeeID);
 
-            employeeDatabase.deleteFromDatabase(employeeID);
-            return employee;
+        employeeDatabase.deleteFromDatabase(employeeID);
+        return employee;
 
 
     }
@@ -110,7 +108,7 @@ public class EmployeeController {
     @PostMapping("/employees")
     @ResponseStatus(HttpStatus.CREATED)
     public int addEmployee(@Parameter(description = "From the automatically JSON parsed Request Body an employee will be created. The " +
-            "request Body contains all necessary attributes which are needed to successfully create an employee ")@Valid @RequestBody Employee requestBody) {
+            "request Body contains all necessary attributes which are needed to successfully create an employee ") @Valid @RequestBody Employee requestBody) {
         try {
             return employeeDatabase.addToDatabase(requestBody);
         } catch (SQLException e) {
