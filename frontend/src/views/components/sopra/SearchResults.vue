@@ -326,6 +326,7 @@ export default {
       if (this.searchKey.length !== 0) {
         for (let i = 0; i < this.allTimeRegistrations.length; i++) {
           if ( this.getProjectName(this.allTimeRegistrations[i].projectID).toLowerCase().includes(this.searchKey.toLowerCase())||
+              this.allTimeRegistrations[i].description.toLowerCase().includes(this.searchKey.toLowerCase()) ||
               this.getEmployeeName(this.allTimeRegistrations[i].employeeID).toLowerCase().includes(this.searchKey.toLowerCase())) {
             if (!this.timeregistrationSearched.includes(this.allTimeRegistrations[i]))
               this.timeregistrationSearched.push(this.allTimeRegistrations[i])

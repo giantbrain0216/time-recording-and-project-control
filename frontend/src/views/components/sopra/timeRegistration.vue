@@ -66,16 +66,20 @@
                                       min="06:00" max="22:00" v-model="endtime" required>
                 <small> End Time</small>
               </div>
+              <h6 style="color: red" class="m-3" v-show="!validNumberWorkingHours(this.starttime,this.endtime)">
+                You are not allowed to work more than 10 hours a day.
+              </h6>
               <div class="m-3">
-                <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger"
+                <vs-textarea counter="200" label="Brief Description" :counter-danger.sync="counterDanger"
                              v-model="textarea"/>
               </div>
               <div class="m-3">
                 <vs-button color="success" type="relief" @click="submitTimeRegistration"
-                           v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)">Save Time
+                       v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)" >Save Time
                   Registration
                 </vs-button>
-              </div>
+               </div>
+
             </div>
           </div>
 
@@ -439,9 +443,15 @@ export default {
     validInput(starttime, endtime) {
       var startdate = new Date("1970-01-01 " + starttime);
       var enddate = new Date("1970-01-01 " + endtime);
-      return (startdate.getTime() < enddate.getTime() && !this.counterDanger && this.textarea !== '' && 'projectNumber'
+      return (startdate.getTime() < enddate.getTime() && (enddate.getTime() - startdate.getTime() <= 10 * 60 * 60 * 1000) && !this.counterDanger && this.textarea !== '' && 'projectNumber'
           in this.currentProject && this.currentEmployee.name !== "None" &&
           new Date(this.currentProject.plannedStart).getTime() <= new Date(this.dateInput + " 00:00").getTime())
+    },
+
+    validNumberWorkingHours(starttime,endtime){
+      var startdate = new Date("1970-01-01 " + starttime);
+      var enddate = new Date("1970-01-01 " + endtime);
+      return (enddate.getTime() - startdate.getTime() <= 10 * 60 * 60 * 1000)
     },
 
     /**Checks if a project has not started yet*/
