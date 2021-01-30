@@ -30,9 +30,9 @@ In diesem Sprint wurden die bis zum [Meilenstein 3](sopra-ws20/team12%"M3") erle
 
 #### 6. Searchbar in der Navbar hinzugefügt
 
-##### - Über die Searchbar kann man Kunden, Projekte, Mitarbeiter und TimeRegistrations suchen. Die Suche kann man auch nach mehreren Entitäten filtern. Wenn man nach dem Namen eines Mitarbeiters sucht, werden auch die zugehörigen TimeRegistrations angezeigt. Ansonsten kann man auch nach der Beschreibung einer TimeRegistration suchen. 
+##### - Über die Searchbar kann man Kunden, Projekte, Mitarbeiter und TimeRegistrations suchen. Die Suche kann man auch nach mehreren Entitäten filtern. Wenn man z.B nach dem Namen eines Mitarbeiters sucht, werden auch die zugehörigen TimeRegistrations angezeigt. Dasselbe gilt auch wenn man nach dem Namen eines Projecktes sucht. Ansonsten kann man auch nach der Beschreibung einer TimeRegistration suchen. 
 
-#### 7. Eine Rechnung für ein Kunde erstellen
+#### 7. Eine Rechnung für einen Kunden erstellen
 
 ##### - Man kann für einen Kunden eine Rechnung als .csv  Datei exportieren. Dafür muss man ein Projekt des Kundens und eine Zeitspanne für die Rechnung auswählen. Der Preis pro Stunde wird als Attrbut vom Projekt festgehalten. Es wird eine CSV Datei mit allen passenden Timeregistrations und den Preisen exportiert. 
 
@@ -42,7 +42,7 @@ In diesem Sprint wurden die bis zum [Meilenstein 3](sopra-ws20/team12%"M3") erle
 
 #### 9. Kompetenzen als Entität
 
-##### - Die Kompetenzen sind jetzt als Entität definiert. Für die Verknüpfungen zwischen Kunden & Kompetenzen und Projekte & Kompetenzen gibt es extra Entitäten und Rest Schnittstellen. Die Kompetenzen kann man in der GUI über eine Searchbar aussuchen, diese werden dann als Checkboxes angezeigt. Man kann keine neuen Kompetenzen aus der GUI erstellen, die Kompetenzen müssen per Schnittstelle hinzugefügt werden.
+##### - Die Kompetenzen sind jetzt als Entität definiert. Für die Verknüpfungen zwischen Kunden & Kompetenzen und Projekte & Kompetenzen gibt es extra Entitäten und Rest Schnittstellen (für die Relationen Project-Client, Kompetenz-Mitarbeiter und Kompetenz-Project). Die Kompetenzen kann man in der GUI über eine Searchbar aussuchen, diese werden dann als Checkboxes angezeigt. Man kann keine neuen Kompetenzen aus der GUI erstellen, die Kompetenzen müssen per Schnittstelle hinzugefügt werden.
 
 #### 10. Für Projekte wird die Kompetenzabdeckung angezeigt
 
@@ -66,7 +66,13 @@ In diesem Sprint wurden die bis zum [Meilenstein 3](sopra-ws20/team12%"M3") erle
 
 #### 15. Logische Verknüpfungen zwischen Entitäten verbessert.
 
-##### - In dem Issue "List of Issues to be Solved" stehen alle logischen Relationen die implementiert wurden(Zum Beispiel wenn man ein Projekt löscht, muss man alle benötigten Kompetenzen des Projekts auch löschen)
+- delete assignments after deleting Employee
+- delete assignments after deleting Project
+- delete competences of projects after deleting a project
+- delete competences of employees after deleting an employee
+- delete Projects (Projects Tabelle) after deleting its Client
+- delete Projects (AssignedProjectsClient Tabelle ) after deleting a Client
+- delete everything related to project when deleting client
 
 #### 16. Event Log für Veränderungen von Kunden, Projekten und Mitarbeitern
 
