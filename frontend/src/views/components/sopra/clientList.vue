@@ -575,6 +575,7 @@ export default {
       this.editValues.addressField = this.currentClient.address
       this.editValues.projectsField = this.currentClient.projects
       this.prompts.activeEditPromt = true;
+      this.selectedEmployeeEdit = true;
 
     },
 
