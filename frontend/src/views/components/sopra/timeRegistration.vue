@@ -10,39 +10,41 @@
           </div>
           <div>
             <div class="ml-3">
-            <autocomplete
-                ref="textSearchOfEmployeeAdd"
-                :search="filterEmployeeItemsAdd"
-                :get-result-value="getEmployeeResultValue"
-                @submit="handleEmployeeSubmitAdd"
-                placeholder="Search for an employee"
-                aria-label="Search for an employee"
-                auto-select
-                v-if="!employeeSelected"
-            ></autocomplete>
-            <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="employeeSelected">
-              <div>Selected Employee:</div>
-              <div class="ml-1" style="color:royalblue;">{{currentEmployee.name }}</div>
-              <vs-button class="ml-2" @click="employeeSelected=false;currentEmployee={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
-            </div>
+              <autocomplete
+                  ref="textSearchOfEmployeeAdd"
+                  :search="filterEmployeeItemsAdd"
+                  :get-result-value="getEmployeeResultValue"
+                  @submit="handleEmployeeSubmitAdd"
+                  placeholder="Search for an employee"
+                  aria-label="Search for an employee"
+                  auto-select
+                  v-if="!employeeSelected"
+              ></autocomplete>
+              <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="employeeSelected">
+                <div>Selected Employee:</div>
+                <div class="ml-1" style="color:royalblue;">{{ currentEmployee.name }}</div>
+                <vs-button class="ml-2" @click="employeeSelected=false;currentEmployee={}" radius color="danger"
+                           type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
+              </div>
             </div>
             <div class="ml-3" v-if='"employeeID" in currentEmployee'>
-            <autocomplete
+              <autocomplete
 
-                ref="textSearchOfProjectAdd"
-                :search="filterProjectItemsAdd"
-                :get-result-value="getProjectResultValue"
-                @submit="handleProjectSubmitAdd"
-                :placeholder= "'Select project of ' + currentEmployee.name"
-                aria-label="Search for an employee"
-                auto-select
-                v-if="!projectSelected"
-            ></autocomplete>
-            <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="projectSelected">
-              <div>Selected Project:</div>
-              <div class="ml-1" style="color:royalblue;">{{currentProject.projectName }}</div>
-              <vs-button class="ml-2" @click="projectSelected=false;currentProject={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
-            </div>
+                  ref="textSearchOfProjectAdd"
+                  :search="filterProjectItemsAdd"
+                  :get-result-value="getProjectResultValue"
+                  @submit="handleProjectSubmitAdd"
+                  :placeholder="'Select project of ' + currentEmployee.name"
+                  aria-label="Search for an employee"
+                  auto-select
+                  v-if="!projectSelected"
+              ></autocomplete>
+              <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="projectSelected">
+                <div>Selected Project:</div>
+                <div class="ml-1" style="color:royalblue;">{{ currentProject.projectName }}</div>
+                <vs-button class="ml-2" @click="projectSelected=false;currentProject={}" radius color="danger"
+                           type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
+              </div>
             </div>
 
             <div class="m-3">
@@ -60,37 +62,38 @@
                 <small> Start Time</small>
               </div>
 
-            <div class="m-3"><input style="width:128px" type="time" id="endtime" name="endtime"
-                                    min="06:00" max="22:00" v-model="endtime" required>
-              <small> End Time</small>
+              <div class="m-3"><input style="width:128px" type="time" id="endtime" name="endtime"
+                                      min="06:00" max="22:00" v-model="endtime" required>
+                <small> End Time</small>
+              </div>
+              <div class="m-3">
+                <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger"
+                             v-model="textarea"/>
+              </div>
+              <div class="m-3">
+                <vs-button color="success" type="relief" @click="submitTimeRegistration"
+                           v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)">Save Time
+                  Registration
+                </vs-button>
+              </div>
             </div>
-            <div class="m-3">
-              <vs-textarea counter="100" label="Brief Description" :counter-danger.sync="counterDanger"
-                           v-model="textarea"/>
-            </div>
-            <div  class="m-3">
-              <vs-button color="success" type="relief" @click="submitTimeRegistration"
-                         v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)">Save Time
-                Registration
-              </vs-button>
-            </div>
-          </div>
           </div>
 
         </vs-card>
         <vs-divider>
-          <h4 style="text-align: center">Or</h4> </vs-divider>        <vs-card class="cardx mt-3">
-          <div  slot="header">
+          <h4 style="text-align: center">Or</h4></vs-divider>
+        <vs-card class="cardx mt-3">
+          <div slot="header">
             <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import", params: {}});'>
               Import Time Registrations From CSV File
             </h4>
-           </div>
+          </div>
         </vs-card>
 
         <vs-divider>
-        <h4 style="text-align: center">Or</h4> </vs-divider>
+          <h4 style="text-align: center">Or</h4></vs-divider>
         <vs-card class="cardx mt-3">
-          <div  slot="header">
+          <div slot="header">
             <h4 style="cursor: pointer" @click='$router.push({name:"CSV Import Ticket System", params: {}});'>
               Import Time Registrations From Ticket System
             </h4>
@@ -120,7 +123,7 @@
               <tr v-for="registration in pagination.viewableRegistrations" :key="registration.id">
                 <td>
                   <div class="d-flex align-items-center">
-                    <div class="mr-2">{{projectNames[registration.projectID] }}</div>
+                    <div class="mr-2">{{ projectNames[registration.projectID] }}</div>
                   </div>
                 </td>
                 <td>
@@ -141,7 +144,11 @@
               </tr>
               </tbody>
             </table>
-            <div style="width: 20%;margin: auto;" id="pagination"><vs-pagination :total="pagination.maxPages" color="danger" v-model="pagination.currentPage" prev-icon="arrow_back" next-icon="arrow_forward" style="justify-content: center;"></vs-pagination></div>
+            <div style="width: 20%;margin: auto;" id="pagination">
+              <vs-pagination :total="pagination.maxPages" color="danger" v-model="pagination.currentPage"
+                             prev-icon="arrow_back" next-icon="arrow_forward"
+                             style="justify-content: center;"></vs-pagination>
+            </div>
           </div>
         </vs-card>
       </vs-col>
@@ -176,7 +183,7 @@ export default {
       currentProject: {projectName: "Project"},
       currentEmployee: {name: "None"},
       employeeSelected: false,
-      projectSelected : false,
+      projectSelected: false,
       dateToday: "",
       dateInput: "",
       starttime: "",
@@ -187,22 +194,22 @@ export default {
       textarea: '',
       counterDanger: false,
       csv: '',
-      pagination: {maxPages:0,currentPage:1,viewableRegistrations:[]}
+      pagination: {maxPages: 0, currentPage: 1, viewableRegistrations: []}
 
     };
   },
   computed: {
-    returnCurrentPage(){
+    returnCurrentPage() {
       return this.pagination.currentPage
     }
   },
   watch: {
-    returnCurrentPage(){
+    returnCurrentPage() {
       var currentPage = this.pagination.currentPage
-      if(7+(currentPage-1)*7 < this.timeregistrations.length){
-        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
-      }else{
-        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,this.timeregistrations.length)
+      if (7 + (currentPage - 1) * 7 < this.timeregistrations.length) {
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0 + (currentPage - 1) * 7, 7 + (currentPage - 1) * 7)
+      } else {
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0 + (currentPage - 1) * 7, this.timeregistrations.length)
       }
 
     }
@@ -239,20 +246,20 @@ export default {
   },
 
   methods: {
-    updatePages(){
+    updatePages() {
       var maxPages = Math.ceil(this.timeregistrations.length / 7)
-      if(maxPages < this.pagination.maxPages){
+      if (maxPages < this.pagination.maxPages) {
         this.pagination.maxPages = maxPages
         this.pagination.currentPage = maxPages
-      }else if(maxPages > this.pagination.maxPages){
+      } else if (maxPages > this.pagination.maxPages) {
         this.pagination.maxPages = maxPages
         this.pagination.currentPage = maxPages
       }
       var currentPage = this.pagination.currentPage
-      if(7+(currentPage-1)*7 < this.timeregistrations.length){
-        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,7+(currentPage-1)*7)
-      }else{
-        this.pagination.viewableRegistrations = this.timeregistrations.slice(0+(currentPage-1)*7,this.timeregistrations.length)
+      if (7 + (currentPage - 1) * 7 < this.timeregistrations.length) {
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0 + (currentPage - 1) * 7, 7 + (currentPage - 1) * 7)
+      } else {
+        this.pagination.viewableRegistrations = this.timeregistrations.slice(0 + (currentPage - 1) * 7, this.timeregistrations.length)
       }
 
     },
@@ -260,14 +267,15 @@ export default {
     /**Filters items for searchbar of employees on add form*/
     async filterEmployeeItemsAdd(input) {
 
-      if (input.length < 1) { return [] }
-
-      else if(input.length < 2){return this.employees.filter(competence => {
-        // eslint-disable-next-line no-console
-        return (competence.name.toLowerCase()
-            .startsWith(input.toLowerCase()))
-      })}
-      else{
+      if (input.length < 1) {
+        return []
+      } else if (input.length < 2) {
+        return this.employees.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.name.toLowerCase()
+              .startsWith(input.toLowerCase()))
+        })
+      } else {
         return this.employees.filter(competence => {
           // eslint-disable-next-line no-console
           return (competence.name.toLowerCase()
@@ -277,15 +285,15 @@ export default {
 
     },
     /**Returns name of the employee objects*/
-    getEmployeeResultValue(result){
+    getEmployeeResultValue(result) {
       return result.name
     },
     /**Handle function when employee is selected by searchbar add form*/
-    async handleEmployeeSubmitAdd(result){
+    async handleEmployeeSubmitAdd(result) {
       await this.fetchProjectsByEmployee(result.employeeID);
       await this.fetchTimeRegistrationsByEmployee(result.employeeID);
       this.updatePages()
-      this.currentEmployee=result
+      this.currentEmployee = result
       this.$refs.textSearchOfEmployeeAdd.value = ""
       this.employeeSelected = true
 
@@ -294,14 +302,15 @@ export default {
     /**Filters items for searchbar of projects on add form*/
     async filterProjectItemsAdd(input) {
 
-      if (input.length < 1) { return [] }
-
-      else if(input.length < 2){return this.projects.filter(competence => {
-        // eslint-disable-next-line no-console
-        return (competence.projectName.toLowerCase()
-            .startsWith(input.toLowerCase()))
-      })}
-      else{
+      if (input.length < 1) {
+        return []
+      } else if (input.length < 2) {
+        return this.projects.filter(competence => {
+          // eslint-disable-next-line no-console
+          return (competence.projectName.toLowerCase()
+              .startsWith(input.toLowerCase()))
+        })
+      } else {
         return this.projects.filter(competence => {
           // eslint-disable-next-line no-console
           return (competence.projectName.toLowerCase()
@@ -310,11 +319,11 @@ export default {
       }
     },
     /**Returns name of the project objects*/
-    getProjectResultValue(result){
+    getProjectResultValue(result) {
       return result.projectName
     },
     /**Handle function when project is selected by searchbar add form*/
-    handleProjectSubmitAdd(result){
+    handleProjectSubmitAdd(result) {
       this.currentProject = result;
       this.$refs.textSearchOfProjectAdd.value = ""
       this.projectSelected = true
@@ -340,7 +349,7 @@ export default {
 
     },
 
-    fetchProjectNames(){
+    fetchProjectNames() {
       for (var i = 0; i < this.projects.length; i++) {
         //this.projectNames.push({key:this.projects[i].projectID ,value: this.projects[i].projectName})
         this.projectNames[this.projects[i].projectNumber] = this.projects[i].projectName
@@ -431,8 +440,8 @@ export default {
       var startdate = new Date("1970-01-01 " + starttime);
       var enddate = new Date("1970-01-01 " + endtime);
       return (startdate.getTime() < enddate.getTime() && !this.counterDanger && this.textarea !== '' && 'projectNumber'
-          in this.currentProject && this.currentEmployee.name !== "None"  &&
-          new Date(this.currentProject.plannedStart).getTime()<=new Date(this.dateInput + " 00:00").getTime())
+          in this.currentProject && this.currentEmployee.name !== "None" &&
+          new Date(this.currentProject.plannedStart).getTime() <= new Date(this.dateInput + " 00:00").getTime())
     },
 
     /**Checks if a project has not started yet*/

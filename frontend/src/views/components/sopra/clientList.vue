@@ -152,8 +152,10 @@
       <div class="con-exemple-prompt">
 
         <div></div>
-        <div>Name</div>
-        <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField"/>
+        <h5 class="mb-2">Client Name <strong style="color:red;">{{ this.currentClient.name }}</strong></h5>
+        <vs-divider position="center" color="warning">
+          Properties
+        </vs-divider>
         Email
         <vs-input :placeholder="editValues.emailField" class="mb-3" v-model="editValues.emailField"/>
         Address
@@ -405,7 +407,7 @@ export default {
     async updateClient() {
       await axios.put(`http://localhost:8080/clients/`, {
         'clientID': this.currentClient.clientID,
-        'name': this.editValues.nameField,
+        'name': this.currentClient.name,
         'email': this.editValues.emailField,
         'address': this.editValues.addressField,
         'telephoneNumber': this.editValues.numberField,

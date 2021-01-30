@@ -11,7 +11,7 @@
           <div class="con-tab-ejemplo">
              <vs-list v-show="eventLogEmployees.length!==0">
               <vs-list-item class="mb-1" v-for="eventLog in eventLogEmployees" :key="eventLog.index "
-              :title="eventLog" ></vs-list-item>
+                            :subtitle="eventLog.slice(0,29)" :title="eventLog.slice(30)"  ></vs-list-item>
               </vs-list>
             <h6 v-show="eventLogEmployees.length===0" style="color:red;">There are no event logs to display</h6>
           </div>
@@ -20,7 +20,7 @@
           <div class="con-tab-ejemplo">
             <vs-list v-show="eventLogProjects.length!==0" >
               <vs-list-item class="mb-1" v-for="eventLog in eventLogProjects" :key="eventLog.index "
-                            :title="eventLog" ></vs-list-item>
+                            :subtitle="eventLog.slice(0,29)" :title="eventLog.slice(30)" ></vs-list-item>
             </vs-list>
             <h6 v-show="eventLogProjects.length===0" style="color:red;">There are no event logs to display</h6>
           </div>
@@ -29,7 +29,7 @@
            <div class="con-tab-ejemplo">
              <vs-list v-show="eventLogClients.length!==0">
                <vs-list-item class="mb-1" v-for="eventLog in eventLogClients" :key="eventLog.index "
-                             :title="eventLog" ></vs-list-item>
+                             :subtitle="eventLog.slice(0,29)" :title="eventLog.slice(30)"   ></vs-list-item>
              </vs-list>
              <h6 v-show="eventLogClients.length===0" style="color:red;">There are no event logs to display</h6>
            </div>
