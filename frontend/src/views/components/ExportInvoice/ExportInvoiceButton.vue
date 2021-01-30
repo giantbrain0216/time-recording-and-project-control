@@ -12,6 +12,7 @@
         :is-valid="validInput(startDateInput,endDateInput,currentSelectedProject)"
         :active.sync="activePrompt"
     >
+
       <div class="con-exemple-prompt">
 <!--        Please Modify Client Data-->
 <!--      </div>-->
@@ -27,7 +28,9 @@
           ></autocomplete>
         </div>
       </div>
-      <div v-if='currentSelectedProject.hasOwnProperty("projectNumber")' style="color:rgb(32,193,53)" class="mt-2">{{"Selected Project: " + currentSelectedProject.projectName}}</div>
+      <div v-if='currentSelectedProject.hasOwnProperty("projectNumber")' style="color:rgb(32,193,53)" class="mt-2">
+        {{"Selected Project: " + currentSelectedProject.projectName}}
+      </div>
       <div v-if='projectNotStarted' class="mt-2" style="color:rgb(198,46,46)">The Project has not started yet, please choose another project</div>
       <hr/>
       <div>
@@ -72,6 +75,7 @@ export default {
       prices:[],
       dataForCSV : [],
       activePrompt : false,
+      projectSelected : false,
       currentSelectedProject:{},
       projectNotStarted:false,
       dateToday:"",

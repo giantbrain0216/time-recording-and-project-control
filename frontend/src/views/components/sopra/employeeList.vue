@@ -193,7 +193,7 @@
               auto-select
           ></autocomplete>
           <div class="mt-3 mb-3">
-            <vs-checkbox color="warning" v-for="competence in editValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
+            <vs-checkbox v-for="competence in editValues.selectedCompetences" :key="competence.id" class="justify-content-start mt-2" v-model="editValues.tickBoxesForCompetences[competence.id]">{{competence.name}}</vs-checkbox>
           </div>
 
           <vs-alert
@@ -246,6 +246,7 @@ export default {
   components: {EmployeeChart},
   data: () => {
     return {
+      eventLog:[],
       competences:[],
       employees: [],
       assignments: [],
@@ -275,6 +276,7 @@ export default {
   },
 
   async created() {
+
     await this.fetchEmployees();
     this.pagination.maxPages = Math.ceil(this.employees.length / 7)
     if(this.employees.length < 7){
@@ -320,9 +322,17 @@ export default {
         this.pagination.viewableEmployees = this.employees.slice(0+(currentPage-1)*7,this.employees.length)
       }
 
-    }
+    },
+    eventLog:{
+      handler(){
+        localStorage.setItem('eventLogEmployee',JSON.stringify(this.eventLog))
+      },
+    },
   },
 
+  mounted() {
+    if (localStorage.getItem('eventLogEmployee')) this.eventLog = JSON.parse(localStorage.getItem('eventLogEmployee'));
+  },
   methods: {
     updatePagesAfterAddOrDelete(){
       var maxPages = Math.ceil(this.employees.length / 7)
@@ -479,7 +489,7 @@ export default {
         if (error.response)
           this.notify("Editing error",error.message,"danger")
       })
-
+      this.eventLog.push(new Date().toUTCString() + ": You have modified the data of the employee " + this.currentEmployee.name)
       var currentCompetences = []
       await axios.get(`http://localhost:8080/competencesByEmployee/` + this.currentEmployee.employeeID)
           .then(response => {
@@ -694,6 +704,7 @@ export default {
 
             }
       })
+      this.eventLog.push(new Date().toUTCString() + " You have added the employee " + this.inputValues.nameField)
       await this.fetchEmployees()
       this.resetAllValues()
       this.updatePagesAfterAddOrDelete()
@@ -725,6 +736,7 @@ export default {
           this.notify("Delete Error",error.message,"danger")
         }
       })
+      this.eventLog.push(new Date().toUTCString() + ": You have deleted the employee " + this.currentEmployee.name)
       await this.fetchEmployees()
       this.updatePagesAfterAddOrDelete()
     },

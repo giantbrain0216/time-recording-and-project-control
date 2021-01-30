@@ -73,6 +73,13 @@ export default new Router({
                     component: () => import('./views/components/sopra/TicketSystem')
                 },
 
+                {
+                    path: '/EventLog',
+                    name: 'EventLog',
+                    index: 7,
+                    component: () => import('./views/components/sopra/EventLog')
+                },
+
 
             ]
         },
