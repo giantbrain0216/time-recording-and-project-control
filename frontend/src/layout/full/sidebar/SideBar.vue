@@ -13,7 +13,7 @@
                    @click='$router.push({name:"EventLog"});'>EVENT LOG</vs-button>
 
         <div class="footer-sidebar" slot="footer">
-          <vs-button icon="reply" color="primary" type="flat" href="https://itestra.com/">Go to Itestra Website
+          <vs-button icon="reply" color="primary" type="flat" href="https://itestra.com/">Go to itestra Website
           </vs-button>
           <p style="font-size:9px">Copyright © 2021 Mohamed, Radu <br> V1.1.3</p>
         </div>
