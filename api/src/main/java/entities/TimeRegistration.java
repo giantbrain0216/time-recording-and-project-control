@@ -7,6 +7,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Date;
+import java.util.ArrayList;
 
 @DatabaseTable(tableName = "Time Registration")
 public class TimeRegistration {
@@ -34,7 +35,6 @@ public class TimeRegistration {
 
     @DatabaseField(columnName = "Brief Description")
     @NotNull
-    @Size(min = 1 , max = 100)
     private String description;
 
     public TimeRegistration(){}
@@ -47,7 +47,7 @@ public class TimeRegistration {
     }
 
 
-    public int getID() {
+    public Integer getID() {
         return id;
     }
 

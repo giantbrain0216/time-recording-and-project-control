@@ -32,7 +32,8 @@ public class TimeRegistrationControllerTest {
 
         try {
             MvcResult result =
-                    this.mockMvc.perform(post("/timeregistrations").contentType(MediaType.APPLICATION_JSON).content(requestBody)).andReturn();
+                    this.mockMvc.perform(post("/timeregistrations").contentType(MediaType.APPLICATION_JSON)
+                            .content(requestBody)).andReturn();
             Integer id = Integer.parseInt(result.getResponse().getContentAsString());
             return id;
         } catch (Exception e) {

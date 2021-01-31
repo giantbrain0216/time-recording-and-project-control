@@ -5,24 +5,29 @@
 			icon:"home"
 		},
 		{
-			url: "/clientlist",
-			name: "Client List",
-			icon:"people"  /*error_outline*/
-		},
-		{
 			url :"/projectList",
-			name:"Project list",
+			name:"Projects",
 			icon:"list"
 		},
 		{
 			url :"/employeeList",
-			name: "Employee list",
+			name: "Employees",
 			icon: "folder_shared"
+		},
+		{
+			url: "/clientlist",
+			name: "Clients",
+			icon:"people"  /*error_outline*/
 		},
 		{
 			url:"/timeRegistration",
 			name:"Time Registration",
 			icon:"watch_later"
 		},
+		/*{
+			url:"/CSV-Import",
+			name:"CSV Import",
+			icon:"get_app"
+		},*/
 
 ]

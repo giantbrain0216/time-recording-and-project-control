@@ -50,7 +50,7 @@ public class ClientDatabase {
      */
     public int addToDatabase(Client clientToAdd) throws SQLException {
       int clientToAddID = createID();
-        clientToAdd.setID(clientToAddID);
+        clientToAdd.setClientID(clientToAddID);
         clientDAO.create(clientToAdd);
         return clientToAddID;
     }

@@ -122,12 +122,8 @@ public class TimeRegistrationDatabase {
     /**
      * return all time registration stored in the database
      *
-     * @return a list or an arraylist containing all employees. When the database
+     * @return a list or an arraylist containing all time registrations. When the database
      * is empty, an empty arrayList will be returned.
-     * <p>
-     * ARRAY OR LIST ?
-     * Hint : Query for all of the items in the object table. For medium sized or large tables, this may load a lot
-     * of objects into memory so you should consider using the iterator() method instead.
      */
     public List<TimeRegistration> getAllTimeRegistrations() {
         try {
@@ -137,5 +133,38 @@ public class TimeRegistrationDatabase {
             System.out.println("there is no elements in the database. ");
             return new ArrayList<>();
         }
+    }
+
+    /**
+     * return all time registration stored in the database of one employee
+     *
+     * @param employeeID of the employee
+     * @return a list or an arraylist containing all time registrations. When the database
+     * is empty, an empty arrayList will be returned.
+     */
+    public List<TimeRegistration> getTimeRegistrationsOfEmployee(int employeeID) {
+        List<TimeRegistration> allTimeRegistrations = getAllTimeRegistrations();
+        List<TimeRegistration> allTimeRegistrationsOfEmployee = new ArrayList<>();
+        for (final TimeRegistration timeRegistration : allTimeRegistrations) {
+            if (timeRegistration.getEmployeeID() == employeeID) {
+                allTimeRegistrationsOfEmployee.add(timeRegistration);
+            }
+        }
+        return allTimeRegistrationsOfEmployee ;
+    }
+
+    /**
+     * deletes all the time registrations of one employee
+     * @param employeeID whose time registrations must be deleted
+     * @throws SQLException if at least one time registration could not be deleted
+     * @return list of all time registrations of the employee for testing purposes
+     */
+    public List<TimeRegistration> deleteTimeRegistrationsOfEmployee(int employeeID) throws SQLException {
+        List<TimeRegistration> allTimeRegistrationsOfEmployee = getTimeRegistrationsOfEmployee(employeeID);
+        for (final TimeRegistration timeRegistration : allTimeRegistrationsOfEmployee){
+            timeRegistrationDAO.deleteById(timeRegistration.getID());
+        }
+        return allTimeRegistrationsOfEmployee;
+
     }
 }
