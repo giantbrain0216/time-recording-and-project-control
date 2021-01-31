@@ -85,7 +85,8 @@
             <vs-list class="mb-2" >
               <vs-list-header title="Projects of this Client" > </vs-list-header>
               <h6></h6>
-              <vs-list-item class="ml-2" v-for="project in currentClient.projects" icon='arrow_right' :key="project.projectNumber"
+              <vs-list-item class="ml-2" v-for="project in currentClient.projects" icon='arrow_right'
+                            :key="project.projectNumber"
                             :title="project.projectName"  >
               </vs-list-item>
             </vs-list>
@@ -151,8 +152,10 @@
       <div class="con-exemple-prompt">
 
         <div></div>
-        <div>Name</div>
-        <vs-input :placeholder="editValues.nameField" class="mb-3" v-model="editValues.nameField"/>
+        <h5 class="mb-2">Client Name <strong style="color:red;">{{ this.currentClient.name }}</strong></h5>
+        <vs-divider position="center" color="warning">
+          Properties
+        </vs-divider>
         Email
         <vs-input :placeholder="editValues.emailField" class="mb-3" v-model="editValues.emailField"/>
         Address
@@ -174,7 +177,8 @@
         <div class="d-flex align-items-center dropdownbtn-alignment mb-3 mt-2" v-if="selectedEmployeeEdit">
           <div>Selected contact person:</div>
           <div class="ml-1" style="color:royalblue;">{{ selectedEmployeeName }}</div>
-          <vs-button class="ml-2" @click='selectedEmployeeEdit=false;selectedEmployeeName="";selectedEmployeeID=0' radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
+          <vs-button class="ml-2" @click='selectedEmployeeEdit=false;selectedEmployeeName="";
+          selectedEmployeeID=0' radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
         </div>
 
 
@@ -237,6 +241,7 @@ export default {
   components: {ExportInvoiceButton, Map},
   data: () => {
     return {
+      eventLog:[],
       employees: [],
       projectsCurrentClient: [],
       selectedEmployeeID: 0,
@@ -282,7 +287,16 @@ export default {
         this.pagination.viewableClients = this.clients.slice(0+(currentPage-1)*7,this.clients.length)
       }
 
-    }
+    },
+    eventLog:{
+      handler(){
+        localStorage.setItem('eventLogClient',JSON.stringify(this.eventLog))
+      },
+    },
+  },
+
+  mounted() {
+    if (localStorage.getItem('eventLogClient')) this.eventLog = JSON.parse(localStorage.getItem('eventLogClient'));
   },
 
   async created() {
@@ -393,7 +407,7 @@ export default {
     async updateClient() {
       await axios.put(`http://localhost:8080/clients/`, {
         'clientID': this.currentClient.clientID,
-        'name': this.editValues.nameField,
+        'name': this.currentClient.name,
         'email': this.editValues.emailField,
         'address': this.editValues.addressField,
         'telephoneNumber': this.editValues.numberField,
@@ -406,6 +420,8 @@ export default {
         }
       })
       await this.fetchCustomers()
+      this.eventLog.push(new Date().toUTCString() + " You have modified the data of the client : "
+          + this.currentClient.name)
       this.updatePagesAfterAddOrDelete()
     },
 
@@ -504,7 +520,7 @@ export default {
           this.notify("Add Client Error", error.message, "danger")
         }
       })
-
+      this.eventLog.push(new Date().toUTCString() + " You have added the client " + this.inputValues.nameField)
       await this.fetchCustomers()
       this.resetAllValues()
       this.updatePagesAfterAddOrDelete()
@@ -537,6 +553,7 @@ export default {
       })
       this.prompts.activeDeletePrompt = false
       await this.fetchCustomers()
+      this.eventLog.push(new Date().toUTCString() + " You have deleted the client " + this.currentClient.name)
       this.currentClient = {}
       this.updatePagesAfterAddOrDelete()
     },
@@ -560,6 +577,7 @@ export default {
       this.editValues.addressField = this.currentClient.address
       this.editValues.projectsField = this.currentClient.projects
       this.prompts.activeEditPromt = true;
+      this.selectedEmployeeEdit = true;
 
     },
 

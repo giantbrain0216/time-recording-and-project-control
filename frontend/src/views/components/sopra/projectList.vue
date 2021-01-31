@@ -145,6 +145,8 @@
       <!--deleteProject(project.projectNumber)-->
 
       <vs-prompt
+
+
           title="Delete Project"
           color="danger"
           @cancel='prompts.activeDeletePrompt = false;notify("Cancelled","Project has not been deleted.","danger")'
@@ -206,10 +208,9 @@
           </vs-divider>
           <vs-input type="number" label-placeholder="Planned Effort In Hours" class="mb-4"
                     v-model="inputValues.plannedEffortField"/>
-          <vs-input type="number" label-placeholder="Price Per Hour : " class="mt-3" v-model="inputValues.pricePerHour"
+          <vs-input  type="number" label-placeholder="Price Per Hour : " class="mt-3 mb-2" v-model="inputValues.pricePerHour"
           />
-          <vs-input disabled="true" type="number" label-placeholder="Performed Effort In Hours : 0" class="mb-3"
-          />
+          <h6 class="mb-2 mt-2" >Performed Effort : <strong style="color: red"> 0 Hours </strong></h6>
           <vs-divider position="center" color="primary">
             Needed competences
           </vs-divider>
@@ -334,7 +335,9 @@
             <a class="a-icon ml-1 " href="#">
               {{ this.currentEmployee.name }}
             </a>
-            <vs-button class="ml-2" @click="employeeAssignSelected=false;currentEmployee={}" radius color="danger" type="border" icon="close" style="width:10px !important;height:10px !important;"></vs-button>
+            <vs-button class="ml-2" @click="employeeAssignSelected=false;currentEmployee={}"
+                       radius color="danger" type="border" icon="close" style="width:10px
+                        !important;height:10px !important;"></vs-button>
           </div>
           <vs-divider position="center" color="success">
             Hours per week
@@ -418,6 +421,7 @@ export default {
   name: "projectList",
   data: () => {
     return {
+      eventLog:[],
       projects: [],
       competences: [],
       competencesAbgedeckt: {},
@@ -492,7 +496,10 @@ export default {
 
   },
 
+mounted() {
+  if (localStorage.getItem('eventLogProject')) this.eventLog = JSON.parse(localStorage.getItem('eventLogProject'));
 
+    },
   computed: {
     /**Checks if Assign of employee is valid*/
     validEmployeeAssign() {
@@ -515,6 +522,11 @@ export default {
   },
 
   watch: {
+    eventLog:{
+      handler(){
+        localStorage.setItem('eventLogProject',JSON.stringify(this.eventLog))
+      },
+    },
     returnCurrentPage(){
       var currentPage = this.pagination.currentPage
       if(7+(currentPage-1)*7 < this.projects.length){
@@ -673,12 +685,22 @@ export default {
       }
     },
 
+
+    getProjectName(id) {
+      for (let i = 0; i < this.projects.length; i++) {
+        if (this.projects[i].projectNumber === id)
+          return this.projects[i].projectName
+      }
+    },
+
     /**
      * Deletes the current assignment
      */
     async deleteAssignment() {
 
       await axios.delete(`http://localhost:8080/assignments/` + this.currentAssignment.id).then(async () => {
+        this.eventLog.push(new Date().toUTCString() + ": You have deleted the assignment of the employee " + this.getEmployeeName(this.currentAssignment.employeeID )+
+            " to the project " + this.getProjectName(this.currentAssignment.projectID))
         await this.fetchEmployee(this.currentAssignment.employeeID)
         await this.fetchCurrentProjectAssignments(this.currentAssignment.projectID)
         await axios.put('http://localhost:8080/employees', {
@@ -742,6 +764,9 @@ export default {
           "projectID": this.currentProject.projectNumber,
           "plannedWorkingHours": this.assignHours
         }).then(async () => {
+          this.eventLog.push(new Date().toUTCString() + ": You have assigned the employee " +
+              this.getEmployeeName(this.currentEmployee.employeeID, )+
+              " to the project " + this.getProjectName(this.currentProject.projectNumber))
           this.notify("Confirmation", "Assignment has been successfully performed.", "success")
         }).catch((error) => {
           if (error.response) {
@@ -830,7 +855,8 @@ export default {
         "performedEffort": 0,
         "competences": this.inputValues.competencesField,
       }).then(async (result) => {
-
+        this.eventLog.push(new Date().toUTCString() + " You have added the project "
+            + this.inputValues.projectName)
         await axios.post(`http://localhost:8080/assignedProjectsClient`, {
           'clientID': this.currentClient.clientID,
           'projectID': result.data,
@@ -908,6 +934,7 @@ export default {
         "performedEffort": this.currentProject.performedEffort,
         "pricePerHour": this.currentProject.pricePerHour,
       }).then(() => {
+        this.eventLog.push(new Date().toUTCString() + " You have modified the data of the project : " + this.currentProject.projectName)
         this.notify("Confirmation", "Project has been successfully edited.", "success")
 
       }).catch((error) => {
@@ -1028,7 +1055,8 @@ export default {
       this.prompts.activeDeletePrompt = false;
       //deletes the project
       await axios.delete(`http://localhost:8080/projects/` + this.currentProject.projectNumber).then(async () => {
-
+        this.eventLog.push(new Date().toUTCString() + " You have deleted the project "
+            + this.currentProject.projectName)
         await axios.delete(`http://localhost:8080/assignmentsbyproject/${this.currentProject.projectNumber}`);
         await axios.delete(`http://localhost:8080/allAssignedCompetencesProject/${this.currentProject.projectNumber}`);
 
