@@ -30,10 +30,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.1.1.1 *GUI für Kunde hinzufügen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.1.1.2 *Kundendaten in der Datenbank speichern*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 2 Stunden
 
 #### Implementable Story 1.1.2 *Kunde bearbeiten*
 
@@ -47,10 +49,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.1.2.1 *GUI für Kunde bearbeiten*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.1.2.2 *Kundendaten in der Datenbank aktualisieren*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.25 Stunden
 
 #### Implementable Story 1.1.3 *Kunde löschen*
 
@@ -64,14 +68,17 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.1.2.1 *Pop-up Meldung "Sind Sie sicher Sie wollen den Kunden xyz löschen?"*
 
 - Aufwandsschätzung: 0.2 Stunden
+- Tatsäschlicher Aufwand : .5 Stunden
 
 ##### Task 1.1.2.2 *Kundendaten aus der Datenbank löschen*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.25 Stunden
 
 ##### Task 1.1.2.3 *Überprüfung ob der Kunde noch offene Projekte hat*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 0.5 Stunden
 
 ### Feature 1.2 *Projekt hinzufügen*
 
@@ -97,10 +104,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.2.1.1 *GUI für Projekt hinzufügen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.2.1.2 *Projektdaten in der Datenbank speichern*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 #### Implementable Story 1.2.2 *Projekt bearbeiten*
 
@@ -114,10 +123,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.2.2.1 *GUI für Projekt bearbeiten*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.2.2.2 *Projektdaten in der Datenbank aktualisieren*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.5 Stunden
 
 #### Implementable Story 1.1.3 *Projekt löschen*
 
@@ -133,18 +144,22 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.2.2.1 *Pop-up Meldung "Sind Sie sicher Sie wollen das Projekt xyz löschen?"*
 
 - Aufwandsschätzung: 0.2 Stunden
+- Tatsäschlicher Aufwand : 0.2 Stunden
 
 ##### Task 1.2.2.2 *Projektdaten aus der Datenbank löschen*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.25 Stunden
 
 ##### Task 1.2.2.3 *Überprüfung ob das Projekt noch läuft*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.5 Stunden
 
 ##### Task 1.2.2.4 *Zugeteilte Mitarbeiter vom Projekt entfernen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 ### Feature 1.3 *Mitarbeiter und ihre verfügbare Arbeitszeit hinzufügen*
 
@@ -168,10 +183,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.3.1.1 *GUI für Mitarbeiter hinzufügen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.3.1.2 *Mitarbeiterdaten in der Datenbank speichern*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 #### Implementable Story 1.3.2 *Mitarbeiter bearbeiten*
 
@@ -185,10 +202,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.3.2.1 *GUI für Mitarbeiter bearbeiten*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.3.2.2 *Mitarbeiterdaten in der Datenbank aktualisieren*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.5 Stunden
 
 #### Implementable Story 1.1.3 *Mitarbeiter löschen*
 
@@ -203,14 +222,17 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.3.2.1 *Pop-up Meldung "Sind Sie sicher Sie wollen den Mitarbeiter xyz löschen?"*
 
 - Aufwandsschätzung: 0.2 Stunden
+- Tatsäschlicher Aufwand : 0.25 Stunden
 
 ##### Task 1.3.2.2 *Mitarbeiterdaten aus der Datenbank löschen*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.5 Stunden
 
 ##### Task 1.3.2.3 *Mitarbeiter von zugeteilten Projekte entfernen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 ### Feature 1.4 *Mitarbeiter einem Projekt zuteilen oder entfernen*
 
@@ -236,10 +258,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.4.1.1 *Mitarbeiter einem Projekt zuteilen*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.5 Stunden
 
 ##### Task 1.4.1.2 *Verfügbare Arbeitsstunden aktualisieren*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 ### Feature 1.5 *Erfassung von geleisteten Aufwänden pro Mitarbeiter*
 
@@ -266,10 +290,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.5.1.1 *Erfasster Aufwand in Datenbank speichern*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.5.1.2 *Bereits getätigter Aufwand in Projekten aktualisieren*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 ### Feature 1.6 *Gesammelte Erfassung von geleisteten Aufwänden pro Mitarbeiter*
 
@@ -292,14 +318,17 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.6.1.1 *Daten aus CSV Datei lesen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 2.5 Stunden
 
 ##### Task 1.6.1.2 *Importierter Aufwand in Datenbank speichern*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.6.1.3 *Defensive Prüfung der CSV Datei (Struktur & Datentypen)*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ### Additional Feature 1.7 *Export der Aufwände für eine Rechnung*
 
@@ -325,14 +354,17 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.7.1.1 *Aufwand aus der Datenbank lesen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
-##### Task 1.7.1.2 *PDF Datei erzeugen*
+##### Task 1.7.1.2 *CSV Datei erzeugen*
 
 - Aufwandsschätzung: 0.5 Stunden
+- Tatsäschlicher Aufwand : 0.25 Stunden
 
-##### Task 1.7.1.3 *PDF Datei anbieten zum runterladen*
+##### Task 1.7.1.3 *CSV Datei anbieten zum runterladen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 0.2 Stunden
 
 ### Additional Feature 1.8 *Ergänzung der vorhandenen Kompetenzen für Mitarbeiter und Projekte*
 
@@ -358,10 +390,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.7.1.1 *Kompetenz hinzufügen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.7.1.2 *Fehlende Kompetenzen für Projekte und Firma updaten*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 2 Stunden
 
 #### Implementable Story 1.8.2 *Kompetenz entfernen*
 
@@ -375,10 +409,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.8.2.1 *Kompetenz löschen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ##### Task 1.8.2.2 *Fehlende Kompetenzen für Projekte und Firma updaten*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 3 Stunden
 
 ### Additional Feature 1.9 *Auflistung benötigter Mitarbeiter im Unternehmen an Hand der benötigten Kompetenzen*
 
@@ -401,10 +437,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.9.1.1 *Bedarfsindex für neue Mitarbeiter errechnen*
 
 - Aufwandsschätzung: 5 Stunden
+- Tatsäschlicher Aufwand : 4 Stunden
 
 ##### Task 1.9.1.2 *Benötigten Mitarbeiter anzeigen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 1.5 Stunden
 
 ### Additional Feature 1.10 *Auswertung von Projektdaten*
 
@@ -429,10 +467,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.10.1.1 *Berechnung ob alle Projekte rechtzeitig bewältigt werden*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 2 Stunden
 
 ##### Task 1.10.1.2 *Berechnung ob es zu Überstunden kommt*
 
 - Aufwandsschätzung: 4 Stunden
+- Tatsäschlicher Aufwand : 3 Stunden
 
 #### Implementable Story 1.10.2 *Verbesserungsvorschläge für den optimalen Einsatz der Mitarbeiter machen*
 
@@ -474,10 +514,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.11.1.1 *Import der Daten aus einem Ticketsystem*
 
 - Aufwandsschätzung: 20 Stunden
+- Tatsäschlicher Aufwand : 4 Stunden
 
 ##### Task 1.11.1.2 *Eintragung der Daten in die Datenbank*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 2 Stunden
 
 ##### Task 1.11.1.3 *Überprüfung ob der Aufwand nicht bereits eingetragen wurde*
 
@@ -503,11 +545,14 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 
 ##### Task 1.12.1.1 *Schnittstelle implementieren*
 
-- Aufwandsschätzung: 10 Stunden
+- Aufwandsschätzung: 10 Stunde
+- Tatsäschlicher Aufwand : 15 Stunden
 
 ##### Task 1.12.1.2 *Methoden schreiben für den Zugriff auf die Datenbank*
 
 - Aufwandsschätzung: 6 Stunden
+- Tatsäschlicher Aufwand : 4 Stunden
+
 
 ### Feature 1.13 *Aufsetzen der Datenbank*
 
@@ -530,6 +575,8 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 1.13.1.1 *Tabellen erstellen*
 
 - Aufwandsschätzung: 10 Stunden
+- Tatsäschlicher Aufwand : 9.5 Stunden
+
 
 
 
@@ -562,10 +609,13 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 2.1.1.1 *Liste dynamisch befüllen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 2 Stunden
+
 
 ##### Task 2.1.1.2 *Detaillierte Anzeige von einem Kunde erstellen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 ### Feature 2.2 *Einsicht aller Projekte*
 
@@ -591,10 +641,13 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 2.2.1.1 *Liste dynamisch befüllen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 2 Stunden
 
 ##### Task 2.2.1.2 *Detaillierte Anzeige von einem Projekt erstellen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
+
 
 ### Feature 2.3 *Einsicht aller Mitarbeiter*
 
@@ -618,10 +671,12 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 2.3.1.1 *Liste dynamisch befüllen*
 
 - Aufwandsschätzung: 2 Stunden
+- Tatsäschlicher Aufwand : 2 Stunden
 
 ##### Task 2.3.1.2 *Detaillierte Anzeige von einem Mitarbeiter erstellen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 ### Additional Feature 2.4 *Visualisierung der Projektauslastung in Form von Charts*
 
@@ -644,10 +699,14 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 2.4.1.1 *Charts erstellen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 3 Stunden
+
 
 ##### Task 2.4.1.2 *Charts mit Daten befüllen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 2 Stunden
+
 
 
 ### Feature 2.5 *Vollständige GUI mit Menü und Searchbar*
@@ -671,10 +730,13 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 2.5.1.1 *Menü mit Knöpfe erstellen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 0.5 Stunde
+
 
 ##### Task 2.5.1.2 *Das Menü responsive machen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 1 Stunde
 
 #### Implementable Story 2.5.2 *Searchbar oben erstellen*
 
@@ -687,3 +749,4 @@ Ausführliche Beschreibung: Der Benutzer soll in der Lage sein, Daten zu Projekt
 ##### Task 2.5.2.1 *Searchbar erstellen*
 
 - Aufwandsschätzung: 1 Stunde
+- Tatsäschlicher Aufwand : 2 Stunden
