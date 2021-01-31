@@ -73,8 +73,8 @@
                 <vs-textarea counter="200" label="Brief Description" :counter-danger.sync="counterDanger"
                              v-model="textarea"/>
               </div>
-              <div class="m-3">
-                <vs-button color="success" type="relief" @click="submitTimeRegistration"
+              <div class="m-3" style="height: 30px">
+                <vs-button color="success" type="relief" @click="submitTimeRegistration" icon="save"
                        v-bind:disabled="!validInput(starttime,endtime)||projectNotStarted(currentProject)" >Save Time
                   Registration
                 </vs-button>

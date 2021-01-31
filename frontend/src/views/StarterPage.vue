@@ -1,11 +1,15 @@
 <template>
   <div>
     <States/>
+    <vs-row>
+    <vs-col vs-lg="12" vs-xs="12">
     <vs-card class="cardx">
       <div slot="header">
         <h3 class="float-left">Earnings Summary </h3></div>
       <SalesSummary/>
     </vs-card>
+    </vs-col>
+      </vs-row>
     <News/>
   </div>
 </template>
