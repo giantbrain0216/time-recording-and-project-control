@@ -2,7 +2,23 @@
 
 In diesem Sprint wurden die bis zum [Meilenstein 3](sopra-ws20/team12%"M3") erledigten User Stories abgearbeitet.
 
+## Verbesserte Dokumente
 
+#### 	1. Verbesserung des Entwurfs:
+
+##### 		- Grundlegender Aufbau der App beschrieben
+
+##### 		- Tatsäschliche Aufwände in den Tasks eingetragen
+
+##### 		- Package Aufbau und Struktur angepasst
+
+##### 		- Ausführlichere Beschreibung der Funktionalität der Views 
+
+#### 	2. README
+
+##### 		- Installation und Ausführung der APP wurden beschrieben
+
+##### 		- Die wichtigsten Anwendungsfälle wurden ausführlich beschrieben
 
 ## Beschreibung der wichtigsten implementierten Features
 
@@ -14,7 +30,7 @@ In diesem Sprint wurden die bis zum [Meilenstein 3](sopra-ws20/team12%"M3") erle
 
 #### 2. Fehlende Kompetenzen in der Firma werden angezeigt
 
-#####  -  Auf der Dashboard gibt es eine Liste mit fehlenden Kompetenzen im Unternehmen. Wenn nur ein Projekt eine gewisse Kompetenz braucht, wird das als Low Priority gewertet, für 2 oder mehr wird die Kompetenz als High Priority gewertet.
+#####  -  Auf der Dashboard gibt es eine Liste mit fehlenden Kompetenzen im Unternehmen. Wenn nur ein Projekt eine gewisse Kompetenz braucht,die aber kein Mitarbeiter hat, wird das als Low Priority gewertet, für 2 oder mehr wird die Kompetenz als High Priority gewertet.
 
 #### 3. Auf der Dashboard gibt es einen News Feed
 
@@ -24,7 +40,7 @@ In diesem Sprint wurden die bis zum [Meilenstein 3](sopra-ws20/team12%"M3") erle
 
 ##### - Rechts in der Navbar gibt es eine kleine Wetteranzeige. Beim draufklicken wird eine ausführliche Wettervorhersage angezeigt. Der Standort wird anhand der IP erkannt und die Wetterdaten werden von der Komponente dynamisch gefetcht. Das ganze ist auch animiert.
 
-#### 5. Adresse des Kundens auf einer Karte angezeigt
+#### 5. Adresse des Kunden auf einer Karte angezeigt
 
 ##### - Wenn man auf einen Kunden klickt, wird in den Details eine Karte von der Adresse angezeigt. Die Lat,Long bekommen wir über eine API von OpenStreetMap, damit schaffen wir es die Addresse vom Kunden recht zuverlässig auf der Karte anzeigen zu können.
 
@@ -34,11 +50,11 @@ In diesem Sprint wurden die bis zum [Meilenstein 3](sopra-ws20/team12%"M3") erle
 
 #### 7. Eine Rechnung für einen Kunden erstellen
 
-##### - Man kann für einen Kunden eine Rechnung als .csv  Datei exportieren. Dafür muss man ein Projekt des Kundens und eine Zeitspanne für die Rechnung auswählen. Der Preis pro Stunde wird als Attrbut vom Projekt festgehalten. Es wird eine CSV Datei mit allen passenden Timeregistrations und den Preisen exportiert. 
+##### - Man kann für einen Kunden eine Rechnung als .csv  Datei exportieren. Dafür muss man ein Projekt des Kunden und eine Zeitspanne für die Rechnung auswählen. Der Preis pro Stunde wird als Attrbut vom Projekt festgehalten. Es wird eine CSV Datei mit allen passenden Timeregistrations und den Preisen exportiert. 
 
 #### 8. CSV Import Aufwände aus eigener Tabelle oder aus einem Ticketsystem
 
-##### - Man kann auf der Seite Time Registrations beide Arten vom Import tätigen. Bei dem Import aus einer eigenen CSV Datei kann man ein Beispiel Template für das benutzte Format runterladen. Nachdem aufwählen der Datei sieht man ein Preview aller Aufwände. Hier kann man sehen welche Timeregistrations valide sind und welche nicht, plus man kann aussuchen welche man importieren will und welche nicht. Das gleiche gilt auch für den Import aus einem Ticketsystem. Hier muss die Datei mit den Issues von Gitlab hochgeladen werden. Dabei muss man eine Spalte mit dem Namen "project id" hinzufügen, wo man die ID des Projekts noch angibt.
+##### - Man kann auf der Seite Time Registrations beide Arten vom Import tätigen. Bei dem Import aus einer eigenen CSV Datei kann man ein Beispiel Template für das benutzte Format runterladen. Nachdem auswählen der Datei sieht man ein Preview aller Aufwände. Hier kann man sehen welche Timeregistrations valide sind und welche nicht, plus man kann aussuchen welche man importieren will und welche nicht. Das gleiche gilt auch für den Import aus einem Ticketsystem. Hier muss die Datei mit den Issues von Gitlab hochgeladen werden. Dabei muss man eine Spalte mit dem Namen "project id" hinzufügen, wo man die ID des Projekts noch angibt.
 
 #### 9. Kompetenzen als Entität
 
