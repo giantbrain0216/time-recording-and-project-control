@@ -38,7 +38,7 @@ export default {
       type: String,
     },
 
-    // Return summary properties in the desired language.
+    // Return summary de.unistuttgart.sopra.properties in the desired language.
     // For list of supported languages, visit https://darksky.net/dev/docs/forecast
     language: {
       type: String,

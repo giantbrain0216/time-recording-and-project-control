@@ -4,7 +4,7 @@
 // any value of `$grid-columns`.
 
 @mixin make-grid-columns($columns: $grid-columns, $gutter: $grid-gutter-width, $breakpoints: $grid-breakpoints) {
-  // Common properties for all breakpoints
+  // Common de.unistuttgart.sopra.properties for all breakpoints
   %grid-column {
     position: relative;
     width: 100%;

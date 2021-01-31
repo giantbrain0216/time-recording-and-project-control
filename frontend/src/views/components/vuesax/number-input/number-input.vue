@@ -15,7 +15,7 @@
         </h3>
         <p class="card-subtitle">
           If you need to add a component that handles a single number, use the
-          <code>component</code> vs-input-number. You can also change the increment and decrement button icons using the properties
+          <code>component</code> vs-input-number. You can also change the increment and decrement button icons using the de.unistuttgart.sopra.properties
           <code>icon-inc</code> and
           <code>icon-dec</code> respectively.
         </p>
@@ -134,7 +134,7 @@
           </vs-button>
         </h3>
         <p class="card-subtitle">
-          You can restrict the maximum number or the minimum with the properties
+          You can restrict the maximum number or the minimum with the de.unistuttgart.sopra.properties
           <code>vs-min, vs-max</code>.
         </p>
 

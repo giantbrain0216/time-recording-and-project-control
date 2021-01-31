@@ -5,7 +5,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html id="htmlId">
 <head>
-  <title>Coverage Report :: Application</title>
+  <title>Coverage Report :: de.unistuttgart.sopra.Application</title>
   <style type="text/css">
     @import "../../.css/coverage.css";
   </style>
@@ -17,10 +17,10 @@
 <div class="content">
 <div class="breadCrumbs">
     [ <a href="../../index.html">all classes</a> ]
-    [ <a href="../index.html">controllers</a> ]
+    [ <a href="../index.html">de.unistuttgart.sopra.controllers</a> ]
 </div>
 
-<h1>Coverage Summary for Class: Application (controllers)</h1>
+<h1>Coverage Summary for Class: de.unistuttgart.sopra.Application (de.unistuttgart.sopra.controllers)</h1>
 
 <table class="coverageStats">
 
@@ -36,7 +36,7 @@
 </th>
 </tr>
 <tr>
-  <td class="name">Application</td>
+  <td class="name">de.unistuttgart.sopra.Application</td>
 <td class="coverageStat">
   <span class="percent">
     66.7%
@@ -55,16 +55,16 @@
 </td>
 </tr>
   <tr>
-    <td class="name">Application$$EnhancerBySpringCGLIB$$126aa72</td>
+    <td class="name">de.unistuttgart.sopra.Application$$EnhancerBySpringCGLIB$$126aa72</td>
   </tr>
   <tr>
-    <td class="name">Application$$EnhancerBySpringCGLIB$$126aa72$$FastClassBySpringCGLIB$$31e43170</td>
+    <td class="name">de.unistuttgart.sopra.Application$$EnhancerBySpringCGLIB$$126aa72$$FastClassBySpringCGLIB$$31e43170</td>
   </tr>
   <tr>
-    <td class="name">Application$$FastClassBySpringCGLIB$$b5b6aa19</td>
+    <td class="name">de.unistuttgart.sopra.Application$$FastClassBySpringCGLIB$$b5b6aa19</td>
   </tr>
   <tr>
-    <td class="name">Application$1</td>
+    <td class="name">de.unistuttgart.sopra.Application$1</td>
 <td class="coverageStat">
   <span class="percent">
     100%
@@ -107,7 +107,7 @@
 <br/>
 
 
-<div class="sourceCode"><i>1</i>&nbsp;package controllers;
+<div class="sourceCode"><i>1</i>&nbsp;package de.unistuttgart.sopra.controllers;
 <i>2</i>&nbsp;
 <i>3</i>&nbsp;import com.j256.ormlite.jdbc.JdbcConnectionSource;
 <i>4</i>&nbsp;import com.j256.ormlite.support.ConnectionSource;
@@ -120,17 +120,17 @@
 <i>11</i>&nbsp;import java.sql.SQLException;
 <i>12</i>&nbsp;
 <i>13</i>&nbsp;@SpringBootApplication
-<i>14</i>&nbsp;public class Application {
+<i>14</i>&nbsp;public class de.unistuttgart.sopra.Application {
 <i>15</i>&nbsp;    public ConnectionSource connectionSource;
 <i>16</i>&nbsp;
-<b class="fc"><i>17</i>&nbsp;    public Application() throws SQLException {</b>
+<b class="fc"><i>17</i>&nbsp;    public de.unistuttgart.sopra.Application() throws SQLException {</b>
 <b class="fc"><i>18</i>&nbsp;        connectionSource = new JdbcConnectionSource(&quot;jdbc:mariadb://bilbao.informatik&quot; +</b>
 <i>19</i>&nbsp;                &quot;.uni-stuttgart.de/team12&quot;, &quot;team12&quot;, &quot;e345c973d6f4d770&quot;);
 <b class="fc"><i>20</i>&nbsp;    }</b>
 <i>21</i>&nbsp;
 <i>22</i>&nbsp;
 <i>23</i>&nbsp;    public static void main(String[] args) {
-<b class="nc"><i>24</i>&nbsp;        SpringApplication.run(Application.class, args);</b>
+<b class="nc"><i>24</i>&nbsp;        SpringApplication.run(de.unistuttgart.sopra.Application.class, args);</b>
 <b class="nc"><i>25</i>&nbsp;    }</b>
 <i>26</i>&nbsp;
 <i>27</i>&nbsp;    // enable cross-origin resource sharing (CORS)

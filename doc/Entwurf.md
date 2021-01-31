@@ -1,6 +1,6 @@
 # Entwurf
 ## WebApp zur Aufwandserfassung und Projektsteuerung
-Die WebApp ist als Single Page Application aufgebaut. Die Daten werden in einer Datenbank gespeichert. Um die Daten zu manipulieren, wird eine Spring-Boot RESTApi angeboten. Diese kommuniziert mit der Datenbank und kann über einen OR-Mapper die Daten schnell und zuverlässig manipulieren. Auf der Frontend Seite wird mit Vue.js die Single Page Application dargestellt. Die Daten werden dann dynamisch geholt.
+Die WebApp ist als Single Page de.unistuttgart.sopra.Application aufgebaut. Die Daten werden in einer Datenbank gespeichert. Um die Daten zu manipulieren, wird eine Spring-Boot RESTApi angeboten. Diese kommuniziert mit der Datenbank und kann über einen OR-Mapper die Daten schnell und zuverlässig manipulieren. Auf der Frontend Seite wird mit Vue.js die Single Page de.unistuttgart.sopra.Application dargestellt. Die Daten werden dann dynamisch geholt.
 
 ### Gruppe 12
 - Clirim Salihi

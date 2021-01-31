@@ -4,7 +4,7 @@
 
 ## Installation und Start
 
-**Run Application**
+**Run de.unistuttgart.sopra.Application**
 ```
 # Install server
 - ./mvnw clean install

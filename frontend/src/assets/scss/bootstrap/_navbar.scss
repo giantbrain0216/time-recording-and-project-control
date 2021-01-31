@@ -23,8 +23,8 @@
   justify-content: space-between; // space out brand from logo
   padding: $navbar-padding-y $navbar-padding-x;
 
-  // Because flex properties aren't inherited, we need to redeclare these first
-  // few properties so that content nested within behave properly.
+  // Because flex de.unistuttgart.sopra.properties aren't inherited, we need to redeclare these first
+  // few de.unistuttgart.sopra.properties so that content nested within behave properly.
   > .container,
   > .container-fluid {
     display: flex;

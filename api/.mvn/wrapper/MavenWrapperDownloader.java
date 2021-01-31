@@ -28,11 +28,11 @@ public class MavenWrapperDownloader {
         + WRAPPER_VERSION + "/maven-wrapper-" + WRAPPER_VERSION + ".jar";
 
     /**
-     * Path to the maven-wrapper.properties file, which might contain a downloadUrl property to
+     * Path to the maven-wrapper.de.unistuttgart.sopra.properties file, which might contain a downloadUrl property to
      * use instead of the default one.
      */
     private static final String MAVEN_WRAPPER_PROPERTIES_PATH =
-            ".mvn/wrapper/maven-wrapper.properties";
+            ".mvn/wrapper/maven-wrapper.de.unistuttgart.sopra.properties";
 
     /**
      * Path where the maven-wrapper.jar will be saved to.
@@ -50,7 +50,7 @@ public class MavenWrapperDownloader {
         File baseDirectory = new File(args[0]);
         System.out.println("- Using base directory: " + baseDirectory.getAbsolutePath());
 
-        // If the maven-wrapper.properties exists, read it and check if it contains a custom
+        // If the maven-wrapper.de.unistuttgart.sopra.properties exists, read it and check if it contains a custom
         // wrapperUrl parameter.
         File mavenWrapperPropertyFile = new File(baseDirectory, MAVEN_WRAPPER_PROPERTIES_PATH);
         String url = DEFAULT_DOWNLOAD_URL;

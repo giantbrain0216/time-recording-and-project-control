@@ -36,4 +36,4 @@ java -jar ./target/sopraws20-api.jar
 ## Documentation
 
 - General references: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
-- controllers.Application properties: https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html
+- de.unistuttgart.sopra.Application de.unistuttgart.sopra.properties: https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-de.unistuttgart.sopra.properties.html
