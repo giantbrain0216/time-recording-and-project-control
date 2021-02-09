@@ -449,6 +449,9 @@ export default {
     },
 
     validNumberWorkingHours(starttime,endtime){
+      if(!starttime || !endtime){
+        return true
+      }
       var startdate = new Date("1970-01-01 " + starttime);
       var enddate = new Date("1970-01-01 " + endtime);
       return (enddate.getTime() - startdate.getTime() <= 10 * 60 * 60 * 1000)
