@@ -336,8 +336,8 @@
               {{ this.currentEmployee.name }}
             </a>
             <vs-button class="ml-2" @click="employeeAssignSelected=false;currentEmployee={}"
-                       radius color="danger" type="border" icon="close" style="width:10px
-                        !important;height:10px !important;"></vs-button>
+                       radius color="danger" type="border" icon="close"
+                       style="width:10px !important; height:10px !important;"></vs-button>
           </div>
           <vs-divider position="center" color="success">
             Hours per week

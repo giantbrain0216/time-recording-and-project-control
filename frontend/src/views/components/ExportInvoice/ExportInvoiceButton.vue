@@ -176,7 +176,7 @@ export default {
       for(var i=0;i<this.timeregistrations.length;i++){
         var workedHours =Math.abs(new Date(this.timeregistrations[i].end) - new Date(this.timeregistrations[i].start)) / 36e5
         var element = [this.timeregistrations[i].id, await this.getEmployeeName(this.timeregistrations[i].employeeID),
-          this.timeregistrations[i].start.substring(0,10),workedHours,this.timeregistrations[i].description,
+          this.timeregistrations[i].start.substring(0,10),workedHours,this.timeregistrations[i].description.replace(",", "."),
           parseInt((workedHours * this.currentSelectedProject.pricePerHour).toFixed(1)) + " Euro"]
         this.dataForCSV.push(element)
         this.prices.push(parseInt((workedHours * this.currentSelectedProject.pricePerHour).toFixed(1)))
