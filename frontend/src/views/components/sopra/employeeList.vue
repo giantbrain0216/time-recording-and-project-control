@@ -75,7 +75,8 @@
             <hr>
             <p><strong>Remaining Working Hours : </strong>{{ currentEmployee.remainingWorkingHoursPerWeek }}</p>
             <hr>
-            <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
+
+            <div><Map :address="currentEmployee.domicile" :name="currentEmployee.name"/></div>
 
           </div>
         </vs-card>
@@ -122,6 +123,7 @@
               </tr>
               </tbody>
             </table>
+            <EmployeeChart :employeeID="this.currentEmployee.employeeID"/>
           </div>
         </vs-card>
       </vs-col>
@@ -240,10 +242,11 @@
 <script>
 import axios from 'axios';
 import EmployeeChart from "@/views/components/dashboard/EmployeeChart";
+import Map from "@/views/components/LeafletMap/Map";
 
 export default {
   name: "employeeList",
-  components: {EmployeeChart},
+  components: {EmployeeChart, Map},
   data: () => {
     return {
       eventLog:[],

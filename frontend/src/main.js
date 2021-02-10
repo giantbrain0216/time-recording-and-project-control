@@ -34,6 +34,7 @@ Vue.component('l-marker', LMarker);
 import VueNumber from 'vue-number-animation'
 Vue.use(VueNumber)
 
+
 // Vue Router
 import router from './router'
 Vue.config.productionTip = false
