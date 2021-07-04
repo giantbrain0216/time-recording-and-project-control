@@ -1,8 +1,8 @@
-# WebApp zur Aufwandserfassung und Projektsteuerung
+# WebApp for effort recording and project control
 
-> Die Webapp dient zur Aufwanderfassung der Mitarbeiter, um den geleisteten Aufwand besser tracken zu können. Zusätzlich dient die App zur Projektsteuerung, sodass Teamleiter ihre Mitarbeiter optimal einsetzen können.
+> The web app is used for tracking the employees in order to be able to better track the efforts made. In addition, the app is used for project control so that team leaders can deploy their employees optimally.
 
-## Installation und Start
+## Installation and Start
 
 **Run de.unistuttgart.sopra.Application**
 ```
@@ -18,81 +18,56 @@
 - npm run serve
 ```
 
-## Verwendung der App
+## Use of the application
 
-_Beschreibung der wichtigsten implementierten Anwendungsfälle_
+_Description of the main implemented use cases_
 
-### Wichtiger Anwendungsfall 1  
-- **Kunde hinzufügen:** Es ist möglich einen Kunden in die WebApp hinzuzufügen. Dies geschieht über
-  einen Butten in der **Client View**. Dieser öffnet ein Pop up Fenster, welches Eingabefelder
-  hat um einen Kunden anlegen zu können. Dieser wird dann in der Datenbank gespeichert.  
+### Important use case 1  
+- **Add customer:** It is possible to add a customer to the WebApp. This is done via a button in the **Client View**. This button opens a pop up window, which has input fields to be able to create a customer. This will then be stored in the database. 
     
-### Wichtiger Anwendungsfall 2  
-- **Löschen eines Kunden:** In der **Client View** gibt es neben jeden Kunden einen **delete** Button
-  der es ermöglicht einen Kunden zu löschen. Dieser wird dann aus der Datenbank entfernt.  
+### Important use case 2  
+- **Delete a customer:** In the **Client View** there is a **delete** button next to each customer. which allows to delete a customer. This customer will then be removed from the database.  
   
-### Wichtiger Anwendungsfall 3  
-- **Bearbeiten eines Kunden:** In der **Client View** gibt es neben jeden Kunden einen **edit** Button,
-  der es ermöglicht die Kundendaten nachträglich zu ändern. Die Änderungen werden in der Datenbank gespeichert.  
+### Important use case 3  
+- **Editing a customer:** In the **Client View** there is an **edit** button next to each customer,  which allows to change the customer data afterwards. The changes are saved in the database.  
   
-### Wichtiger Anwendungsfall 4  
-- **Einfügen eines Mitarbeiters:** In der **Employee View** ist es möglich einen Kunden mit seiner verfügbaren
-  Arbeitszeit hinzuzufügen. Dies geschieht über einen Butten in der **Employee View**. Dieser öffnet ein Pop up Fenster,
-  welches Eingabefelder
-  hat um einen Mitarbeiter anlegen zu können. Dieser wird dann in der Datenbank gespeichert.  
- 
+### Important use case 4  
+- **Inserting an employee:** In the **Employee View** it is possible to add a customer with his available available working time. This is done via a button in the **Employee View**. This opens a pop up window, which has input fields to create an employee. This employee will then be stored in the database.  
   
-### Wichtiger Anwendungsfall 5  
-- **Mitarbeiter bearbeiten:** In der **Employee View** ist es möglich einen Mitarbeiter im nachhinein zu bearbeiten. Dazu
-  gibt es einen Button neben jeden Mitarbeiter, der ein Pop up Fenster aufruft mit Eingabefelder die man zum Bearbeiten
-  braucht. Die Änderungen werden in der Datenbank gespeichert.  
+### Important use case 5  
+- **Edit employee:** In the **Employee View** it is possible to edit an employee afterwards. For this purpose there is a button next to each employee, which opens a pop up window with input fields needed for editing. needed. The changes are saved in the database.  
   
-### Wichtiger Anwendungsfall 6  
-- **Mitarbeiter löschen:** In der **Employee View** ist es möglich einen Mitarbeiter zu löschen. Die geschieht über
-  einen lösch Button der neben jeden Mitarbeiter positioniert ist. Der Mitarbeiter existiert danach in der Datenbank
-  nicht mehr.  
+### Important use case 6  
+- **Delete employee:** In the **Employee View** it is possible to delete an employee. This is done via a delete button that is positioned next to each employee. The employee will no longer exist in the database.  
 
-### Wichtiger Anwendungsfall 7  
-- **Projekt hinzufügen:** In der **Project View** ist es möglich ein Projekt anzulegen. Dies geschieht über einen Button
-  der ein Pop up Fenster öffnent, mit gegebenen Eingabefeldern die benötigt werden um die Attribute richtig in der Datenbank
-  zu speichern. Der Kunde wird dann in der Datenbank gespeichert.  
+### Important use case 7  
+- **Add project:** In the **Project View** it is possible to create a project. This is done via a button that opens a pop up window with given input fields that are needed to store the attributes correctly in the database. The project will then be saved in the database.  
   
-### Wichtiger Anwendungsfall 8
-- **Projekt bearbeiten:** In der **Project View** ist es möglich Projekte im nachhinein zu bearbeiten. Dies geschieht über eine Edit Button.
-  Dieser öffnet ein Pop up Fenstere, welches es ermöglich die Projektdaten zu ändern. Die Änderungen in der Datenbank abgespeichert. 
+### Important use case 8
+- **Edit project:** In the **Project View** it is possible to edit projects afterwards. This is done via an Edit button. This opens a pop up window, which allows to change the project data. The changes are saved in the database. 
 
-### Wichtiger Anwendungsfall 9  
-- **Project löschen:** In der **Project View** ist es möglich ein Projekt zu löschen. Die geschieht über
-  einen lösch Button der neben jedem Projekt zu finden ist. Das Projekt existiert danach in der Datenbank
-  nicht mehr.  
+### Important use case 9  
+- **Delete project:** In the **Project View** it is possible to delete a project. This is done via a delete button that can be found next to each project. The project does not exist in the database no more.  
 
-### Wichtiger Anwendungsfall 10
-- **Einsicht aller Projekte:** Die Projekte werden automatisch in der **Project View** angezeigt. Die Projekte müssen dafür
-  jedoch in der Datenbank gespeichert sein. Mit einem Mausklick auf den Button ***Assign*** kann man Mitarbeiter dem Projekt zuweisen
-  und/oder entfernen. Es wird sowie eine detailierte Ansicht des Projekts angezeigt mit allen Daten des Projekts. In dieser Ansicht werden die fehlenden Kompetenzen rot angezeigt, während die abgedeckten grün angezeigt werden!
-
-### Wichtiger Anwendungsfall 11
-- **Zuweisung von Mitarbeitern zu den Projekten** : In der **Project List View** befindet sich neben jedem Projekt einen Button ***Assign***. Mit dem kann man Mitarbeiter dem Projekt zuweisen und/oder entfernen.
-
-### Wichtiger Anwendungsfall 11  
-- **Einsicht aller Kunden:** In der **Client View** werden automatisch alle Kunden angezeigt, die in
-  der Datenbank geespeichert sind. Mit einem Mausklick auf dem Namen des Kunden, erscheint noch
-  eine detailierte Ansicht des ausgewählten **Kunden**  
+### Important use case 10
+- **View of all projects:** The projects are automatically displayed in the **Project View**. The projects must be stored in the database. With a mouse click on the button ***Assign*** you can assign and/or remove employees to the project. A detailed view of the project is displayed with all data of the project. In this view, the missing competences are displayed in red, while the covered ones are displayed in green!
 
 
-### Wichtiger Anwendungsfall 12
-- **Rechnung für einen Kunden erstellen** : In der **Client View** wird vor jedem Kunden einen Button ***Invoice*** stehen. Wenn man auf den drückt, dann taucht ein Pop Up Fenster auf, wo man das Projekt eingeben kann (Searchbar mit autocomplete), den Zeitraum und den Preis/Stunde. Eine CSV Datei wird erst heruntergeladen, wenn man auf accept drückt. Die enthält alle Time Registrations und die Summe.
+### Important use case 11
+- **Assignment of employees to the projects** : In the **Project List View** there is a button ***Assign*** next to each project. With this button you can assign and/or remove employees to the project.
+
+### Important use case 11  
+- **View all customers:** In the **Client View** all customers are automatically displayed, which are stored in the database. With a mouse click on the name of the customer, a detailed view of the selected **customer** appears. There one can see the most important information as well as the address of the customer on a map fetched from [OpenStreetMap](https://www.openstreetmap.org/).
+
+
+### Important use case 12
+- **Create invoice for a customer** : In the **Client View** there will be a button ***Invoice*** in front of each customer. If you press it, a pop up window will appear where you can enter the project (searchbar with autocomplete) and the period. A CSV file is downloaded when you press accept. It contains all time registrations and the total.
   
-## Wichtiger Anwendungsfall 13
-- **Einsicht aller Mitarbeiter:** In der **Employee View** werden automatisch alle Mitarbeiter angezeigt. Mit einem Mausklick
-  auf eine Mitarbeiternamen, scheint eine detailierte Ansicht des Mitarbeiters, sowie eine Ansicht um die Zuteilung der
-  Projekte zu bearbeiten.
-  siehe Feature **Mitarbeitern einem Projekt zuteilen**.  
+### Important use case 13
+-  **View of all employees:** In the **Employee View** all employees are automatically displayed. With a mouse click on an employee name, a detailed view of the employee appears, as well as a view to edit the assignment of the projects. projects. see feature **Assign employees to a project**.  
   
-### Wichtiger Anwendungsfall 14
-- **Zeiterfassung eines Mitarbeiters:** In der **Time registration View** ist es möglich Arbeitszeiten eines Mitarbeiters,
-  welcher schon in der Datenbank gespeichert ist zu erfassen. Die erfasse Zeit wird dann in der detailierten Ansicht des Mitarbeits
-  angezeigt in Form von einer Chart, jedoch nur für die letzten 5 Tage.
+### Important use case 14
+- **Time registration of an employee:** In the **Time registration View** it is possible to record working times of an employee, which is already stored in the database. The recorded time is then displayed in the detailed view of the employee in the form of a chart. in the form of a chart, but only for the last 5 days.
 
-### Wichtiger Anwendungsfall 15 
-- **Zeiterfassung aus CSV Datei** : In der ** Time registration view** gibt es einen Button mit der Beschriftung : ***Import Time Registration From CSV File***. Wenn man darauf klickt, landet man in einer neuen View. Auf der View steht eine ***CSV-Datei-Vorlage*** zur Verfügung, die mit einem Mausklick heruntergelalden werden kann. Man kann die CSV Datei hochladen kann und dann werden entprechend die Time Registration in in einer Preview Tabelle angezeigt, wo man die löschen bzw. undo kann und nach dem Drücken auf Submit Button werden die jeweiligen Time Registrations in der Datenbank gespeichert.
+### Important use case 15 
+- **Time registration from CSV file** : In the **Time registration view** there is a button labeled : ***Import Time Registration From CSV File***. If you click on it, you will land in a new view. On the view there is a ***CSV file template*** available, which can be downloaded with a mouse click. You can upload the CSV file and then the time registrations will be displayed in a preview table, where you can delete or undo them and after pressing the Submit button the respective time registrations will be saved in the database.
